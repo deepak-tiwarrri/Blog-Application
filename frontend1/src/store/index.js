@@ -4,11 +4,11 @@ import {
   createAsyncThunk,
   createSlice,
 } from "@reduxjs/toolkit";
-import axios from "axios";
+import { userApi, setAuthToken } from "@/api";
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    isLoggedIn: true,
+  isLoggedIn: false,
     input: {
       name: "",
       email: "",
@@ -24,6 +24,8 @@ const authSlice = createSlice({
     },
     logout(state) {
       localStorage.removeItem("userId");
+      localStorage.removeItem("token");
+      setAuthToken(null);
       state.isLoggedIn = false;
     },
     updateInput(state, action) {
@@ -37,7 +39,8 @@ const authSlice = createSlice({
       })
       .addCase(sendRequest.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.user = action.payload;
+        // action.payload expected to be { user, token }
+        state.user = action.payload?.user || null;
         state.isLoggedIn = true;
       })
       .addCase(sendRequest.rejected, (state, action) => {
@@ -56,19 +59,20 @@ export const sendRequest = createAsyncThunk(
       if (!input?.email || !input?.password) {
         return rejectWithValue("Email or password missing");
       }
-      const res = await axios.post(`${USER_URL}/${type}`, {
-        name: type === "signup" ? input.name : undefined,
-        email: input.email,
-        password: input.password,
-      });
-      const data = res.data;
-      console.log(data);
+  // use userApi so instance headers and timeouts apply
+  const res = await (type === 'signup' ? userApi.signup({ name: input.name, email: input.email, password: input.password }) : userApi.login({ email: input.email, password: input.password }));
+  const data = res.data;
       // Validate response
-      if (!res.data || !res.data.user) {
+      if (!data || !data.user) {
         return rejectWithValue("Response format is not proper");
       }
+      // persist userId and token
       localStorage.setItem("userId", data.user._id);
-      return data.user;
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        setAuthToken(data.token);
+      }
+      return { user: data.user, token: data.token };
     } catch (error) {
       return rejectWithValue(error.response?.data || error?.message);
     }

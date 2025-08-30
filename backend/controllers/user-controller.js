@@ -1,5 +1,5 @@
 import User from "../models/User.js";
-// import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 const getAllUser = async (req, res) => {
@@ -25,20 +25,28 @@ const signUp = async (req, res) => {
         .status(400)
         .json({ message: "User already exists!! Login Instead" });
     }
-    //now hash the password
-    const hashPassword = await bcrypt.hash(password, 10); //hash and make it 10 length long
-    console.log(hashPassword);
+    // Hash the password
+    const hashPassword = await bcrypt.hash(password, 10);
     let newUser = new User({
       name,
       email,
       password: hashPassword,
       blogs: [],
-      blogs: [],
     });
     await newUser.save();
-    return res
-      .status(201)
-      .json({ message: "User created successfully", user: newUser });
+    // Generate JWT token
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    return res.status(201).json({
+      message: "User created successfully",
+      user: {
+        _id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+      },
+      token,
+    });
   } catch (error) {
     return res
       .status(500)
@@ -55,15 +63,15 @@ const login = async (req, res) => {
         message: "Invalid Credentials,Email is not registered!!",
       });
     }
-    //compare the password
-    const isMatch = bcrypt.compare(password, user.password);
+    // Compare the password
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: "Password is wrong" });
     }
-    //generate a jwt token
-    // const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-    //   expiresIn: "1h",
-    // });
+    // Generate JWT token
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
     return res.status(200).json({
       message: "Login Successfully",
       user: {
@@ -71,18 +79,8 @@ const login = async (req, res) => {
         name: user.name,
         email: user.email,
       },
+      token,
     });
-    // const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-    //   expiresIn: "1h",
-    // });
-    // return res.status(200).json({
-    //   message: "Login Successfully",
-    //   user: {
-    //     _id: user._id,
-    //     name: user.name,
-    //     email: user.email,
-    //   },
-    // });
   } catch (error) {
     return res
       .status(500)

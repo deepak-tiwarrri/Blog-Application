@@ -7,10 +7,13 @@ import Blogs from "./components/Blogs";
 import AddBlog from "./components/AddBlog";
 import UserBlogs from "./components/UserBlogs";
 import BlogDetail from "./components/BlogDetail";
+import Profile from "./components/Profile";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import ErrorBoundary from "./components/ErrorBoundary";
 import { authActions } from "./store/index.js";
 import { useSelector, useDispatch } from "react-redux";
+import { Toaster } from "sonner";
 
 const App = () => {
   const isLoggedIn = useSelector((state) => state.auth?.isLoggedIn);
@@ -18,13 +21,14 @@ const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     if (localStorage.getItem("userId")) {
-      localStorage.removeItem("userId");
+      // preserve userId in localStorage and mark user as logged in
       dispatch(authActions.login());
     }
   }, [dispatch]);
-  
+
   return (
     <div className="flex flex-col min-h-screen">
+      <Toaster richColors position="top-right" />
       {/* Header */}
       <header>
         <Header />
@@ -32,22 +36,25 @@ const App = () => {
 
       <div className="flex-grow">
         <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            {!isLoggedIn ? (
-              <>
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-              </>
-            ) : (
-              <>
-                <Route path="/blogs" element={<Blogs />} />
-                <Route path="/blogs/add" element={<AddBlog />} />
-                <Route path="/myblogs" element={<UserBlogs />} />
-                <Route path="/myblogs/:id" element={<BlogDetail />} />
-              </>
-            )}
-          </Routes>
+          <ErrorBoundary>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              {!isLoggedIn ? (
+                <>
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
+                </>
+              ) : (
+                <>
+                  <Route path="/blogs" element={<Blogs />} />
+                  <Route path="/blogs/add" element={<AddBlog />} />
+                  <Route path="/myblogs" element={<UserBlogs />} />
+                  <Route path="/myblogs/:id" element={<BlogDetail />} />
+                  <Route path="/profile" element={<Profile />} />
+                </>
+              )}
+            </Routes>
+          </ErrorBoundary>
         </main>
       </div>
       {/* Footer */}

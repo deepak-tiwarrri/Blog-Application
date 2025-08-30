@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import React, { useState } from "react";
-import axios from "axios";
+import { blogApi } from "@/api";
 import { useNavigate } from "react-router-dom";
 import { useStyles } from "./utils";
 const labelStyles = { mt: 2, mb: 1, fontSize: "24px", fontWeight: "bold" };
@@ -37,15 +37,14 @@ const AddBlog = () => {
   };
 
   async function sendRequest() {
-    const res = await axios
-      .post(`${BLOG_URL}/add`, {
+    const res = await blogApi.add({
         title: input.title,
         description: input.description,
         image: input.image,
         user: localStorage.getItem("userId"),
-      })
-      .catch((err) => {
+      }).catch((err) => {
         console.error(err);
+        throw err;
       });
     const data = await res.data;
     console.log(data);
@@ -54,7 +53,7 @@ const AddBlog = () => {
   return (
       <form action="" onSubmit={handleSubmit} className="mt-12 mb-16">
         <div
-          className="m-auto shadow-md hover:shadow-gray-900 hover:shadow-lg transition-all ease-in-out rounded-md p-8 flex flex-col mb-6 mt-6 w-[468px] "
+    className="m-auto shadow-md hover:shadow-gray-900 hover:shadow-lg transition-all ease-in-out rounded-md p-8 flex flex-col mb-6 mt-6 w-full max-w-xl "
         >
           {/* <Typography className={classes.font} fontWeight={'bold'} variant="h3" padding={3} color="grey" textAlign={"center"}>Post Your Blog</Typography> */}
           <h3

@@ -1,48 +1,70 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { useEffect } from "react";
+
+import React, { useState, useEffect } from "react";
+import { blogApi, userApi } from "@/api";
 import Blog from "./Blog";
 import { BLOG_URL, USER_URL } from "./utils";
+import { toast } from "sonner";
 
-//fetch the user blog by id
-const UserBlogs = ({}) => {
-  const [user, setUsers] = useState();
-  let id = localStorage.getItem("userId");
+const UserBlogs = () => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const id = localStorage.getItem("userId");
+
   async function fetchBlogs() {
-    const res = await axios
-      .get(`${USER_URL}/${id}`)
-      .catch((err) => console.log(err));
-    let data = await res.data;
-    // console.log(data.user);
-    return data;
+    setLoading(true);
+    try {
+  const res = await userApi.getById(id);
+  setUser(res.data.user);
+      setLoading(false);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to fetch user blogs");
+      toast.error(err.response?.data?.message || "Failed to fetch user blogs");
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
-    fetchBlogs().then((data) => setUsers(data.user));
+    fetchBlogs();
   }, [id]);
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (blogId) => {
     try {
-      const res = await res.get(`${BLOG_URL}/${id}`);
+  await blogApi.delete(blogId);
+      toast.success("Blog deleted successfully!");
       fetchBlogs();
     } catch (error) {
-      console.log(error);
+      toast.error("Failed to delete blog");
     }
   };
+
   return (
-    <div>
-      {user &&
-        user.blogs.map((blog, index) => (
-          <Blog
-            id={blog._id}
-            key={index}
-            title={blog.title}
-            description={blog.description}
-            imageUrl={blog.image}
-            userName={blog.user.name}
-            onDelete={()=>handleDelete(blog._id)}
-          />
-        ))}
+    <div className="container mx-auto px-4 py-8">
+      <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">My Blogs</h2>
+      {loading ? (
+        <div className="flex justify-center items-center h-32">
+          <div className="animate-pulse w-32 h-32 bg-gray-200 rounded-full"></div>
+        </div>
+      ) : error ? (
+        <p className="text-red-600 text-center">{error}</p>
+      ) : !user || user.blogs.length === 0 ? (
+        <p className="text-gray-600 text-center">No blogs found.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {user.blogs.map((blog, index) => (
+            <Blog
+              id={blog._id}
+              key={index}
+              title={blog.title}
+              description={blog.description}
+              imageUrl={blog.image}
+              userName={user.name}
+              onDelete={() => handleDelete(blog._id)}
+              isUser={true}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import AuthForm from "./AuthForm";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import { authActions, sendRequest } from "@/store";
+import { toast } from "sonner";
 const Login = () => {
   const location = useLocation();
   const dispatch = useDispatch();
@@ -17,19 +17,25 @@ const Login = () => {
     e.preventDefault();
     dispatch(sendRequest({ type: "login", input })).then((result) => {
       if (result.meta.requestStatus === "fulfilled") {
-        navigate("/blogs");
+        toast.success("Login successful!", { position: "top-right", duration: 1500 });
+        setTimeout(() => {
+          navigate("/blogs");
+        }, 1500);
       }
     });
   };
+  useEffect(() => {
+    if (status === "pending") {
+      toast.loading("Logging in...", { position: "top-right", duration: 1200 });
+    }
+    if (status === "failed" && error) {
+      toast.error(typeof error === "object" ? error?.message : error, { position: "top-right", duration: 2500 });
+    }
+  }, [status, error]);
+
   return (
     <>
-      {status === "pending" && <p className="text-gray-700">Loading...</p>}
-      {error && (
-        <p className="text-red-700">
-          {typeof error === "object" ? error?.message : error}
-        </p>
-      )}
-      <AuthForm onHandleSubmit={handleSubmit} isLoginMode={isLoginMode} />;
+      <AuthForm onHandleSubmit={handleSubmit} isLoginMode={isLoginMode} />
     </>
   );
 };

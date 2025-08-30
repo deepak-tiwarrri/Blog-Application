@@ -1,10 +1,10 @@
-import axios from "axios";
 import React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Box, InputLabel, TextField, Typography } from "@mui/material";
 const labelStyles = { mt: 2, mb: 1, fontSize: "24px", fontWeight: "bold" };
-import { BLOG_URL, useStyles } from "./utils";
+import { useStyles } from "./utils";
+import { blogApi } from "@/api";
 import {Button} from "@/components/ui/button";
 
 const BlogDetail = () => {
@@ -34,22 +34,18 @@ const BlogDetail = () => {
   // so the update happen in backend
   async function updateRequest() {
     //update in the blog array
-    const res = await axios
-      .put(`${BLOG_URL}/update/${id}`, {
+    const res = await blogApi.update(id, {
         title: input.title,
         description: input.description,
-      })
-      .catch((err) => console.log(err));
+      }).catch((err) => console.log(err));
 
     const data = await res.data;
     return data;
   }
 
   async function fetchBlogById() {
-    const res = await axios
-      .get(`${BLOG_URL}/${id}`)
-      .catch((err) => console.log(err));
-    const data = res && res.data;
+  const res = await blogApi.getById(id).catch((err) => console.log(err));
+  const data = res && res.data;
     if (data) {
       setBlog(data.blog);
       setInput({
@@ -119,9 +115,7 @@ const BlogDetail = () => {
             >
               Submit
             </Button> */}
-            <Button
-            className={classes.font}
-            >
+            <Button type="submit" className={`${classes.font} bg-gray-800 text-white`}>
               Submit
             </Button>
 

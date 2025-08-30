@@ -1,32 +1,29 @@
 import { authActions } from "@/store";
-import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useLocation } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import AuthForm from "./AuthForm";
 import { USER_URL } from "./utils";
+import { userApi, setAuthToken } from "@/api";
 const Auth = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const [isSignup, setIsSignUp] = useState(true);
+  const [input, setInput] = useState({ name: '', email: '', password: '' });
 
   const sendRequest = async (type = "login") => {
     try {
-      const response = await axios.post(
-        `${USER_URL}/${type}`,
-        {
-          name: input.name,
-          email: input.email,
-          password: input.password,
-        }
-      );
-      console.log("response from the server", response.data);
-      const data = await response.data;
+      const res = await (type === 'signup' ? userApi.signup({ name: input.name, email: input.email, password: input.password }) : userApi.login({ email: input.email, password: input.password }));
+      const data = res.data;
+      if (data?.token) {
+        localStorage.setItem('token', data.token);
+        setAuthToken(data.token);
+      }
       return data;
     } catch (error) {
       console.log(error);
-      console.log(error.message?.data || error.message);
+      return null;
     }
   };
 
@@ -34,17 +31,14 @@ const Auth = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (isSignup) {
-      sendRequest("signup")
-        .then((data) => localStorage.setItem("userId", data.user._id))
-        .then(() => dispatch(authActions.login()))
-        .then(() => navigate("/blogs"));
-    } else {
-      sendRequest("login")
-        .then((data) => localStorage.setItem("userId", data.user._id))
-        .then(() => dispatch(authActions.login()))
-        .then(() => navigate("/blogs"));
-    }
+    sendRequest(isSignup ? 'signup' : 'login')
+      .then((data) => {
+        if (data?.user) {
+          localStorage.setItem('userId', data.user._id);
+          dispatch(authActions.login());
+          navigate('/blogs');
+        }
+      });
   };
   console.log(location.pathname);
   return (

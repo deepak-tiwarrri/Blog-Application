@@ -1,82 +1,62 @@
+
 import React from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
-import {
-  Typography,
-  CardMedia,
-  CardContent,
-  CardHeader,
-  Card,
-  Avatar,
-  IconButton,
-  Box,
-} from "@mui/material";
-import axios from "axios";
+import { blogApi } from "@/api";
+import { toast } from "sonner";
 
-const Blog = ({ title, description, imageUrl, userName, isUser, id,onDelete }) => {
-  // console.log(title,isUser);
-  let navigate = useNavigate();
 
-  const handleEdit = (e) => {
+const Blog = ({ title, description, imageUrl, userName, isUser, id, onDelete }) => {
+  const navigate = useNavigate();
+
+  const handleEdit = () => {
     navigate(`/myblogs/${id}`);
-  };  
-  const handleDelete = () => {
-    deleteRequest()
-    navigate("/");
-    navigate("/blogs");
   };
 
-  const deleteRequest = async () => {
-    const res = await axios
-      .delete(`http://localhost:5000/api/blog/${id}`)
-      .catch((err) => console.log(err));
-   const data = await res.data;
-   return data;
+  const handleDelete = async () => {
+    try {
+  await blogApi.delete(id);
+      toast.success("Blog deleted successfully!");
+      if (onDelete) onDelete();
+    } catch (error) {
+      toast.error("Failed to delete blog");
+    }
   };
-
 
   return (
-    <Card
-      sx={{
-        width: "40%",
-        margin: "auto",
-        mt: 2,
-        padding: 2,
-        boxShadow: "5px 5px 10px #ccc,",
-        ":hover": {
-          boxShadow: "10px 10px 20px #ccc",
-        },
-      }}
-    >
-       {isUser && (
-        <Box display="flex">
-          <IconButton onClick={handleEdit} sx={{ marginLeft: "auto" }}>
-            <EditIcon sx={{color:"#1976d2 "}} />
-          </IconButton>
-          <IconButton onClick={handleDelete}>
-            <DeleteIcon sx={{color:"#f44336"}}/>
-          </IconButton>
-        </Box>
+    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all overflow-hidden flex flex-col w-full">
+      {isUser && (
+        <div className="flex justify-end gap-2 p-2">
+          <button onClick={handleEdit} className="text-blue-600 hover:text-blue-800">
+            <EditIcon />
+          </button>
+          <button onClick={handleDelete} className="text-red-600 hover:text-red-800">
+            <DeleteIcon />
+          </button>
+        </div>
       )}
-      
-      <CardHeader
-        avatar={
-          <Avatar sx={{ bgcolor: "red" }} aria-label="recipe" >
-            {userName?userName.charAt(0).toUpperCase():''}
-          </Avatar>
-        }
-        title={title}
+      <img
+        src={imageUrl}
+        onError={(e) => {
+          e.target.src = '/assets/dish.jpg';
+        }}
+        alt={title}
+        className="w-full h-48 object-cover"
       />
-      <CardMedia component="img" height="194" alt="Blog image" image={imageUrl} />
-      <CardContent>
-      <hr />
-      <br />
-        <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          {userName}: {description}
-        </Typography>
-      </CardContent>
-    </Card>
+      <div className="p-4 flex-1 flex flex-col justify-between">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">
+            {userName ? userName.charAt(0).toUpperCase() : ''}
+          </span>
+          <span className="text-lg font-semibold text-gray-900">{title}</span>
+        </div>
+        <p className="text-gray-700 mb-2">{description}</p>
+        <div className="flex items-center justify-between mt-auto">
+          <span className="text-sm text-gray-500">By {userName}</span>
+        </div>
+      </div>
+    </div>
   );
 };
 
