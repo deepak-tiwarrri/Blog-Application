@@ -1,13 +1,19 @@
-
-import React from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
 import { blogApi } from "@/api";
 import { toast } from "sonner";
+import PropTypes from "prop-types";
 
-
-const Blog = ({ title, description, imageUrl, userName, isUser, id, onDelete }) => {
+const Blog = ({
+  title,
+  description,
+  imageUrl,
+  userName,
+  isUser,
+  id,
+  onDelete,
+}) => {
   const navigate = useNavigate();
 
   const handleEdit = () => {
@@ -16,22 +22,22 @@ const Blog = ({ title, description, imageUrl, userName, isUser, id, onDelete }) 
 
   const handleDelete = async () => {
     try {
-  await blogApi.delete(id);
+      await blogApi.delete(id);
       toast.success("Blog deleted successfully!");
       if (onDelete) onDelete();
     } catch (error) {
-      toast.error("Failed to delete blog");
+      toast.error("Failed to delete blog", error);
     }
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all overflow-hidden flex flex-col w-full">
+    <div className="card-container">
       {isUser && (
-        <div className="flex justify-end gap-2 p-2">
-          <button onClick={handleEdit} className="text-blue-600 hover:text-blue-800">
+        <div className="card-header-actions">
+          <button onClick={handleEdit} className="edit-btn">
             <EditIcon />
           </button>
-          <button onClick={handleDelete} className="text-red-600 hover:text-red-800">
+          <button onClick={handleDelete} className="delete-btn">
             <DeleteIcon />
           </button>
         </div>
@@ -39,25 +45,35 @@ const Blog = ({ title, description, imageUrl, userName, isUser, id, onDelete }) 
       <img
         src={imageUrl}
         onError={(e) => {
-          e.target.src = '/assets/dish.jpg';
+          e.target.src = "/assets/dish.jpg";
         }}
         alt={title}
-        className="w-full h-48 object-cover"
+        className="blog-image"
       />
-      <div className="p-4 flex-1 flex flex-col justify-between">
+      <div className="card-content">
         <div className="flex items-center gap-2 mb-2">
-          <span className="bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">
-            {userName ? userName.charAt(0).toUpperCase() : ''}
+          <span className="avatar-circle">
+            {userName ? userName.charAt(0).toUpperCase() : ""}
           </span>
-          <span className="text-lg font-semibold text-gray-900">{title}</span>
+          <span className="blog-title">{title}</span>
         </div>
-        <p className="text-gray-700 mb-2">{description}</p>
-        <div className="flex items-center justify-between mt-auto">
-          <span className="text-sm text-gray-500">By {userName}</span>
+        <p className="blog-description">{description}</p>
+        <div className="blog-meta">
+          <span className="blog-meta-author">By {userName}</span>
         </div>
       </div>
     </div>
   );
+};
+
+Blog.propTypes = {
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  imageUrl: PropTypes.string,
+  userName: PropTypes.string,
+  isUser: PropTypes.bool,
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  onDelete: PropTypes.func,
 };
 
 export default Blog;

@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Box, InputLabel, TextField, Typography } from "@mui/material";
+import { Box, InputLabel, TextField } from "@mui/material";
 const labelStyles = { mt: 2, mb: 1, fontSize: "24px", fontWeight: "bold" };
 import { useStyles } from "./utils";
 import { blogApi } from "@/api";
-import {Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 const BlogDetail = () => {
   const classes = useStyles();
@@ -34,18 +34,20 @@ const BlogDetail = () => {
   // so the update happen in backend
   async function updateRequest() {
     //update in the blog array
-    const res = await blogApi.update(id, {
+    const res = await blogApi
+      .update(id, {
         title: input.title,
         description: input.description,
-      }).catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
 
     const data = await res.data;
     return data;
   }
 
-  async function fetchBlogById() {
-  const res = await blogApi.getById(id).catch((err) => console.log(err));
-  const data = res && res.data;
+  const fetchBlogById = useCallback(async () => {
+    const res = await blogApi.getById(id).catch((err) => console.log(err));
+    const data = res && res.data;
     if (data) {
       setBlog(data.blog);
       setInput({
@@ -54,72 +56,58 @@ const BlogDetail = () => {
         image: data.blog.image,
       });
     }
-  }
-  useEffect(() => {
-    fetchBlogById();
   }, [id]);
 
-  return (
-    <div>
-      {input && (
-        <form onSubmit={handleSubmit}>
-          <Box
-            border={3}
-            borderColor={"green"}
-            borderRadius={10}
-            boxShadow="10px 10px 20px #ccc"
-            margin={"auto"}
-            marginTop={3}
-            padding={3}
-            display={"flex"}
-            flexDirection="column"
-            width="80%"
-          >
-            <Typography
-              fontWeight={"bold"}
-              variant="h2"
-              padding={3}
-              color="grey"
-              textAlign={"center"}
-              className={classes.font}
-            >
-              Edit Blog
-            </Typography>
+  useEffect(() => {
+    fetchBlogById();
+  }, [fetchBlogById]);
 
-            <InputLabel sx={labelStyles} className={classes.font}>Title</InputLabel>
-            <TextField
+  return (
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      {input && (
+        <form
+          onSubmit={handleSubmit}
+          className="w-full max-w-md bg-white shadow-lg rounded-2xl p-6"
+        >
+          <div className="mx-auto max-w-sm mt-10">
+            <h2 className="text-xl font-semibold text-gray-800 mb-2 text-center">
+              Edit Blog
+            </h2>
+            <label
+              htmlFor=""
+              className={`${classes.font} block text-sm font-medium text-gray-700 mb-1 `}
+            >
+              Title
+            </label>
+            <input
+              type="text"
+              className={`${classes.font} w-full px-4 py-2 border border-gray-300 rounded-lg focus:outlined-none  mb-4`}
+              placeholder="Enter blog title"
               value={input.title}
               name="title"
               onChange={handleChange}
-              margin="normal"
-              variant="outlined"
             />
-
-            <InputLabel sx={labelStyles} className={classes.font}>Description</InputLabel>
-            <TextField
+            <label
+              htmlFor=""
+              className={`${classes.font} block text-sm font-medium text-gray-700 mb-1 mt-2`}
+            >
+              Description
+            </label>
+            <textarea
+              type="text"
+              className={`${classes.font} w-full px-4 py-2 border border-gray-300 rounded-lg focus:outlined-none  mb-4`}
               value={input.description}
+              placeholder="Enter blog application"
               name="description"
               onChange={handleChange}
-              margin="normal"
-              variant="outlined"
             />
-            {/* <Button
+            <button
               type="submit"
-              variant="contained"
-              sx={{
-                backgroundColor: "rgba(59,9,121,1)",
-                mt: 2,
-                borderRadius: 4,
-              }}
-              className={classes.font}
+              className={`${classes.font} bg-gray-800 text-white`}
             >
               Submit
-            </Button> */}
-            <Button type="submit" className={`${classes.font} bg-gray-800 text-white`}>
-              Submit
-            </Button>
-
-          </Box>
+            </button>
+          </div>
         </form>
       )}
     </div>

@@ -1,8 +1,7 @@
 
-import React, { useState, useEffect } from "react";
-import { blogApi, userApi } from "@/api";
+import { useState, useEffect, useCallback } from "react";
+import { blogApi } from "@/api";
 import Blog from "./Blog";
-import { BLOG_URL, USER_URL } from "./utils";
 import { toast } from "sonner";
 
 const UserBlogs = () => {
@@ -11,36 +10,39 @@ const UserBlogs = () => {
   const [error, setError] = useState(null);
   const id = localStorage.getItem("userId");
 
-  async function fetchBlogs() {
+  const fetchBlogs = useCallback(async () => {
     setLoading(true);
     try {
-  const res = await userApi.getById(id);
-  setUser(res.data.user);
+      const res = await blogApi.getBlogByUserId(id);
+      console.log(res.data.user);
+      setUser(res.data.user);
       setLoading(false);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch user blogs");
       toast.error(err.response?.data?.message || "Failed to fetch user blogs");
       setLoading(false);
     }
-  }
+  }, [id]);
 
   useEffect(() => {
     fetchBlogs();
-  }, [id]);
+  }, [fetchBlogs]);
 
   const handleDelete = async (blogId) => {
     try {
-  await blogApi.delete(blogId);
+      await blogApi.delete(blogId);
       toast.success("Blog deleted successfully!");
       fetchBlogs();
     } catch (error) {
-      toast.error("Failed to delete blog");
+      toast.error("Failed to delete blog", error);
     }
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">My Blogs</h2>
+      <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
+        My Blogs
+      </h2>
       {loading ? (
         <div className="flex justify-center items-center h-32">
           <div className="animate-pulse w-32 h-32 bg-gray-200 rounded-full"></div>

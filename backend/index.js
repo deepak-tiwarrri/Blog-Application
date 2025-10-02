@@ -9,7 +9,13 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 //connect mongodb
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5001",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentails: true,
+  })
+);
 connectDB();
 
 app.use("/api/user", userRouter);

@@ -32,3 +32,63 @@
 }
 
 body{background:var(--bg); color:var(--text)}
+/* Utility classes for repeated Tailwind patterns */
+.card-container {
+  @apply bg-white rounded-lg shadow-md hover:shadow-lg transition-all overflow-hidden flex flex-col w-full;
+}
+
+.card-header-actions {
+  @apply flex justify-end gap-2 p-2;
+}
+
+.edit-btn {
+  @apply text-blue-600 hover:text-blue-800;
+}
+
+.delete-btn {
+  @apply text-red-600 hover:text-red-800;
+}
+
+.blog-image {
+  @apply w-full h-48 object-cover;
+}
+
+.card-content {
+  @apply p-4 flex-1 flex flex-col justify-between;
+}
+
+.avatar-circle {
+  @apply bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold;
+}
+
+.blog-title {
+  @apply text-lg font-semibold text-gray-900;
+}
+
+.blog-description {
+  @apply text-gray-700 mb-2;
+}
+
+.blog-meta {
+  @apply flex items-center justify-between mt-auto;
+}
+
+.blog-meta-author {
+  @apply text-sm text-gray-500;
+}
+
+.centered-flex {
+  @apply flex justify-center items-center;
+}
+
+.pagination-btn {
+  @apply px-3 py-1 rounded bg-gray-200 disabled:opacity-50;
+}
+
+.pagination-info {
+  @apply px-3 py-1;
+}
+
+.blogs-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8;
+}

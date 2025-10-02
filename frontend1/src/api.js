@@ -29,12 +29,12 @@ export const blogApi = {
   add: (payload) => api.post(`${BLOG_URL}/add`, payload),
   update: (id, payload) => api.put(`${BLOG_URL}/update/${id}`, payload),
   delete: (id) => api.delete(`${BLOG_URL}/${id}`),
+  getBlogByUserId: (id) => api.get(`${BLOG_URL}/user/${id}`),
 };
 
 export const userApi = {
   signup: (payload) => api.post(`${USER_URL}/signup`, payload),
   login: (payload) => api.post(`${USER_URL}/login`, payload),
-  getById: (id) => api.get(`${USER_URL}/${id}`),
 };
 
 export default api;
