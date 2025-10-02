@@ -5,6 +5,9 @@ import { BLOG_URL, USER_URL } from './components/utils';
 const api = axios.create({
   baseURL: '', // we'll use absolute URLs in utils, but keep instance for headers
   timeout: 10000,
+  headers:{
+    'Authorization':"Bearer "
+  }
 });
 
 export function setAuthToken(token) {
