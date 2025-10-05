@@ -23,13 +23,13 @@
   --btn-text: #ffffff;
 }
 
-.dark{
+/* .dark{
   --bg: #0b1220;
   --text: #f9fafb;
   --muted: #9ca3af;
   --accent-start: #111827;
   --accent-end: #374151;
-}
+} */
 
 body{background:var(--bg); color:var(--text)}
 /* Utility classes for repeated Tailwind patterns */

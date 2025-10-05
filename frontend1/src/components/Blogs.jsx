@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { blogApi } from "@/api";
 import Blog from "./Blog";
 import { toast } from "sonner";
@@ -10,7 +10,7 @@ const Blogs = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 6;
 
-  const fetchBlogs = async () => {
+  const fetchBlogs = useCallback(async () => {
     setLoading(true);
     try {
       const response = await blogApi.getAll();
@@ -22,11 +22,11 @@ const Blogs = () => {
       toast.error(err.response?.data?.message || "Failed to fetch blogs");
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchBlogs();
-  }, []);
+  }, [fetchBlogs]);
 
   return (
     <div className="container mx-auto px-4 py-8">

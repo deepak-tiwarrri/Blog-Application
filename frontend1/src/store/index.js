@@ -1,14 +1,14 @@
-import { USER_URL } from "@/components/utils";
 import {
   configureStore,
   createAsyncThunk,
   createSlice,
 } from "@reduxjs/toolkit";
 import { userApi, setAuthToken } from "@/api";
+
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-  isLoggedIn: false,
+    isLoggedIn: false,
     input: {
       name: "",
       email: "",
@@ -59,9 +59,16 @@ export const sendRequest = createAsyncThunk(
       if (!input?.email || !input?.password) {
         return rejectWithValue("Email or password missing");
       }
-  // use userApi so instance headers and timeouts apply
-  const res = await (type === 'signup' ? userApi.signup({ name: input.name, email: input.email, password: input.password }) : userApi.login({ email: input.email, password: input.password }));
-  const data = res.data;
+      // use userApi so instance headers and timeouts apply
+      const res = await (type === "signup"
+        ? userApi.signup({
+            name: input.name,
+            email: input.email,
+            password: input.password,
+          })
+        : userApi.login({ email: input.email, password: input.password }));
+
+      const data = res.data;
       // Validate response
       if (!data || !data.user) {
         return rejectWithValue("Response format is not proper");

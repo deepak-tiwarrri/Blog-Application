@@ -1,17 +1,17 @@
 // AuthForm.jsx
-import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Box } from "@mui/material";
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import PersonIcon from '@mui/icons-material/Person';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import PersonIcon from "@mui/icons-material/Person";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "@/store";
-const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
+import PropTypes from "prop-types";
 
+const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
   const input = useSelector((state) => state.auth?.input);
   // console.log(input);
 
@@ -24,45 +24,28 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
   const status = useSelector((state) => state.auth.status);
 
   return (
-    <form onSubmit={onHandleSubmit}>
-      <Box
-        className="max-w-md w-full mx-auto bg-white dark:bg-gray-800 rounded-xl"
-        display="flex"
-        flexDirection="column"
-        justifyContent="center"
-        alignItems="center"
-        sx={{
-          transition: "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out ",
-          boxShadow: "0px 10px 10px rgba(0, 0, 0, 0.1)",
-          "&:hover": {
-            transform: "translateY(-5px)",
-            boxShadow: "0px 20px 40px rgba(0, 0, 0, 0.08)",
-          },
-        }}
-        padding={2}
-        margin="auto"
-        marginTop={6}
-        marginBottom={6}
-        borderRadius={5}
-        height={isLoginMode ? 420 : 500}
-        gap={2}
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-8 px-4">
+      <div
+        className="w-full max-w-md bg-white rounded-xl shadow-lg p-8 flex flex-col justify-center"
+        style={{ minHeight: 480 }}
       >
-        <h2 className="pb-2 font-semibold text-3xl md:text-4xl p-6" style={{color:'var(--text)'}}>
+        <h2 className="text-3xl font-bold text-gray-900 mb-8 text-left">
           {isLoginMode ? "Welcome Back" : "Create your account"}
         </h2>
-        <Box className="flex-column p-6 md:p-8 self-stretch">
+        <form onSubmit={onHandleSubmit} className="flex flex-col gap-6">
           {/* Name field for Signup */}
           {!isLoginMode && (
-            <Box className="flex flex-auto flex-col gap-2">
+            <div className="flex flex-col gap-2">
               <Label
                 htmlFor="name"
-                className="font-semibold text-base"
-                style={{color:'var(--text)'}}
+                className="text-base font-medium text-gray-700"
               >
                 Name
               </Label>
-              <div className="flex items-center gap-3">
-                <PersonIcon className="text-gray-400" />
+              <div className="relative flex items-center">
+                <span className="absolute left-3 text-gray-400 flex items-center h-full">
+                  <PersonIcon fontSize="small" />
+                </span>
                 <Input
                   type="text"
                   id="name"
@@ -71,22 +54,23 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                   value={input?.name}
                   onChange={handleChange}
                   required
+                  className="pl-10"
                 />
               </div>
-            </Box>
+            </div>
           )}
-
-          {/* Common Email field */}
-          <Box className="flex flex-auto flex-col gap-2 mt-4">
+          {/* Email field */}
+          <div className="flex flex-col gap-2">
             <Label
               htmlFor="email"
-              className="font-semibold text-base"
-              style={{color:'var(--text)'}}
+              className="text-base font-medium text-gray-700"
             >
               Email
             </Label>
-            <div className="flex items-center gap-3">
-              <MailOutlineIcon className="text-gray-400" />
+            <div className="relative flex items-center">
+              <span className="absolute left-3 text-gray-400 flex items-center h-full">
+                <MailOutlineIcon fontSize="small" />
+              </span>
               <Input
                 type="email"
                 id="email"
@@ -95,21 +79,22 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                 value={input?.email}
                 onChange={handleChange}
                 required
+                className="pl-10"
               />
             </div>
-          </Box>
-
-          {/* Common Password field */}
-          <Box className="flex flex-auto flex-col gap-2 mt-4">
+          </div>
+          {/* Password field */}
+          <div className="flex flex-col gap-2">
             <Label
               htmlFor="password"
-              className="font-semibold text-base"
-              style={{color:'var(--text)'}}
+              className="text-base font-medium text-gray-700"
             >
               Password
             </Label>
-            <div className="flex items-center gap-3">
-              <LockOutlinedIcon className="text-gray-400" />
+            <div className="relative flex items-center">
+              <span className="absolute left-3 text-gray-400 flex items-center h-full">
+                <LockOutlinedIcon fontSize="small" />
+              </span>
               <Input
                 type="password"
                 id="password"
@@ -118,47 +103,56 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                 placeholder="Password"
                 onChange={handleChange}
                 required
+                className="pl-10"
               />
             </div>
-          </Box>
-        </Box>
-
-        {/* Submit Button */}
-        <Button
-          type="submit"
-          disabled={status === "loading"}
-          className={`py-2 w-full text-base bg-gradient-to-r from-gray-900 to-gray-700 hover:from-gray-800 hover:to-gray-600 text-white ${status === "loading" ? "opacity-60 cursor-not-allowed" : ""}`}
-        >
-          {status === "loading" ? (isLoginMode ? "Logging in..." : "Signing up...") : isLoginMode ? "Login" : "Sign Up"}
-        </Button>
-
-        {/* Toggle Link */}
-        <p className="">
-          {isLoginMode ? (
-            <>
-              Don't have an account?{" "}
-              <Link
-                to="/signup"
-                className="text-blue-500 font-medium hover:underline"
-              >
-                Sign up now
-              </Link>
-            </>
-          ) : (
-            <>
-              Already have an account?{" "}
-              <Link
-                to="/login"
-                className="text-blue-500 font-medium hover:underline"
-              >
-                Login now
-              </Link>
-            </>
-          )}
-        </p>
-      </Box>
-    </form>
+          </div>
+          <Button
+            type="submit"
+            disabled={status === "loading"}
+            className="w-full text-base bg-gradient-to-r from-gray-900 to-gray-700 hover:from-gray-800 hover:to-gray-600 text-white mt-2"
+          >
+            {status === "loading"
+              ? isLoginMode
+                ? "Logging in..."
+                : "Signing up..."
+              : isLoginMode
+              ? "Login"
+              : "Sign Up"}
+          </Button>
+        </form>
+        <div className="mt-8 text-left">
+          <p className="text-sm text-gray-700">
+            {isLoginMode ? (
+              <>
+                Don&apos;t have an account?{" "}
+                <Link
+                  to="/signup"
+                  className="text-blue-500 font-medium hover:underline"
+                >
+                  Sign up now
+                </Link>
+              </>
+            ) : (
+              <>
+                Already have an account?{" "}
+                <Link
+                  to="/login"
+                  className="text-blue-500 font-medium hover:underline"
+                >
+                  Login now
+                </Link>
+              </>
+            )}
+          </p>
+        </div>
+      </div>
+    </div>
   );
+};
+AuthForm.propTypes = {
+  onHandleSubmit: PropTypes.func.isRequired,
+  isLoginMode: PropTypes.bool.isRequired,
 };
 
 export default AuthForm;

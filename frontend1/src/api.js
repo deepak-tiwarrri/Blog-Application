@@ -5,20 +5,30 @@ import { BLOG_URL, USER_URL } from './components/utils';
 const api = axios.create({
   baseURL: '', // we'll use absolute URLs in utils, but keep instance for headers
   timeout: 10000,
-  headers:{
-    'Authorization':"Bearer "
-  }
 });
 
+/**
+ * Sets or removes the Authorization header for all API requests.
+ * Call this after login/signup and on app load if a token exists.
+ * @param {string|null} token - The JWT token to set, or null/undefined to remove it.
+ */
 export function setAuthToken(token) {
   if (token) {
+    // Set the Authorization header for all future requests
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    // also set global axios default so any import of axios still has header
-    // eslint-disable-next-line no-undef
-    try { window.axios && (window.axios.defaults.headers.common['Authorization'] = `Bearer ${token}`); } catch(e) {}
+    // console.log(`api header: ${api.defaults.headers.common['Authorization']}`);
+
+
+    // Optionally, set for global axios if used elsewhere
+    if (typeof window !== 'undefined' && window.axios) {
+      window.axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    }
   } else {
+    // Remove the Authorization header
     delete api.defaults.headers.common['Authorization'];
-    try { window.axios && delete window.axios.defaults.headers.common['Authorization']; } catch(e) {}
+    if (typeof window !== 'undefined' && window.axios) {
+      delete window.axios.defaults.headers.common['Authorization'];
+    }
   }
 }
 

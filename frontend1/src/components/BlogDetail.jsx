@@ -41,6 +41,7 @@ const BlogDetail = () => {
       .catch((err) => console.log(err));
 
     const data = await res.data;
+    console.log("update data blog", data);
     return data;
   }
 
@@ -66,43 +67,47 @@ const BlogDetail = () => {
       {input && (
         <form
           onSubmit={handleSubmit}
-          className="w-full max-w-md bg-white shadow-lg rounded-2xl p-6"
+          className="w-full max-w-md bg-white shadow-lg rounded-2xl p-8"
         >
-          <div className="mx-auto max-w-sm mt-10">
-            <h2 className="text-xl font-semibold text-gray-800 mb-2 text-center">
+          <div className="mx-auto max-w-sm mt-5 flex flex-col gap-3">
+            <h2 className="text-xl font-bold text-gray-800 mb-2 text-center">
               Edit Blog
             </h2>
-            <label
-              htmlFor=""
-              className={`${classes.font} block text-sm font-medium text-gray-700 mb-1 `}
-            >
-              Title
-            </label>
-            <input
-              type="text"
-              className={`${classes.font} w-full px-4 py-2 border border-gray-300 rounded-lg focus:outlined-none  mb-4`}
-              placeholder="Enter blog title"
-              value={input.title}
-              name="title"
-              onChange={handleChange}
-            />
-            <label
-              htmlFor=""
-              className={`${classes.font} block text-sm font-medium text-gray-700 mb-1 mt-2`}
-            >
-              Description
-            </label>
-            <textarea
-              type="text"
-              className={`${classes.font} w-full px-4 py-2 border border-gray-300 rounded-lg focus:outlined-none  mb-4`}
-              value={input.description}
-              placeholder="Enter blog application"
-              name="description"
-              onChange={handleChange}
-            />
+            <div className="">
+              <label
+                htmlFor=""
+                className={`${classes.font} block text-sm font-medium text-gray-700 mb-1 `}
+              >
+                Title
+              </label>
+              <input
+                type="text"
+                className={`${classes.font} w-full px-4 py-1 border border-gray-300 rounded-lg focus:outlined-none  mb-4`}
+                placeholder="Enter blog title"
+                value={input.title}
+                name="title"
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <label
+                htmlFor=""
+                className={`${classes.font} block text-sm font-medium text-gray-700 mb-1 `}
+              >
+                Description
+              </label>
+              <textarea
+                type="text"
+                className={`${classes.font} w-full px-4 py-1 border border-gray-300 rounded-lg focus:outlined-none  mb-4`}
+                value={input.description}
+                placeholder="Enter blog application"
+                name="description"
+                onChange={handleChange}
+              />
+            </div>
             <button
               type="submit"
-              className={`${classes.font} bg-gray-800 text-white`}
+              className={`${classes.font} bg-blue-600 hover:bg-blue-700 py-2 px-4 text-white rounded-lg transition duration-200 w-full border-none cursor-pointer`}
             >
               Submit
             </button>

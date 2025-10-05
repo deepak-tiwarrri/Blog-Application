@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import Login from "./components/Login";
 import Home from "./components/Home";
 import Signup from "./components/Signup";
@@ -7,7 +7,7 @@ import Blogs from "./components/Blogs";
 import AddBlog from "./components/AddBlog";
 import UserBlogs from "./components/UserBlogs";
 import BlogDetail from "./components/BlogDetail";
-import Profile from "./components/Profile";
+// import Profile from "./components/Profile";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -29,7 +29,6 @@ const App = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Toaster richColors position="top-right" />
-      {/* Header */}
       <header>
         <Header />
       </header>
@@ -50,14 +49,13 @@ const App = () => {
                   <Route path="/blogs/add" element={<AddBlog />} />
                   <Route path="/myblogs" element={<UserBlogs />} />
                   <Route path="/myblogs/:id" element={<BlogDetail />} />
-                  <Route path="/profile" element={<Profile />} />
+                  {/* <Route path="/profile" element={<Profile />} /> */}
                 </>
               )}
             </Routes>
           </ErrorBoundary>
         </main>
       </div>
-      {/* Footer */}
       <footer>
         <Footer />
       </footer>
