@@ -45,6 +45,7 @@ export const blogApi = {
 export const userApi = {
   signup: (payload) => api.post(`${USER_URL}/signup`, payload),
   login: (payload) => api.post(`${USER_URL}/login`, payload),
+  getById: (id) => api.get(`${USER_URL}/${id}`),
 };
 
 export default api;

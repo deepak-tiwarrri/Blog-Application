@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&display=swap');
 @import "tailwindcss";
 
 /* ... */
@@ -42,11 +44,11 @@ body{background:var(--bg); color:var(--text)}
 }
 
 .edit-btn {
-  @apply text-blue-600 hover:text-blue-800;
+  @apply text-blue-600 hover:text-blue-800 hover:cursor-pointer;
 }
 
 .delete-btn {
-  @apply text-red-600 hover:text-red-800;
+  @apply text-red-600 hover:text-red-800 hover:cursor-pointer;
 }
 
 .blog-image {
@@ -62,11 +64,18 @@ body{background:var(--bg); color:var(--text)}
 }
 
 .blog-title {
-  @apply text-lg font-semibold text-gray-900;
+  @apply text-lg font-semibold text-gray-900 flex-1;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
 .blog-description {
-  @apply text-gray-700 mb-2;
+  @apply text-gray-700 mb-3 line-clamp-2;
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  color: #4b5563;
 }
 
 .blog-meta {
@@ -75,6 +84,9 @@ body{background:var(--bg); color:var(--text)}
 
 .blog-meta-author {
   @apply text-sm text-gray-500;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.3px;
 }
 
 .centered-flex {
@@ -90,5 +102,14 @@ body{background:var(--bg); color:var(--text)}
 }
 
 .blogs-grid {
-  @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8;
+  @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-4;
+}
+
+.blogs-card-buttons{
+  @apply text-gray-600 hover:cursor-pointer transition-colors duration-200;
+  font-family: 'Poppins', sans-serif;
+}
+
+.nav-link{
+  @apply px-4 py-2 rounded-full text-sm font-medium transition
 }

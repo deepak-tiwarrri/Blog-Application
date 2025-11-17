@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import connectDB from "../backend/config/db.js";
+import connectDB from "./config/db.js";
 import cors from "cors";
 import userRouter from "./routes/user-routes.js";
 import blogRouter from "./routes/blog-routes.js";
@@ -11,9 +11,9 @@ app.use(express.json());
 //connect mongodb
 app.use(
   cors({
-    origin: "http://localhost:5001",
+    origin: ["http://localhost:5001", "http://localhost:5000"],
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentails: true,
+    credentials: true,
   })
 );
 connectDB();
@@ -22,7 +22,7 @@ app.use("/api/user", userRouter);
 //http://localhost:5000/api/user
 app.use("/api/blog", blogRouter);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);

@@ -62,10 +62,10 @@ export const sendRequest = createAsyncThunk(
       // use userApi so instance headers and timeouts apply
       const res = await (type === "signup"
         ? userApi.signup({
-            name: input.name,
-            email: input.email,
-            password: input.password,
-          })
+          name: input.name,
+          email: input.email,
+          password: input.password,
+        })
         : userApi.login({ email: input.email, password: input.password }));
 
       const data = res.data;

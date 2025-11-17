@@ -1,0 +1,298 @@
+{
+  "info": {
+    "name": "Blog-Application - Blog Samples",
+    "_postman_id": "blog-samples-collection",
+    "description": "Collection with signup/login and five sample blog POST requests (use {{baseUrl}}, {{token}}, {{userId}} variables)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "blogId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Signup - Create Sample User",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Sample Author\",\n  \"email\": \"author@example.com\",\n  \"password\": \"Password123\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/user/signup",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "user", "signup"]
+        }
+      }
+    },
+    {
+      "name": "Login - Get Token",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"author@example.com\",\n  \"password\": \"Password123\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/user/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "user", "login"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "var json = pm.response.json();",
+              "if (json && json.token) {",
+              "    pm.collectionVariables.set('token', json.token);",
+              "    if (pm.environment) pm.environment.set('token', json.token);",
+              "}",
+              "if (json && json.user && json.user._id) {",
+              "    pm.collectionVariables.set('userId', json.user._id);",
+              "    if (pm.environment) pm.environment.set('userId', json.user._id);",
+              "}",
+              "console.log('Saved token and userId to collection variables');"
+            ]
+          }
+        }
+      ],
+      "response": []
+    },
+    {
+      "name": "Get All Blogs",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/blog/",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "blog", ""]
+        }
+      }
+    },
+    {
+      "name": "Add Blog - Sample 1 (Kyoto Food Guide)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"A Food-Lover's Guide to Kyoto: Markets, Teahouses & Hidden Izakayas\",\n  \"description\": \"Kyoto rewards curious travelers with a layered culinary history — from centuries-old tea ceremonies to bustling morning markets. In this guide I walk you through the best neighborhoods for seasonal kaiseki, intimate teahouses for matcha pairings, and off-the-beaten-path izakayas where locals gather after sundown. Practical tips include how to navigate market etiquette, seasonal specialties to try, and a sample half-day food crawl that packs a delightful variety of flavors.\",\n  \"image\": \"https://images.unsplash.com/photo-1531289861632-2ab3edb3b1c1?w=1200&q=80&auto=format&fit=crop\",\n  \"user\": \"{{userId}}\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{baseUrl}}/api/blog/add", "host": ["{{baseUrl}}"], "path": ["api", "blog", "add"] }
+      }
+    },
+    {
+      "name": "Add Blog - Sample 2 (Sourdough Science)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"The Science of Perfect Sourdough: Hydration, Starter Care & Scoring\",\n  \"description\": \"This article breaks down sourdough production into practical, repeatable steps for hobbyist bakers. Topics covered: maintaining a resilient starter, calculating hydration levels for different crumb textures, shaping and scoring techniques that improve oven spring, and an approachable schedule for a weekend bake. Includes troubleshooting for common issues like dense crumb, pale crusts, and under-fermentation.\",\n  \"image\": \"https://images.unsplash.com/photo-1512058564366-c9e6d0f3f2b8?w=1200&q=80&auto=format&fit=crop\",\n  \"user\": \"{{userId}}\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{baseUrl}}/api/blog/add", "host": ["{{baseUrl}}"], "path": ["api", "blog", "add"] }
+      }
+    },
+    {
+      "name": "Add Blog - Sample 3 (Design Systems)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Design Systems in Practice: How to Build Reusable UI for Scale\",\n  \"description\": \"Design systems accelerate product development when done with clear contracts and governance. This post explains the core decisions — tokens vs. components, versioning strategies, documentation tooling, and the role of a cross-functional steering group. It also outlines a pragmatic rollout plan for migrating two product teams to a shared component library while minimizing regressions and preserving autonomy.\",\n  \"image\": \"https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=1200&q=80&auto=format&fit=crop\",\n  \"user\": \"{{userId}}\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{baseUrl}}/api/blog/add", "host": ["{{baseUrl}}"], "path": ["api", "blog", "add"] }
+      }
+    },
+    {
+      "name": "Add Blog - Sample 4 (Low-Light Photography)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Low-Light Landscape Photography: Gear, Technique & Post Processing\",\n  \"description\": \"Capturing dramatic low-light landscapes requires more than a fast lens. This article covers essential techniques — long exposures, stacking for noise reduction, optimal aperture selection for starfields, and practical tips for white balance and RAW processing. I include example before/after edits and a checklist to use on location to make sure you bring home clean, expressive images.\",\n  \"image\": \"https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1200&q=80&auto=format&fit=crop\",\n  \"user\": \"{{userId}}\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{baseUrl}}/api/blog/add", "host": ["{{baseUrl}}"], "path": ["api", "blog", "add"] }
+      }
+    },
+    {
+      "name": "Add Blog - Sample 5 (Remote Teams)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Leading Remote Teams: Communication Rhythms That Actually Work\",\n  \"description\": \"Remote teams thrive when communication is intentional. This piece outlines a lightweight operating cadence: async documentation-first decisions, weekly tactical syncs, monthly strategy reviews, and a practical approach to meetings that respects time zones. I also cover tooling recommendations, onboarding checklists, and cultural practices that reduce misalignment while keeping the team connected.\",\n  \"image\": \"https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1200&q=80&auto=format&fit=crop\",\n  \"user\": \"{{userId}}\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{baseUrl}}/api/blog/add", "host": ["{{baseUrl}}"], "path": ["api", "blog", "add"] }
+      }
+    },
+    {
+      "name": "Add Blog - Sample 6 (Urban Gardening)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Urban Gardening: Small-Space Solutions for Year-Round Harvests\",\n  \"description\": \"Transform balconies and compact yards into productive micro-farms. This guide covers container selection, soil mixes, seasonal crop planning, vertical supports, and pest-safe organic treatments. Includes a month-by-month care calendar and quick recipes for your first harvests.\",\n  \"image\": \"https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=1200&q=80&auto=format&fit=crop\",\n  \"user\": \"{{userId}}\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{baseUrl}}/api/blog/add", "host": ["{{baseUrl}}"], "path": ["api", "blog", "add"] }
+      }
+    },
+    {
+      "name": "Add Blog - Sample 7 (Minimalist Photography)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Minimalist Photography: Composing with Less for Stronger Images\",\n  \"description\": \"Minimalist photography strips away distractions and focuses on form, negative space, and subtle textures. Learn composition rules, lens choices, exposure tips, and how to find minimalist subjects in everyday scenes. Includes before/after crop examples and a 7-day shooting challenge.\",\n  \"image\": \"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1200&q=80&auto=format&fit=crop\",\n  \"user\": \"{{userId}}\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{baseUrl}}/api/blog/add", "host": ["{{baseUrl}}"], "path": ["api", "blog", "add"] }
+      }
+    },
+    {
+      "name": "Add Blog - Sample 8 (Node.js Performance)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Node.js Performance: Profiling, Event Loop Tips & Memory Management\",\n  \"description\": \"This technical deep-dive explains how to profile Node.js apps, interpret flame graphs, optimize asynchronous hotspots, and avoid common memory leaks. Includes lightweight tooling recommendations and a checklist for production readiness.\",\n  \"image\": \"https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&q=80&auto=format&fit=crop\",\n  \"user\": \"{{userId}}\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{baseUrl}}/api/blog/add", "host": ["{{baseUrl}}"], "path": ["api", "blog", "add"] }
+      }
+    },
+    {
+      "name": "Add Blog - Sample 9 (Travel Packing)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Smart Packing: Carry-On Essentials for 7-Day Trips\",\n  \"description\": \"Master packing light with a modular capsule system built for comfort and utility. This post lists fabrics, multi-use gear, compression strategies, and a quick wash-and-refresh routine to keep outfits fresh. Includes a printable packing checklist.\",\n  \"image\": \"https://images.unsplash.com/photo-1504215680853-026ed2a45def?w=1200&q=80&auto=format&fit=crop\",\n  \"user\": \"{{userId}}\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{baseUrl}}/api/blog/add", "host": ["{{baseUrl}}"], "path": ["api", "blog", "add"] }
+      }
+    },
+    {
+      "name": "Add Blog - Sample 10 (Mindful Leadership)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Mindful Leadership: Practices to Build Resilient Teams\",\n  \"description\": \"Practical leadership practices that cultivate psychological safety, focus, and resilience. Topics include intentional listening, clarity in role expectations, and rituals that reconnect teams across distributed settings. Includes a simple 5-minute daily check-in template.\",\n  \"image\": \"https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1200&q=80&auto=format&fit=crop\",\n  \"user\": \"{{userId}}\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{baseUrl}}/api/blog/add", "host": ["{{baseUrl}}"], "path": ["api", "blog", "add"] }
+      }
+    },
+    {
+      "name": "Update Blog (example)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Updated Title Example\",\n  \"description\": \"Updated description text.\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{baseUrl}}/api/blog/update/{{blogId}}", "host": ["{{baseUrl}}"], "path": ["api", "blog", "update", "{{blogId}}"] }
+      }
+    },
+    {
+      "name": "Delete Blog (example)",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": { "raw": "{{baseUrl}}/api/blog/{{blogId}}", "host": ["{{baseUrl}}"], "path": ["api", "blog", "{{blogId}}"] }
+      }
+    }
+  ]
+}

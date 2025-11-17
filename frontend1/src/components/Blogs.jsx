@@ -2,6 +2,9 @@ import { useCallback, useEffect, useState } from "react";
 import { blogApi } from "@/api";
 import Blog from "./Blog";
 import { toast } from "sonner";
+import { Button } from "./ui/button";
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
@@ -28,6 +31,7 @@ const Blogs = () => {
     fetchBlogs();
   }, [fetchBlogs]);
 
+  const totalPages = Math.max(1, Math.ceil(blogs.length / pageSize));
   return (
     <div className="container mx-auto px-4 py-8">
       <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
@@ -42,7 +46,7 @@ const Blogs = () => {
       ) : blogs.length === 0 ? (
         <p className="text-gray-600 text-center">No blogs found.</p>
       ) : (
-        <div>
+        <>
           <div className="blogs-grid">
             {blogs
               .slice((currentPage - 1) * pageSize, currentPage * pageSize)
@@ -59,19 +63,19 @@ const Blogs = () => {
                 />
               ))}
           </div>
-          <div className="flex justify-center gap-3 mt-6">
-            <span className="pagination-info">
-              {currentPage} / {Math.max(1, Math.ceil(blogs.length / pageSize))}
-            </span>
-            <button
-              disabled={currentPage >= Math.ceil(blogs.length / pageSize)}
-              onClick={() => setCurrentPage((p) => p + 1)}
-              className="pagination-btn"
-            >
-              Next
-            </button>
-          </div>
-        </div>
+          {/* Material UI Pagination */}
+          <Stack spacing={2} className="mt-8 flex justify-center items-center">
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={(e, page) => setCurrentPage(page)}
+              variant="outlined"
+              color="secondary"
+              showFirstButton
+              showLastButton
+            />
+          </Stack>
+        </>
       )}
     </div>
   );

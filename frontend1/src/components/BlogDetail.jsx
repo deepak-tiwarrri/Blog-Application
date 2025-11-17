@@ -1,15 +1,15 @@
 import { useCallback } from "react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
-const labelStyles = { mt: 2, mb: 1, fontSize: "24px", fontWeight: "bold" };
 import { useStyles } from "./utils";
 import { blogApi } from "@/api";
-// import { Button } from "@/components/ui/button";
 
 const BlogDetail = () => {
   const classes = useStyles();
   const navigate = useNavigate();
   const { id } = useParams();
+  //eslint-disable-next-line
   const [blog, setBlog] = useState({});
   const [input, setInput] = useState({
     title: "",
@@ -27,7 +27,15 @@ const BlogDetail = () => {
     e.preventDefault();
     //after submitting we will call
     // send request function so that
-    updateRequest().then(() => navigate("/myblogs"));
+    updateRequest()
+      .then(() => {
+        toast.success("Blog updated successfully");
+        navigate("/myblogs");
+      })
+      .catch((err) => {
+        console.error(err);
+        toast.error(err?.response?.data?.message || "Failed to update blog");
+      });
   };
   //send a put request to update the details of blog detail page
   // so the update happen in backend
@@ -38,7 +46,10 @@ const BlogDetail = () => {
         title: input.title,
         description: input.description,
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        throw err;
+      });
 
     const data = await res.data;
     console.log("update data blog", data);
@@ -98,7 +109,7 @@ const BlogDetail = () => {
               </label>
               <textarea
                 type="text"
-                className={`${classes.font} w-full px-4 py-1 border border-gray-300 rounded-lg focus:outlined-none  mb-4`}
+                className={`${classes.font} w-full px-4 py-1 border border-gray-300 rounded-lg focus:outlined-none  mb-4 h-100`}
                 value={input.description}
                 placeholder="Enter blog application"
                 name="description"

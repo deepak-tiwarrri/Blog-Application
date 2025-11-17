@@ -1,11 +1,11 @@
 
-import React, { useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+// @eslint-ignore
+// eslint-disable-next-line no-unused-vars
+import React from "react";
+import { Link, NavLink, useLocation, useNavigate, useRoutes } from "react-router-dom";
 import { authActions } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
-import { Box } from "@mui/material";
 import { Button } from "./ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // import Brightness4Icon from "@mui/icons-material/Brightness4";
 // import Brightness7Icon from "@mui/icons-material/Brightness7";
 
@@ -17,15 +17,7 @@ const Header = () => {
   // Conditional rendering logic
   const isLoginPage = location.pathname === "/login";
   const isSignupPage = location.pathname === "/signup";
-  const [theme, setTheme] = React.useState(
-    () => localStorage.getItem("theme") || "light"
-  );
-
-  React.useEffect(() => {
-    if (theme === "dark") document.documentElement.classList.add("dark");
-    else document.documentElement.classList.remove("dark");
-    localStorage.setItem("theme", theme);
-  }, [theme]);
+  console.log(location.pathname);
 
   // Logout Handler
   const handleLogout = () => {
@@ -34,78 +26,72 @@ const Header = () => {
   };
 
   return (
-    <Box className="bg-gradient-to-r from-gray-950 to-gray-800 sticky top-0 flex justify-between items-center px-6 py-4 shadow-lg">
+    <div className="bg-gradient-to-r from-gray-950 to-gray-800 sticky top-0 flex justify-between items-center px-6 py-4 shadow-lg z-50" >
       {/* Left Section - Logo */}
-      <h2
-        className="font-semibold text-3xl cursor-pointer hover:text-purple-300"
-        style={{ color: "var(--text)" }}
-      >
+      <h2 className="font-semibold text-3xl cursor-pointer text-white hover:text-purple-300">
         <Link to="/">Bite&Roam</Link>
       </h2>
+
       {isLoggedIn && (
-        <Box className="ml-8 mr-auto">
-          <Tabs defaultValue="allBlogs" className="">
-            <TabsList>
-              <Link to="/blogs">
-                <TabsTrigger value="allBlogs">All Blogs</TabsTrigger>
-              </Link>
-              <Link to={"/myblogs"}>
-                <TabsTrigger value="myBlogs">My Blogs</TabsTrigger>
-              </Link>
-            </TabsList>
-          </Tabs>
-        </Box>
+        <div className="ml-8 ">
+          <nav className="inline-flex space-x-2 items-center bg-gray-900/20 p-1 rounded-full" aria-label="Blogs tabs">
+            <NavLink
+              to="/blogs"
+              className={({ isActive }) =>
+                isActive
+                  ? "nav-link bg-white/10 text-white "
+                  : "nav-link text-gray-300 hover:bg-white/5 "
+              }
+            >
+              All Blogs
+            </NavLink>
+            <NavLink
+              to="/myblogs"
+              className={({ isActive }) =>
+                isActive
+                  ? "ml-2 px-4 py-2 rounded-full text-sm font-medium transition bg-white/10 text-white"
+                  : "ml-2 px-4 py-2 rounded-full text-sm font-medium transition text-gray-300 hover:bg-white/5"
+              }
+            >
+              My Blogs
+            </NavLink>
+          </nav>
+        </div>
       )}
 
       {/* Right Section - Navigation Buttons */}
-      <Box className="flex space-x-4 items-center">
-        {/* Theme toggle */}
-        {/* <button
-          onClick={() =>
-            setTheme((prev) => (prev === "dark" ? "light" : "dark"))
-          }
-          className="p-2 rounded-full hover:bg-gray-700 text-white"
-          aria-label="Toggle theme"
-        >
-          {theme === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
-        </button> */}
+      <div className="flex space-x-4 items-center gap-2">
         {/* Conditionally show Login button */}
+
         {!isLoggedIn && !isLoginPage && (
-          <Button
-            className="rounded-full text-white bg-blue-500 hover:bg-blue-400 px-6 py-2 transition-all "
-            asChild
-          >
-            <Link to="/login">Login</Link>
-          </Button>
+          <NavLink to="/login"
+            style={{ fontFamily: "Poppins, sans-serif" }}
+            className="rounded-full hover:curspor-pointer text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-base hover:shadow-xl duration-300 px-6 py-2 transition-all ">
+            Login
+          </NavLink>
         )}
 
         {/* Conditionally show Signup button */}
-        {!isLoggedIn && !isSignupPage && (
-          <Button
-            className="rounded-full text-white bg-blue-500 hover:bg-blue-400 px-6 py-2 transition-all"
-            asChild
-          >
-            <Link to="/signup">Signup</Link>
-          </Button>
+        {(!isLoggedIn && !isSignupPage) && (
+          <NavLink to="/signup"
+            style={{ fontFamily: "Poppins, sans-serif" }}
+            className="rounded-full text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-base hover:shadow-xl duration-300 px-6 py-2 transition-all  hover:cursor-pointer">
+            Signup
+          </NavLink>
         )}
-
-        {/* {isLoggedIn && (
-          <Button className="rounded-full text-white bg-blue-500 hover:bg-blue-400 px-4 py-2">
-            <Link to="/profile">Profile</Link>
-          </Button>
-        )} */}
 
         {/* Logout Button */}
         {isLoggedIn && (
           <Button
-            className="rounded-full text-white bg-red-600 hover:bg-red-500 px-6 py-2 transition-all"
+            className="rounded-full text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-base hover:shadow-xl duration-300 px-6 py-2 transition-all  hover:cursor-pointer"
             onClick={handleLogout}
+            style={{ fontFamily: "Poppins, sans-serif" }}
           >
             Logout
           </Button>
         )}
-      </Box>
-    </Box>
+      </div>
+    </div >
   );
 };
 

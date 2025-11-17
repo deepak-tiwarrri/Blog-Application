@@ -12,6 +12,8 @@ const Signup = () => {
   const navigate = useNavigate();
   const isLoginMode = location.pathname === "/login";
   const dispatch = useDispatch();
+
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(sendRequest({ type: "signup", input })).then((result) => {
