@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { ArrowRight, BookOpen, Users, Sparkles } from "lucide-react";
 import "@fontsource/poppins";
 import "@fontsource/playfair-display";
+import FeaturedSection from "./FeaturedSection";
 
 const Home = () => {
   const [blogs, setBlogs] = React.useState([]);
@@ -112,52 +113,12 @@ const Home = () => {
       </section>
 
       {/* Features Section */}
-      <section className="features py-16 md:py-24 bg-white">
-        <div className="container mx-auto px-4 max-w-7xl">
-          <div className="text-center mb-16">
-            <h2
-              className="text-3xl md:text-4xl font-bold text-gray-900 mb-4"
-              style={{ fontFamily: "Playfair Display, serif" }}
-            >
-              Why Choose Our Platform
-            </h2>
-            <p className="text-lg text-gray-600" style={{ fontFamily: "Poppins, sans-serif" }}>
-              Everything you need to share your story with the world
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { icon: BookOpen, title: "Easy Publishing", desc: "Create and publish blogs in minutes with our intuitive editor" },
-              { icon: Users, title: "Build Community", desc: "Connect with readers who share your passion and interests" },
-              { icon: Sparkles, title: "Beautiful Design", desc: "Professional layouts that showcase your content beautifully" }
-            ].map((feature, idx) => (
-              <div
-                key={idx}
-                className="group p-8 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 hover:from-blue-50 hover:to-purple-50 transition-all duration-300 border border-gray-200 hover:border-blue-300 hover:shadow-lg"
-              >
-                <div className="mb-4 inline-block p-4 bg-white rounded-lg group-hover:bg-gradient-to-br group-hover:from-blue-100 group-hover:to-purple-100 transition-all">
-                  <feature.icon size={28} className="text-blue-600" />
-                </div>
-                <h3
-                  className="text-xl font-bold text-gray-900 mb-2"
-                  style={{ fontFamily: "Poppins, sans-serif" }}
-                >
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600" style={{ fontFamily: "Poppins, sans-serif" }}>
-                  {feature.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <FeaturedSection />
 
       {/* Latest Blogs Section - Enhanced */}
       <section className="blogs py-16 md:py-24 bg-gradient-to-br from-gray-50 to-white">
         <div className="container mx-auto px-4 max-w-7xl">
-          <div className="text-center mb-12">
+          <div className="text-center " style={{ marginBottom: "2rem" }}>
             <div className="inline-block mb-4 px-4 py-2 bg-blue-50 rounded-full">
               <span className="text-sm font-semibold text-blue-600" style={{ fontFamily: "Poppins, sans-serif" }}>
                 Featured Content
@@ -179,16 +140,16 @@ const Home = () => {
               <div className="animate-pulse w-32 h-32 bg-gradient-to-br from-blue-200 to-purple-200 rounded-full"></div>
             </div>
           ) : error ? (
-            <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg">
+            <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg mt-12">
               <p className="text-red-700 font-semibold" style={{ fontFamily: "Poppins, sans-serif" }}>{error}</p>
             </div>
           ) : blogs.length === 0 ? (
-            <div className="text-center py-16">
+            <div className="text-center py-16 mt-12">
               <BookOpen size={48} className="mx-auto text-gray-400 mb-4" />
               <p className="text-gray-600 text-lg" style={{ fontFamily: "Poppins, sans-serif" }}>No blogs found yet. Be the first to share your story!</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
               {blogs.slice(0, 6).map((blog) => (
                 <div key={blog._id} className="transform hover:scale-105 transition-transform duration-300">
                   <BlogCard blog={blog} />
@@ -201,7 +162,7 @@ const Home = () => {
             <div className="text-center mt-12">
               <Link to="/blogs" className="group">
                 <button
-                  className="px-8 py-3 rounded-full border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 font-semibold flex items-center justify-center gap-2 mx-auto"
+                  className="px-8 py-3 rounded-full hover:cursor-pointer border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 font-semibold flex items-center justify-center gap-2 mx-auto"
                   style={{ fontFamily: "Poppins, sans-serif" }}
                 >
                   View All Blogs <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />

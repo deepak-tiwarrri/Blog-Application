@@ -4,10 +4,10 @@ import Home from "./components/Home";
 import Signup from "./components/Signup";
 import { Routes, Route } from "react-router-dom";
 import Blogs from "./components/Blogs";
+import BlogDetailPage from "./components/BlogDetailPage";
 import AddBlog from "./components/AddBlog";
 import UserBlogs from "./components/UserBlogs";
-import BlogDetail from "./components/BlogDetail";
-// import Profile from "./components/Profile";
+import BlogDetail from "./components/EditBlog";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -38,6 +38,8 @@ const App = () => {
           <ErrorBoundary>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/blogs" element={<Blogs />} />
+              <Route path="/blogs/:id" element={<BlogDetailPage />} />
               {!isLoggedIn ? (
                 <>
                   <Route path="/login" element={<Login />} />
@@ -45,7 +47,6 @@ const App = () => {
                 </>
               ) : (
                 <>
-                  <Route path="/blogs" element={<Blogs />} />
                   <Route path="/blogs/add" element={<AddBlog />} />
                   <Route path="/myblogs" element={<UserBlogs />} />
                   <Route path="/myblogs/:id" element={<BlogDetail />} />

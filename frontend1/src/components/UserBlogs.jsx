@@ -3,6 +3,9 @@ import { useState, useEffect, useCallback } from "react";
 import { blogApi } from "@/api";
 import Blog from "./Blog";
 import { toast } from "sonner";
+import { BookOpen } from "lucide-react";
+import "@fontsource/poppins";
+import "@fontsource/playfair-display";
 
 const UserBlogs = () => {
   const [user, setUser] = useState(null);
@@ -39,34 +42,77 @@ const UserBlogs = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
-        My Blogs
-      </h2>
-      {loading ? (
-        <div className="flex justify-center items-center h-32">
-          <div className="animate-pulse w-32 h-32 bg-gray-200 rounded-full"></div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white py-8 md:py-12 lg:py-16">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+
+        {/* Header Section */}
+        <div className="mb-8 md:mb-12 lg:mb-16">
+          <div className="text-center space-y-3 md:space-y-4">
+            <div className="inline-block mb-4 px-3 sm:px-4 py-2 bg-blue-50 rounded-full">
+              <span
+                className="text-xs sm:text-sm font-semibold text-blue-600"
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                Your Content
+              </span>
+            </div>
+            <h2
+              className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight"
+              style={{ fontFamily: "Playfair Display, serif", letterSpacing: "-0.5px" }}
+            >
+              My Blogs
+            </h2>
+            <p
+              className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto"
+              style={{ fontFamily: "Poppins, sans-serif" }}
+            >
+              Manage and showcase all your published stories
+            </p>
+          </div>
         </div>
-      ) : error ? (
-        <p className="text-red-600 text-center">{error}</p>
-      ) : !user || user.blogs.length === 0 ? (
-        <p className="text-gray-600 text-center">No blogs found.</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {user.blogs.map((blog, index) => (
-            <Blog
-              id={blog._id}
-              key={index}
-              title={blog.title}
-              description={blog.description}
-              imageUrl={blog.image}
-              userName={user.name}
-              onDelete={() => handleDelete(blog._id)}
-              isUser={true}
-            />
-          ))}
-        </div>
-      )}
+
+        {/* Content Section */}
+        {loading ? (
+          <div className="flex justify-center items-center h-32 md:h-40">
+            <div className="animate-pulse w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br from-blue-200 to-purple-200 rounded-full"></div>
+          </div>
+        ) : error ? (
+          <div className="bg-red-50 border-l-4 border-red-500 p-4 sm:p-6 rounded-lg max-w-2xl mx-auto">
+            <p className="text-red-700 font-semibold text-sm sm:text-base" style={{ fontFamily: "Poppins, sans-serif" }}>
+              {error}
+            </p>
+          </div>
+        ) : !user || user.blogs.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-12 md:py-16 lg:py-20">
+            <BookOpen size={48} className="text-gray-400 mb-4" />
+            <p
+              className="text-gray-600 text-center text-base sm:text-lg"
+              style={{ fontFamily: "Poppins, sans-serif" }}
+            >
+              No blogs yet. Start creating your first blog!
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
+            {user.blogs.map((blog, index) => (
+              <div
+                key={index}
+                className="transform hover:scale-105 transition-transform duration-300"
+              >
+                <Blog
+                  id={blog._id}
+                  title={blog.title}
+                  description={blog.description}
+                  imageUrl={blog.image}
+                  userName={user.name}
+                  onDelete={() => handleDelete(blog._id)}
+                  isUser={true}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -29,6 +29,10 @@ const Blog = ({
     navigate(`/myblogs/${id}`);
   };
 
+  const handleViewBlog = () => {
+    navigate(`/blogs/${id}`);
+  };
+
   const handleDelete = async () => {
     try {
       await blogApi.delete(id);
@@ -61,9 +65,9 @@ const Blog = ({
   };
 
   return (
-    <div className="card-container">
+    <div className="card-container group cursor-pointer" onClick={handleViewBlog}>
       {isUser && (
-        <div className="card-header-actions">
+        <div className="card-header-actions" onClick={(e) => e.stopPropagation()}>
           <button onClick={handleEdit} className="edit-btn">
             <Pencil sx={{ fontSize: "18px" }} size={20} />
           </button>
