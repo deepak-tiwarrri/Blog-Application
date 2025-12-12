@@ -2,7 +2,7 @@ import { authActions } from "@/store";
 import React, { useState } from "react";
 import { useDispatch, useLocation } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import AuthForm from "./AuthForm";
+import AuthForm from "./features/AuthForm";
 import { USER_URL } from "./utils";
 import { userApi, setAuthToken } from "@/api";
 const Auth = () => {
@@ -27,7 +27,7 @@ const Auth = () => {
     }
   };
 
-  
+
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -2,12 +2,13 @@ import React, { useEffect } from "react";
 import { blogApi } from "@/api";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
-import BlogCard from "./BlogCard";
+import BlogCard from "../features/BlogCard";
+import Loader from "../common/Loader";
 import { useSelector } from "react-redux";
 import { ArrowRight, BookOpen, Users, Sparkles } from "lucide-react";
 import "@fontsource/poppins";
 import "@fontsource/playfair-display";
-import FeaturedSection from "./FeaturedSection";
+import FeaturedSection from "../features/FeaturedSection";
 
 const Home = () => {
   const [blogs, setBlogs] = React.useState([]);
@@ -136,9 +137,7 @@ const Home = () => {
           </div>
 
           {loading ? (
-            <div className="flex justify-center items-center h-32">
-              <div className="animate-pulse w-32 h-32 bg-gradient-to-br from-blue-200 to-purple-200 rounded-full"></div>
-            </div>
+            <Loader fullScreen={false} size={50} />
           ) : error ? (
             <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg mt-12">
               <p className="text-red-700 font-semibold" style={{ fontFamily: "Poppins, sans-serif" }}>{error}</p>

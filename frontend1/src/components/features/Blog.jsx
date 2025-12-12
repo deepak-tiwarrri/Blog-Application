@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { blogApi } from "@/api";
 import { toast } from "sonner";
 import PropTypes from "prop-types";
-import { Pencil, Trash } from 'lucide-react';
+import { Pencil, SquarePenIcon, Trash } from 'lucide-react';
 
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import "@fontsource/poppins";
@@ -69,7 +69,7 @@ const Blog = ({
       {isUser && (
         <div className="card-header-actions" onClick={(e) => e.stopPropagation()}>
           <button onClick={handleEdit} className="edit-btn">
-            <Pencil sx={{ fontSize: "18px" }} size={20} />
+            <SquarePenIcon sx={{ fontSize: "18px" }} size={20} />
           </button>
           <button onClick={handleDelete} className="delete-btn">
             <Trash sx={{ fontSize: "18px" }} size={20} />

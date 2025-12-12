@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { Link, NavLink, useLocation, useNavigate, useRoutes } from "react-router-dom";
 import { authActions } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { Menu, X } from "lucide-react";
 import "@fontsource/poppins";
 // import Brightness4Icon from "@mui/icons-material/Brightness4";
@@ -17,7 +17,7 @@ const Header = () => {
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.auth?.isLoggedIn);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
+
   // Conditional rendering logic
   const isLoginPage = location.pathname === "/login";
   const isSignupPage = location.pathname === "/signup";
@@ -39,10 +39,10 @@ const Header = () => {
     <div className="bg-gradient-to-r from-gray-950 to-gray-800 sticky top-0 shadow-lg z-50">
       <div className="px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
         <div className="flex justify-between items-center">
-          
+
           {/* Left Section - Logo */}
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             onClick={handleNavClick}
             className="flex-shrink-0"
           >
@@ -87,7 +87,7 @@ const Header = () => {
           <div className="hidden md:flex items-center gap-3 lg:gap-4">
             {/* Conditionally show Login button */}
             {!isLoggedIn && !isLoginPage && (
-              <NavLink 
+              <NavLink
                 to="/login"
                 onClick={handleNavClick}
                 style={{ fontFamily: "Poppins, sans-serif" }}
@@ -99,7 +99,7 @@ const Header = () => {
 
             {/* Conditionally show Signup button */}
             {(!isLoggedIn && !isSignupPage) && (
-              <NavLink 
+              <NavLink
                 to="/signup"
                 onClick={handleNavClick}
                 style={{ fontFamily: "Poppins, sans-serif" }}
@@ -140,7 +140,7 @@ const Header = () => {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden mt-4 pb-4 border-t border-gray-700 pt-4 space-y-3">
-            
+
             {/* Mobile Navigation Links */}
             {isLoggedIn && (
               <nav className="space-y-2">
@@ -174,7 +174,7 @@ const Header = () => {
             {/* Mobile Action Buttons */}
             <div className="space-y-2 pt-2">
               {!isLoggedIn && !isLoginPage && (
-                <NavLink 
+                <NavLink
                   to="/login"
                   onClick={handleNavClick}
                   style={{ fontFamily: "Poppins, sans-serif" }}
@@ -185,7 +185,7 @@ const Header = () => {
               )}
 
               {(!isLoggedIn && !isSignupPage) && (
-                <NavLink 
+                <NavLink
                   to="/signup"
                   onClick={handleNavClick}
                   style={{ fontFamily: "Poppins, sans-serif" }}

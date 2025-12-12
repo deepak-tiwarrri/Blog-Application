@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { blogApi } from "@/api";
 import { toast } from "sonner";
-import { ChevronLeft, Heart, Bookmark, Share2, User, Calendar } from "lucide-react";
+import { ChevronLeft, Heart, Bookmark, Share2, Calendar } from "lucide-react";
+import Loader from "../common/Loader";
 import "@fontsource/playfair-display/700.css";
 import "@fontsource/poppins/400.css";
 import "@fontsource/poppins/500.css";
@@ -57,13 +58,7 @@ const BlogDetailPage = () => {
     };
 
     if (loading) {
-        return (
-            <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 flex items-center justify-center">
-                <div className="animate-pulse">
-                    <div className="w-32 h-32 bg-gradient-to-br from-blue-200 to-purple-200 rounded-full"></div>
-                </div>
-            </div>
-        );
+        return <Loader fullScreen={true} size={60} />;
     }
 
     if (error || !blog) {
@@ -170,8 +165,8 @@ const BlogDetailPage = () => {
                         <button
                             onClick={handleLike}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 ${liked
-                                    ? "bg-red-50 text-red-600 border border-red-200"
-                                    : "bg-gray-100 text-gray-600 hover:bg-red-50 hover:text-red-600 border border-transparent hover:border-red-200"
+                                ? "bg-red-50 text-red-600 border border-red-200"
+                                : "bg-gray-100 text-gray-600 hover:bg-red-50 hover:text-red-600 border border-transparent hover:border-red-200"
                                 }`}
                         >
                             <Heart className={`w-5 h-5 ${liked ? "fill-current" : ""}`} />
@@ -183,8 +178,8 @@ const BlogDetailPage = () => {
                         <button
                             onClick={handleBookmark}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 ${bookmarked
-                                    ? "bg-amber-50 text-amber-600 border border-amber-200"
-                                    : "bg-gray-100 text-gray-600 hover:bg-amber-50 hover:text-amber-600 border border-transparent hover:border-amber-200"
+                                ? "bg-amber-50 text-amber-600 border border-amber-200"
+                                : "bg-gray-100 text-gray-600 hover:bg-amber-50 hover:text-amber-600 border border-transparent hover:border-amber-200"
                                 }`}
                         >
                             <Bookmark className={`w-5 h-5 ${bookmarked ? "fill-current" : ""}`} />

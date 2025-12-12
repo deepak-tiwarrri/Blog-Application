@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import AuthForm from "./AuthForm";
+import AuthForm from "./features/AuthForm";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { sendRequest } from "@/store";

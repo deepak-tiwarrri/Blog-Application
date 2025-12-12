@@ -1,7 +1,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { blogApi } from "@/api";
-import Blog from "./Blog";
+import Blog from "../features/Blog";
+import Loader from "../common/Loader";
 import { toast } from "sonner";
 import { BookOpen } from "lucide-react";
 import "@fontsource/poppins";
@@ -73,9 +74,7 @@ const UserBlogs = () => {
 
         {/* Content Section */}
         {loading ? (
-          <div className="flex justify-center items-center h-32 md:h-40">
-            <div className="animate-pulse w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br from-blue-200 to-purple-200 rounded-full"></div>
-          </div>
+          <Loader fullScreen={false} size={60} />
         ) : error ? (
           <div className="bg-red-50 border-l-4 border-red-500 p-4 sm:p-6 rounded-lg max-w-2xl mx-auto">
             <p className="text-red-700 font-semibold text-sm sm:text-base" style={{ fontFamily: "Poppins, sans-serif" }}>

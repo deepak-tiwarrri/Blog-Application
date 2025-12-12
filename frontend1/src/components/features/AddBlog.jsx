@@ -2,7 +2,7 @@ import { useState } from "react";
 import { blogApi } from "@/api";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { useStyles } from "./utils";
+import { useStyles } from "@/lib/utils.js";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -59,7 +59,6 @@ const AddBlog = () => {
   return (
     <form action="" onSubmit={handleSubmit} className="mt-12 mb-16">
       <div className="m-auto shadow-md hover:shadow-gray-900 hover:shadow-lg transition-all ease-in-out rounded-md p-8 flex flex-col mb-6 mt-6 w-full max-w-xl ">
-        {/* <Typography className={classes.font} fontWeight={'bold'} variant="h3" padding={3} color="grey" textAlign={"center"}>Post Your Blog</Typography> */}
         <h3
           className={`font-bold p-6 ${classes.font}  text-gray-700 text-center text-2xl`}
         >

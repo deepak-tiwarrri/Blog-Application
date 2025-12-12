@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { blogApi } from "@/api";
-import Blog from "./Blog";
+import Blog from "../features/Blog";
 import { toast } from "sonner";
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import Loader from "../common/Loader";
 import "@fontsource/playfair-display/700.css";
 import "@fontsource/poppins/400.css";
 import "@fontsource/poppins/500.css";
@@ -66,11 +67,7 @@ const Blogs = () => {
 
         {/* Content Section */}
         {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-pulse">
-              <div className="w-32 h-32 bg-gradient-to-br from-blue-200 to-purple-200 rounded-full"></div>
-            </div>
-          </div>
+          <Loader fullScreen={false} size={60} />
         ) : error ? (
           <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg">
             <p className="text-red-700 font-semibold" style={{ fontFamily: "Poppins, sans-serif" }}>

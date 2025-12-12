@@ -1,5 +1,5 @@
 import React from "react";
-import AuthForm from "./AuthForm";
+import AuthForm from "./features/AuthForm";
 import { useDispatch, useSelector } from "react-redux";
 import { sendRequest } from "@/store";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -13,7 +13,7 @@ const Signup = () => {
   const isLoginMode = location.pathname === "/login";
   const dispatch = useDispatch();
 
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(sendRequest({ type: "signup", input })).then((result) => {

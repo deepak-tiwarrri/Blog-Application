@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
-import { useStyles } from "./utils";
+import { useStyles } from "@/lib/utils.js";
 import { blogApi } from "@/api";
 import "@fontsource/playfair-display/700.css";
 import "@fontsource/poppins/400.css";

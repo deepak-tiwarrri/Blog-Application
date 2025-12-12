@@ -9,10 +9,10 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "@/store";
 import PropTypes from "prop-types";
-import { useStyles } from "./utils";
 import { BookOpen, ArrowRight } from "lucide-react";
 import "@fontsource/poppins";
 import "@fontsource/playfair-display";
+import { useStyles } from "@/lib/utils";
 
 const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
   const input = useSelector((state) => state.auth?.input);
@@ -35,7 +35,6 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
 
       <div className="w-full max-w-5xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-
           {/* Left Side - Branding & Features */}
           <div className="hidden lg:flex flex-col justify-between space-y-8">
             <div>
@@ -54,7 +53,10 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
               <div>
                 <h2
                   className="text-4xl font-bold text-gray-900 mb-4"
-                  style={{ fontFamily: "Playfair Display, serif", letterSpacing: "-0.5px" }}
+                  style={{
+                    fontFamily: "Playfair Display, serif",
+                    letterSpacing: "-0.5px",
+                  }}
                 >
                   {isLoginMode ? "Welcome Back" : "Join Our Community"}
                 </h2>
@@ -72,19 +74,34 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
             {/* Features List */}
             <div className="space-y-4">
               {[
-                { title: "Write & Publish", desc: "Create beautiful blog posts in minutes" },
-                { title: "Connect", desc: "Build your audience and engage with readers" },
-                { title: "Share", desc: "Inspire others with your unique perspective" }
+                {
+                  title: "Write & Publish",
+                  desc: "Create beautiful blog posts in minutes",
+                },
+                {
+                  title: "Connect",
+                  desc: "Build your audience and engage with readers",
+                },
+                {
+                  title: "Share",
+                  desc: "Inspire others with your unique perspective",
+                },
               ].map((feature, idx) => (
                 <div key={idx} className="flex items-start gap-4 group">
                   <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center mt-1">
                     <ArrowRight size={20} className="text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900" style={{ fontFamily: "Poppins, sans-serif" }}>
+                    <h3
+                      className="font-semibold text-gray-900"
+                      style={{ fontFamily: "Poppins, sans-serif" }}
+                    >
                       {feature.title}
                     </h3>
-                    <p className="text-sm text-gray-600" style={{ fontFamily: "Poppins, sans-serif" }}>
+                    <p
+                      className="text-sm text-gray-600"
+                      style={{ fontFamily: "Poppins, sans-serif" }}
+                    >
                       {feature.desc}
                     </p>
                   </div>
@@ -118,7 +135,6 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
               </div>
 
               <form onSubmit={onHandleSubmit} className="flex flex-col gap-5">
-
                 {/* Name field for Signup */}
                 {!isLoginMode && (
                   <div className="flex flex-col gap-3">
@@ -184,7 +200,10 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                       Password
                     </Label>
                     {isLoginMode && (
-                      <Link to="#" className="text-xs text-blue-600 hover:text-blue-700 font-medium">
+                      <Link
+                        to="#"
+                        className="text-xs text-blue-600 hover:text-blue-700 font-medium"
+                      >
                         Forgot?
                       </Link>
                     )}
@@ -233,7 +252,10 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                   <div className="w-full border-t border-gray-200"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-3 bg-white text-gray-500" style={{ fontFamily: "Poppins, sans-serif" }}>
+                  <span
+                    className="px-3 bg-white text-gray-500"
+                    style={{ fontFamily: "Poppins, sans-serif" }}
+                  >
                     or
                   </span>
                 </div>
@@ -241,7 +263,10 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
 
               {/* Toggle Auth Mode */}
               <div className="text-center">
-                <p className="text-sm text-gray-600 mb-4" style={{ fontFamily: "Poppins, sans-serif" }}>
+                <p
+                  className="text-sm text-gray-600 mb-4"
+                  style={{ fontFamily: "Poppins, sans-serif" }}
+                >
                   {isLoginMode ? (
                     <>
                       Don&apos;t have an account?{" "}
@@ -267,12 +292,15 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
               </div>
 
               {/* Terms & Privacy */}
-              <p className="text-xs text-gray-500 text-center mt-6" style={{ fontFamily: "Poppins, sans-serif" }}>
+              <p
+                className="text-xs text-gray-500 text-center mt-6"
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
                 By continuing, you agree to our{" "}
                 <Link to="#" className="text-blue-600 hover:underline">
                   Terms of Service
-                </Link>
-                {" "}and{" "}
+                </Link>{" "}
+                and{" "}
                 <Link to="#" className="text-blue-600 hover:underline">
                   Privacy Policy
                 </Link>

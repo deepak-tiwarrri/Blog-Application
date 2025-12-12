@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BLOG_URL, USER_URL } from './components/utils';
+import { BLOG_URL, USER_URL } from './lib/endpoints';
 
 // create an axios instance with default baseURL (we'll keep BLOG_URL as base for blog calls)
 const api = axios.create({
@@ -12,12 +12,11 @@ const api = axios.create({
  * Call this after login/signup and on app load if a token exists.
  * @param {string|null} token - The JWT token to set, or null/undefined to remove it.
  */
-export function setAuthToken(token) {
+export const setAuthToken = (token) => {
   if (token) {
     // Set the Authorization header for all future requests
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     // console.log(`api header: ${api.defaults.headers.common['Authorization']}`);
-
 
     // Optionally, set for global axios if used elsewhere
     if (typeof window !== 'undefined' && window.axios) {
