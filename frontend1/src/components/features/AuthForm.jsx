@@ -157,7 +157,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                         value={input?.name}
                         onChange={handleChange}
                         required
-                        className={`${classes.font} pl-12 py-3 rounded-lg border-2 border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-500 focus:outline-none transition-all duration-200 placeholder:text-gray-400`}
+                        className={`${classes.font} pl-12 py-3 rounded-lg border-2 border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-500 focus:outline-none focus:ring-0 focus-visible:ring-0 transition-all duration-200 placeholder:text-gray-400`}
                       />
                     </div>
                   </div>
@@ -183,7 +183,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                       placeholder="you@example.com"
                       value={input?.email}
                       onChange={handleChange}
-                      className={`${classes.font} pl-12 py-3 rounded-lg border-2 border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-500 focus:outline-none transition-all duration-200 w-full placeholder:text-gray-400`}
+                      className={`${classes.font} pl-12 py-3 rounded-lg border-2 border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-500 focus:outline-none focus:ring-0 focus-visible:ring-0 transition-all duration-200 w-full placeholder:text-gray-400`}
                       required
                     />
                   </div>
@@ -220,7 +220,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                       placeholder="••••••••"
                       onChange={handleChange}
                       required
-                      className={`${classes.font} pl-12 py-3 rounded-lg border-2 border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-500 focus:outline-none transition-all duration-200 w-full placeholder:text-gray-400`}
+                      className={`${classes.font} pl-12 py-3 rounded-lg border-2 border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-500 focus:outline-none focus:ring-0 focus-visible:ring-0 transition-all duration-200 w-full placeholder:text-gray-400`}
                     />
                   </div>
                 </div>
