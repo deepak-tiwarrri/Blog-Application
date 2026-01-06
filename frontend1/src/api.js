@@ -1,9 +1,9 @@
-import axios from 'axios';
-import { BLOG_URL, USER_URL } from './lib/endpoints';
+import axios from "axios";
+import { BLOG_URL, USER_URL } from "./lib/endpoints";
 
 // create an axios instance with default baseURL (we'll keep BLOG_URL as base for blog calls)
 const api = axios.create({
-  baseURL: '', // we'll use absolute URLs in utils, but keep instance for headers
+  baseURL: "", // we'll use absolute URLs in utils, but keep instance for headers
   timeout: 10000,
 });
 
@@ -15,21 +15,21 @@ const api = axios.create({
 export const setAuthToken = (token) => {
   if (token) {
     // Set the Authorization header for all future requests
-    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     // console.log(`api header: ${api.defaults.headers.common['Authorization']}`);
 
     // Optionally, set for global axios if used elsewhere
-    if (typeof window !== 'undefined' && window.axios) {
-      window.axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    if (typeof window !== "undefined" && window.axios) {
+      window.axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     }
   } else {
     // Remove the Authorization header
-    delete api.defaults.headers.common['Authorization'];
-    if (typeof window !== 'undefined' && window.axios) {
-      delete window.axios.defaults.headers.common['Authorization'];
+    delete api.defaults.headers.common["Authorization"];
+    if (typeof window !== "undefined" && window.axios) {
+      delete window.axios.defaults.headers.common["Authorization"];
     }
   }
-}
+};
 
 // helper methods that target backend endpoints
 export const blogApi = {
@@ -44,6 +44,7 @@ export const blogApi = {
 export const userApi = {
   signup: (payload) => api.post(`${USER_URL}/signup`, payload),
   login: (payload) => api.post(`${USER_URL}/login`, payload),
+  googleSignIn: (payload) => api.post(`${USER_URL}/google-signin`, payload),
   getById: (id) => api.get(`${USER_URL}/${id}`),
 };
 

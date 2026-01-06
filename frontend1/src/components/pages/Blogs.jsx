@@ -5,12 +5,11 @@ import { toast } from "sonner";
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import Loader from "../common/Loader";
-import "@fontsource/playfair-display/700.css";
-import "@fontsource/poppins/400.css";
-import "@fontsource/poppins/500.css";
+import { useScrollToTop } from "@/hooks/useScrollToTop.js";
 import { BookOpen } from "lucide-react";
 
 const Blogs = () => {
+  useScrollToTop();
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);

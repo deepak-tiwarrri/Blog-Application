@@ -4,13 +4,13 @@ import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import BlogCard from "../features/BlogCard";
 import Loader from "../common/Loader";
+import { useScrollToTop } from "@/hooks/useScrollToTop.js";
 import { useSelector } from "react-redux";
 import { ArrowRight, BookOpen, Users, Sparkles } from "lucide-react";
-import "@fontsource/poppins";
-import "@fontsource/playfair-display";
 import FeaturedSection from "../features/FeaturedSection";
 
 const Home = () => {
+  useScrollToTop();
   const [blogs, setBlogs] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
@@ -46,21 +46,32 @@ const Home = () => {
             <div className="space-y-6 md:space-y-8">
               <div className="inline-flex items-center space-x-2 bg-blue-50 px-4 py-2 rounded-full">
                 <Sparkles size={18} className="text-blue-600" />
-                <span className="text-sm font-semibold text-blue-600">Welcome to Your Stories</span>
+                <span className="text-sm font-semibold text-blue-600">
+                  Welcome to Your Stories
+                </span>
               </div>
 
               <h1
                 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-gray-900"
-                style={{ fontFamily: "Playfair Display, serif", fontWeight: "800", letterSpacing: "-0.5px" }}
+                style={{
+                  fontFamily: "Playfair Display, serif",
+                  fontWeight: "800",
+                  letterSpacing: "-0.5px",
+                }}
               >
-                Create a Blog Worth <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Sharing</span>
+                Create a Blog Worth{" "}
+                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  Sharing
+                </span>
               </h1>
 
               <p
                 className="text-lg md:text-xl text-gray-600 leading-relaxed"
                 style={{ fontFamily: "Poppins, sans-serif", lineHeight: "1.8" }}
               >
-                Explore travel adventures, uncover global cuisines and share your flavourful journey with the world. Connect with passionate readers and build your unique voice.
+                Explore travel adventures, uncover global cuisines and share
+                your flavourful journey with the world. Connect with passionate
+                readers and build your unique voice.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
@@ -71,7 +82,11 @@ const Home = () => {
                         className="w-full sm:w-auto px-8 py-3 rounded-full shadow-lg hover:shadow-xl text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transition-all duration-300 font-semibold flex items-center justify-center gap-2"
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
-                        Get Started <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                        Get Started{" "}
+                        <ArrowRight
+                          size={18}
+                          className="group-hover:translate-x-1 transition-transform"
+                        />
                       </button>
                     </Link>
                     <Link to="/blogs" className="group">
@@ -90,7 +105,11 @@ const Home = () => {
                       className="w-full sm:w-auto px-8 py-3 rounded-full shadow-lg hover:shadow-xl text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transition-all duration-300 font-semibold flex items-center justify-center gap-2"
                       style={{ fontFamily: "Poppins, sans-serif" }}
                     >
-                      Explore All Blogs <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                      Explore All Blogs{" "}
+                      <ArrowRight
+                        size={18}
+                        className="group-hover:translate-x-1 transition-transform"
+                      />
                     </button>
                   </Link>
                 )}
@@ -121,7 +140,10 @@ const Home = () => {
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="text-center " style={{ marginBottom: "2rem" }}>
             <div className="inline-block mb-4 px-4 py-2 bg-blue-50 rounded-full">
-              <span className="text-sm font-semibold text-blue-600" style={{ fontFamily: "Poppins, sans-serif" }}>
+              <span
+                className="text-sm font-semibold text-blue-600"
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
                 Featured Content
               </span>
             </div>
@@ -131,7 +153,10 @@ const Home = () => {
             >
               Latest Blogs
             </h2>
-            <p className="text-lg text-gray-600" style={{ fontFamily: "Poppins, sans-serif" }}>
+            <p
+              className="text-lg text-gray-600"
+              style={{ fontFamily: "Poppins, sans-serif" }}
+            >
               Discover inspiring stories from our community of writers
             </p>
           </div>
@@ -140,17 +165,30 @@ const Home = () => {
             <Loader fullScreen={false} size={50} />
           ) : error ? (
             <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg mt-12">
-              <p className="text-red-700 font-semibold" style={{ fontFamily: "Poppins, sans-serif" }}>{error}</p>
+              <p
+                className="text-red-700 font-semibold"
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                {error}
+              </p>
             </div>
           ) : blogs.length === 0 ? (
             <div className="text-center py-16 mt-12">
               <BookOpen size={48} className="mx-auto text-gray-400 mb-4" />
-              <p className="text-gray-600 text-lg" style={{ fontFamily: "Poppins, sans-serif" }}>No blogs found yet. Be the first to share your story!</p>
+              <p
+                className="text-gray-600 text-lg"
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                No blogs found yet. Be the first to share your story!
+              </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
               {blogs.slice(0, 6).map((blog) => (
-                <div key={blog._id} className="transform hover:scale-105 transition-transform duration-300">
+                <div
+                  key={blog._id}
+                  className="transform hover:scale-105 transition-transform duration-300"
+                >
                   <BlogCard blog={blog} />
                 </div>
               ))}
@@ -164,7 +202,11 @@ const Home = () => {
                   className="px-8 py-3 rounded-full hover:cursor-pointer border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 font-semibold flex items-center justify-center gap-2 mx-auto"
                   style={{ fontFamily: "Poppins, sans-serif" }}
                 >
-                  View All Blogs <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  View All Blogs{" "}
+                  <ArrowRight
+                    size={18}
+                    className="group-hover:translate-x-1 transition-transform"
+                  />
                 </button>
               </Link>
             </div>
@@ -188,7 +230,8 @@ const Home = () => {
                   className="text-lg text-blue-100"
                   style={{ fontFamily: "Poppins, sans-serif" }}
                 >
-                  Join our community of passionate writers and readers. Create, share, and inspire.
+                  Join our community of passionate writers and readers. Create,
+                  share, and inspire.
                 </p>
               </div>
 

@@ -29,6 +29,55 @@
   ],
   "item": [
     {
+      "name": "Google Sign-In",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"token\": \"YOUR_GOOGLE_JWT_TOKEN_HERE\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/user/google-signin",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "user", "google-signin"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "var json = pm.response.json();",
+              "if (json && json.token) {",
+              "    pm.collectionVariables.set('token', json.token);",
+              "    if (pm.environment) pm.environment.set('token', json.token);",
+              "    console.log('✓ Token saved: ' + json.token.substring(0, 20) + '...');",
+              "}",
+              "if (json && json.user && json.user._id) {",
+              "    pm.collectionVariables.set('userId', json.user._id);",
+              "    if (pm.environment) pm.environment.set('userId', json.user._id);",
+              "    console.log('✓ UserId saved: ' + json.user._id);",
+              "    console.log('✓ User: ' + json.user.name + ' (' + json.user.email + ')');",
+              "}",
+              "console.log('Google Sign-In successful! Use token and userId for blog requests.');"
+            ]
+          }
+        }
+      ],
+      "response": []
+    },
+    {
       "name": "Signup - Create Sample User",
       "request": {
         "method": "POST",

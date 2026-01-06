@@ -4,12 +4,10 @@ import { blogApi } from "@/api";
 import { toast } from "sonner";
 import { ChevronLeft, Heart, Bookmark, Share2, Calendar } from "lucide-react";
 import Loader from "../common/Loader";
-import "@fontsource/playfair-display/700.css";
-import "@fontsource/poppins/400.css";
-import "@fontsource/poppins/500.css";
-import "@fontsource/poppins/600.css";
+import { useScrollToTop } from "@/hooks/useScrollToTop.js";
 
 const BlogDetailPage = () => {
+    useScrollToTop();
     const { id } = useParams();
     const navigate = useNavigate();
     const [blog, setBlog] = useState(null);

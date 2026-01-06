@@ -2,6 +2,7 @@ import { useState } from "react";
 import { blogApi } from "@/api";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useScrollToTop } from "@/hooks/useScrollToTop.js";
 import { useStyles } from "@/lib/utils.js";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
 const AddBlog = () => {
+  useScrollToTop();
   const classes = useStyles();
   const navigate = useNavigate();
   const [input, setInput] = useState({

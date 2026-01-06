@@ -8,11 +8,11 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "@/store";
+import GoogleSignInButton from "../GoogleSignIn";
 import PropTypes from "prop-types";
 import { BookOpen, ArrowRight } from "lucide-react";
-import "@fontsource/poppins";
-import "@fontsource/playfair-display";
 import { useStyles } from "@/lib/utils";
+import FeatureList from "./FeatureList";
 
 const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
   const input = useSelector((state) => state.auth?.input);
@@ -72,42 +72,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
             </div>
 
             {/* Features List */}
-            <div className="space-y-4">
-              {[
-                {
-                  title: "Write & Publish",
-                  desc: "Create beautiful blog posts in minutes",
-                },
-                {
-                  title: "Connect",
-                  desc: "Build your audience and engage with readers",
-                },
-                {
-                  title: "Share",
-                  desc: "Inspire others with your unique perspective",
-                },
-              ].map((feature, idx) => (
-                <div key={idx} className="flex items-start gap-4 group">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center mt-1">
-                    <ArrowRight size={20} className="text-white" />
-                  </div>
-                  <div>
-                    <h3
-                      className="font-semibold text-gray-900"
-                      style={{ fontFamily: "Poppins, sans-serif" }}
-                    >
-                      {feature.title}
-                    </h3>
-                    <p
-                      className="text-sm text-gray-600"
-                      style={{ fontFamily: "Poppins, sans-serif" }}
-                    >
-                      {feature.desc}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <FeatureList />
           </div>
 
           {/* Right Side - Form */}
@@ -183,7 +148,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                       placeholder="you@example.com"
                       value={input?.email}
                       onChange={handleChange}
-                      className={`${classes.font} pl-12 py-3 rounded-lg border-2 border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-500 focus:outline-none focus:ring-0 focus-visible:ring-0 transition-all duration-200 w-full placeholder:text-gray-400`}
+                      className={`${classes.font} input-field`}
                       required
                     />
                   </div>
@@ -220,7 +185,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                       placeholder="••••••••"
                       onChange={handleChange}
                       required
-                      className={`${classes.font} pl-12 py-3 rounded-lg border-2 border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-500 focus:outline-none focus:ring-0 focus-visible:ring-0 transition-all duration-200 w-full placeholder:text-gray-400`}
+                      className={`${classes.font} input-field`}
                     />
                   </div>
                 </div>
@@ -256,8 +221,15 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                     className="px-3 bg-white text-gray-500"
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
-                    or
+                    or continue with
                   </span>
+                </div>
+              </div>
+
+              {/* Google Sign-In Button */}
+              <div className="flex justify-center mb-6">
+                <div className="w-full">
+                  <GoogleSignInButton />
                 </div>
               </div>
 
