@@ -4,13 +4,11 @@ import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { useStyles } from "@/lib/utils.js";
 import { blogApi } from "@/api";
-import "@fontsource/playfair-display/700.css";
-import "@fontsource/poppins/400.css";
-import "@fontsource/poppins/500.css";
-import "@fontsource/poppins/600.css";
+import { useScrollToTop } from "@/hooks/useScrollToTop.js";
 import { ChevronLeft } from "lucide-react";
 
 const BlogDetail = () => {
+  useScrollToTop();
   const classes = useStyles();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -87,7 +85,10 @@ const BlogDetail = () => {
           className="inline-flex items-center gap-2 mb-8 text-gray-600 hover:text-gray-900 transition-colors duration-200 group"
         >
           <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-200" />
-          <span style={{ fontFamily: "Poppins, sans-serif" }} className="text-sm font-medium">
+          <span
+            style={{ fontFamily: "Poppins, sans-serif" }}
+            className="text-sm font-medium"
+          >
             Back to My Blogs
           </span>
         </button>
@@ -100,7 +101,10 @@ const BlogDetail = () => {
           >
             Edit Blog
           </h1>
-          <p style={{ fontFamily: "Poppins, sans-serif" }} className="text-gray-600 text-sm sm:text-base">
+          <p
+            style={{ fontFamily: "Poppins, sans-serif" }}
+            className="text-gray-600 text-sm sm:text-base"
+          >
             Update your blog content and publish your changes
           </p>
         </div>
@@ -154,7 +158,10 @@ const BlogDetail = () => {
                   name="description"
                   onChange={handleChange}
                 />
-                <p style={{ fontFamily: "Poppins, sans-serif" }} className="text-xs md:text-sm text-gray-500 mt-2">
+                <p
+                  style={{ fontFamily: "Poppins, sans-serif" }}
+                  className="text-xs md:text-sm text-gray-500 mt-2"
+                >
                   {input.description.length} characters
                 </p>
               </div>

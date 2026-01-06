@@ -6,11 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { blogApi } from "@/api";
 import { toast } from "sonner";
 import PropTypes from "prop-types";
-import { Pencil, SquarePenIcon, Trash } from 'lucide-react';
-
+import { SquarePenIcon, Trash } from 'lucide-react';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import "@fontsource/poppins";
-import "@fontsource/playfair-display";
 
 const Blog = ({
   title,

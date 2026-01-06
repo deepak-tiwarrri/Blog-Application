@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import AuthForm from "./features/AuthForm";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useScrollToTop } from "@/hooks/useScrollToTop.js";
 import { sendRequest } from "@/store";
 import { toast } from "sonner";
 
-
-
 const Login = () => {
+  useScrollToTop();
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();

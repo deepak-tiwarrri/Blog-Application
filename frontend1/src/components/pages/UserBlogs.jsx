@@ -3,12 +3,12 @@ import { useState, useEffect, useCallback } from "react";
 import { blogApi } from "@/api";
 import Blog from "../features/Blog";
 import Loader from "../common/Loader";
+import { useScrollToTop } from "@/hooks/useScrollToTop.js";
 import { toast } from "sonner";
 import { BookOpen } from "lucide-react";
-import "@fontsource/poppins";
-import "@fontsource/playfair-display";
 
 const UserBlogs = () => {
+  useScrollToTop();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);

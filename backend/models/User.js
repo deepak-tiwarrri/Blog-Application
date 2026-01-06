@@ -14,10 +14,27 @@ const userSchema = new Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: false,
     minlength: 6,
   },
+  googleId: {
+    type: String,
+    default: null,
+  },
+  profilePicture: {
+    type: String,
+    default: null,
+  },
+  authMethod: {
+    type: String,
+    enum: ['email', 'google'],
+    default: 'email',
+  },
   blogs: [{ type: mongoose.Types.ObjectId, ref: "Blog", required: true }],
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 export default mongoose.model("User", userSchema);
 // users

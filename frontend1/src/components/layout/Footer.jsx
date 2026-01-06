@@ -5,8 +5,6 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import XIcon from "@mui/icons-material/X";
 import { Mail, MapPin, Phone } from "lucide-react";
-import "@fontsource/poppins";
-import "@fontsource/playfair-display";
 
 const Footer = () => {
   return (

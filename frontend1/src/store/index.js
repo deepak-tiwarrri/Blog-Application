@@ -31,6 +31,9 @@ const authSlice = createSlice({
     updateInput(state, action) {
       state.input = { ...state.input, ...action.payload };
     },
+    updateUser(state, action) {
+      state.user = { ...state.user, ...action.payload };
+    },
   },
   extraReducers: (builder) => {
     builder

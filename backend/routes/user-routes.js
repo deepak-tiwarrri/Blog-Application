@@ -7,5 +7,6 @@ const userRouter = express.Router();
 userRouter.get("/", userController.getAllUser);
 userRouter.post("/signup", userController.signUp);
 userRouter.post("/login", userController.login);
-// Example: userRouter.put("/:id", authMiddleware, userController.updateUser); // Uncomment if updateUser is implemented
+userRouter.post("/google-signin", userController.googleSignIn);
+
 export default userRouter;

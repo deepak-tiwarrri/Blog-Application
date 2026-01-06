@@ -1,7 +1,5 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import "@fontsource/poppins";
-import "@fontsource/playfair-display";
 
 const BlogCard = ({ blog }) => {
   return (
