@@ -151,4 +151,102 @@ const googleSignIn = async (req, res) => {
   }
 };
 
-export default { getAllUser, signUp, login, googleSignIn };
+/**
+ * Get user profile by ID
+ * @param {string} userId - User ID from params or from authenticated request
+ */
+const getUserProfile = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    if (!id) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    const user = await User.findById(id).select("-password");
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        profilePicture: user.profilePicture,
+        bio: user.bio,
+        location: user.location,
+        phone: user.phone,
+        website: user.website,
+        authMethod: user.authMethod,
+        createdAt: user.createdAt,
+        blogsCount: user.blogs.length,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Failed to fetch user profile",
+      error: error.message,
+    });
+  }
+};
+
+/**
+ * Update user profile
+ * @param {string} userId - User ID (from authenticated request)
+ * @param {Object} updates - Profile updates (name, bio, location, phone, website, profilePicture)
+ */
+const updateUserProfile = async (req, res) => {
+  try {
+    const userId = req.userId || req.params.id;
+    const { name, bio, location, phone, website, profilePicture } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    // Find and update user
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update only provided fields
+    if (name) user.name = name;
+    if (bio !== undefined) user.bio = bio;
+    if (location !== undefined) user.location = location;
+    if (phone !== undefined) user.phone = phone;
+    if (website !== undefined) user.website = website;
+    if (profilePicture !== undefined) user.profilePicture = profilePicture;
+
+    user.updatedAt = new Date();
+
+    await user.save();
+
+    return res.status(200).json({
+      message: "Profile updated successfully",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        profilePicture: user.profilePicture,
+        bio: user.bio,
+        location: user.location,
+        phone: user.phone,
+        website: user.website,
+        authMethod: user.authMethod,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Failed to update profile",
+      error: error.message,
+    });
+  }
+};
+
+export default { getAllUser, signUp, login, googleSignIn, getUserProfile, updateUserProfile };

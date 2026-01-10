@@ -1,3 +1,11 @@
+import GoogleIcon from "../../assets/google-icon.svg?url"
+const handleClick = () => {
+  // Trigger the actual GoogleLogin component
+  const googleLoginButton = document.querySelector('[role="button"]');
+  if (googleLoginButton) googleLoginButton.click();
+};
+
+
 export const GoogleButton = ({ children }) => (
   <button
     type="button"
@@ -7,6 +15,6 @@ export const GoogleButton = ({ children }) => (
   >
     {/* Google Icon */}
     <img src={GoogleIcon} alt="Google" width={20} height={20} />
-    {children }
+    {children}
   </button>
 );

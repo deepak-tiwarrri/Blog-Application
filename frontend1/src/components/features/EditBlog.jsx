@@ -165,6 +165,20 @@ const BlogDetail = () => {
                   {input.description.length} characters
                 </p>
               </div>
+              <div className="mb-8 md:mb-10">
+                <label htmlFor="image"
+                  style={{ fontFamily: "Poppins, sans-serif" }}
+                  className="block text-sm md:text-base font-semibold text-gray-800 mb-3">Image Link</label>
+                <input type="text"
+                  id="image-url"
+                  style={{ fontFamily: "Poppins, sans-serif" }}
+                  className="w-full px-4 md:px-5 py-3 md:py-3.5 border border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 bg-white hover:border-gray-300 transition-all duration-200 text-gray-900 placeholder-gray-400 text-sm md:text-base"
+                  placeholder="Enter an engaging blog title"
+                  value={input.title}
+                  name="title"
+                  onChange={handleChange}
+                />
+              </div>
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-3 md:gap-4">

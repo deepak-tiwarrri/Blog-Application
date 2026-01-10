@@ -1,4 +1,3 @@
-
 // @eslint-ignore
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
@@ -6,7 +5,8 @@ import { Link, NavLink, useLocation, useNavigate, useRoutes } from "react-router
 import { authActions } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "../ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
+import { toast } from "sonner";
 import "@fontsource/poppins";
 // import Brightness4Icon from "@mui/icons-material/Brightness4";
 // import Brightness7Icon from "@mui/icons-material/Brightness7";
@@ -26,6 +26,7 @@ const Header = () => {
   // Logout Handler
   const handleLogout = () => {
     dispatch(authActions.logout());
+    toast.success("Logged out successfully");
     navigate("/login");
     setMobileMenuOpen(false);
   };
@@ -109,10 +110,27 @@ const Header = () => {
               </NavLink>
             )}
 
+            {/* Profile Button */}
+            {isLoggedIn && (
+              <NavLink
+                to="/profile"
+                onClick={handleNavClick}
+                className={({ isActive }) =>
+                  isActive
+                    ? "flex items-center gap-2 rounded-full text-white bg-blue-600 hover:bg-blue-700 text-sm lg:text-base px-4 lg:px-6 py-2 transition-all"
+                    : "flex items-center gap-2 rounded-full text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-sm lg:text-base hover:shadow-xl duration-300 px-4 lg:px-6 py-2 transition-all hover:cursor-pointer"
+                }
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                <User size={18} />
+                Profile
+              </NavLink>
+            )}
+
             {/* Logout Button */}
             {isLoggedIn && (
               <Button
-                className="rounded-full text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-sm lg:text-base hover:shadow-xl duration-300 px-5 lg:px-6 py-2 transition-all hover:cursor-pointer"
+                className="rounded-full text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-sm lg:text-base hover:shadow-xl duration-300 px-5 lg:px-6 py-2 transition-all hover:cursor-pointer"
                 onClick={handleLogout}
                 style={{ fontFamily: "Poppins, sans-serif" }}
               >
@@ -167,6 +185,19 @@ const Header = () => {
                   style={{ fontFamily: "Poppins, sans-serif" }}
                 >
                   My Blogs
+                </NavLink>
+                <NavLink
+                  to="/profile"
+                  onClick={handleNavClick}
+                  className={({ isActive }) =>
+                    isActive
+                      ? "block px-4 py-2 rounded-lg bg-blue-600 text-white font-medium transition flex items-center gap-2"
+                      : "block px-4 py-2 rounded-lg text-gray-300 hover:bg-gray-800 font-medium transition flex items-center gap-2"
+                  }
+                  style={{ fontFamily: "Poppins, sans-serif" }}
+                >
+                  <User size={18} />
+                  My Profile
                 </NavLink>
               </nav>
             )}

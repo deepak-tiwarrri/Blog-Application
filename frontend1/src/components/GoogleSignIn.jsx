@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import axios from "axios";
 import { USER_URL } from "@/lib/endpoints";
-import GoogleIcon from "../../public/assets/google-icon.svg?url";
+
 import { GoogleButton } from "./common/GoogleButton";
 
 /**
@@ -49,11 +49,7 @@ const GoogleSignInButton = () => {
       toast.error(error.response?.data?.message || "Google Sign-In failed");
     }
   };
-  const handleClick = () => {
-    // Trigger the actual GoogleLogin component
-    const googleLoginButton = document.querySelector('[role="button"]');
-    if (googleLoginButton) googleLoginButton.click();
-  };
+  
 
   const handleGoogleError = () => {
     toast.error("Google Sign-In failed. Please try again.");
