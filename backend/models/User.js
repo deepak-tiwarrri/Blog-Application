@@ -47,6 +47,24 @@ const userSchema = new Schema({
     type: String,
     default: "",
   },
+  socialMedia: {
+    twitter: {
+      type: String,
+      default: "",
+    },
+    linkedin: {
+      type: String,
+      default: "",
+    },
+    instagram: {
+      type: String,
+      default: "",
+    },
+    github: {
+      type: String,
+      default: "",
+    },
+  },
   blogs: [{ type: mongoose.Types.ObjectId, ref: "Blog", required: true }],
   createdAt: {
     type: Date,

@@ -244,3 +244,13 @@ body {
 .input-field {
   @apply pl-12 py-3 rounded-lg border-2 border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-500 focus:outline-none focus:ring-0 focus-visible:ring-0 transition-all duration-200 w-full placeholder:text-gray-400;
 }
+.quick-link-button-header {
+  @apply text-gray-900
+font-semibold text-gray-900;
+}
+.quick-link-button-subheader {
+  @apply text-sm text-gray-600;
+}
+.quick-link-button {
+  @apply p-4 bg-white rounded-lg shadow hover:shadow-md transition-shadow border border-gray-100 text-left hover:cursor-pointer;
+}

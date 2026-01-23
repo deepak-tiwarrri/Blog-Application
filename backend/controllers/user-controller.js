@@ -158,13 +158,14 @@ const googleSignIn = async (req, res) => {
 const getUserProfile = async (req, res) => {
   try {
     const { id } = req.params;
-    
+
     if (!id) {
       return res.status(400).json({ message: "User ID is required" });
     }
 
     const user = await User.findById(id).select("-password");
-    
+    console.log("User details from backend: ", user);
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -179,6 +180,7 @@ const getUserProfile = async (req, res) => {
         location: user.location,
         phone: user.phone,
         website: user.website,
+        socialMedia: user.socialMedia,
         authMethod: user.authMethod,
         createdAt: user.createdAt,
         blogsCount: user.blogs.length,
@@ -200,7 +202,8 @@ const getUserProfile = async (req, res) => {
 const updateUserProfile = async (req, res) => {
   try {
     const userId = req.userId || req.params.id;
-    const { name, bio, location, phone, website, profilePicture } = req.body;
+    const { name, bio, location, phone, website, profilePicture, socialMedia } =
+      req.body;
 
     if (!userId) {
       return res.status(400).json({ message: "User ID is required" });
@@ -220,6 +223,14 @@ const updateUserProfile = async (req, res) => {
     if (phone !== undefined) user.phone = phone;
     if (website !== undefined) user.website = website;
     if (profilePicture !== undefined) user.profilePicture = profilePicture;
+    if (socialMedia) {
+      user.socialMedia = {
+        twitter: socialMedia.twitter || "",
+        linkedin: socialMedia.linkedin || "",
+        instagram: socialMedia.instagram || "",
+        github: socialMedia.github || "",
+      };
+    }
 
     user.updatedAt = new Date();
 
@@ -236,6 +247,7 @@ const updateUserProfile = async (req, res) => {
         location: user.location,
         phone: user.phone,
         website: user.website,
+        socialMedia: user.socialMedia,
         authMethod: user.authMethod,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
@@ -249,4 +261,84 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
-export default { getAllUser, signUp, login, googleSignIn, getUserProfile, updateUserProfile };
+/**
+ * Change user password
+ * @param {string} userId - User ID
+ * @param {string} currentPassword - Current password
+ * @param {string} newPassword - New password
+ */
+const changePassword = async (req, res) => {
+  try {
+    const userId = req.userId || req.params.id;
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return res.status(400).json({
+        message:
+          "Current password, new password, and confirmation are required",
+      });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        message: "New passwords do not match",
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        message: "New password must be at least 6 characters long",
+      });
+    }
+
+    // Get user with password field
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Only password-authenticated users can change password
+    if (user.authMethod === "google") {
+      return res.status(400).json({
+        message: "Cannot change password for Google-authenticated accounts",
+      });
+    }
+
+    // Verify current password
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Current password is incorrect" });
+    }
+
+    // Hash new password
+    const hashPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashPassword;
+    user.updatedAt = new Date();
+
+    await user.save();
+
+    return res.status(200).json({
+      message: "Password changed successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Failed to change password",
+      error: error.message,
+    });
+  }
+};
+
+export default {
+  getAllUser,
+  signUp,
+  login,
+  googleSignIn,
+  getUserProfile,
+  updateUserProfile,
+  changePassword,
+};

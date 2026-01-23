@@ -11,5 +11,6 @@ userRouter.post("/signup", userController.signUp);
 userRouter.post("/login", userController.login);
 userRouter.post("/google-signin", userController.googleSignIn);
 userRouter.put("/:id", authMiddleware, userController.updateUserProfile);
+userRouter.put("/:id/change-password", authMiddleware, userController.changePassword);
 
 export default userRouter;
