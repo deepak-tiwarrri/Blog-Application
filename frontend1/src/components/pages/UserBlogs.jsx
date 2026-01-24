@@ -12,25 +12,30 @@ const UserBlogs = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const id = localStorage.getItem("userId");
+  const userId = localStorage.getItem("userId");
 
   const fetchBlogs = useCallback(async () => {
+    if (!userId) return; // Guard against missing userId
+
     setLoading(true);
     try {
-      const res = await blogApi.getBlogByUserId(id);
+      const res = await blogApi.getBlogByUserId(userId);
       console.log(res.data.user);
       setUser(res.data.user);
-      setLoading(false);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to fetch user blogs");
-      toast.error(err.response?.data?.message || "Failed to fetch user blogs");
+      const errorMsg = err.response?.data?.message || "Failed to fetch user blogs";
+      setError(errorMsg);
+      toast.error(errorMsg);
+    }finally{
       setLoading(false);
     }
-  }, [id]);
+  }, [userId]);
 
   useEffect(() => {
-    fetchBlogs();
-  }, [fetchBlogs]);
+    if (userId) {
+      fetchBlogs();
+    }
+  }, [userId, fetchBlogs]);
 
   const handleDelete = async (blogId) => {
     try {
@@ -77,9 +82,15 @@ const UserBlogs = () => {
           <Loader fullScreen={false} size={60} />
         ) : error ? (
           <div className="bg-red-50 border-l-4 border-red-500 p-4 sm:p-6 rounded-lg max-w-2xl mx-auto">
-            <p className="text-red-700 font-semibold text-sm sm:text-base" style={{ fontFamily: "Poppins, sans-serif" }}>
+            <p className="text-red-700 font-semibold text-sm sm:text-base mb-4" style={{ fontFamily: "Poppins, sans-serif" }}>
               {error}
             </p>
+            <button
+              onClick={fetchBlogs}
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors"
+            >
+              Retry
+            </button>
           </div>
         ) : !user || user.blogs.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 md:py-16 lg:py-20">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { blogApi } from "@/api";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -13,11 +13,20 @@ const AddBlog = () => {
   useScrollToTop();
   const classes = useStyles();
   const navigate = useNavigate();
+  const userId = localStorage.getItem("userId");
   const [input, setInput] = useState({
     title: "",
     description: "",
     image: "",
   });
+
+  // Protect route - redirect if not authenticated
+  useEffect(() => {
+    if (!userId) {
+      toast.error("Please login to create a blog");
+      navigate("/login", { replace: true });
+    }
+  }, [userId, navigate]);
 
   const handleChange = (e) => {
     setInput((prevState) => ({
@@ -28,6 +37,29 @@ const AddBlog = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Validate all required fields
+    if (!input.title.trim()) {
+      toast.error("Title is required");
+      return;
+    }
+    if (!input.description.trim()) {
+      toast.error("Description is required");
+      return;
+    }
+    if (!input.image.trim()) {
+      toast.error("Image URL is required");
+      return;
+    }
+    if (input.title.length < 3) {
+      toast.error("Title must be at least 3 characters");
+      return;
+    }
+    if (input.description.length < 10) {
+      toast.error("Description must be at least 10 characters");
+      return;
+    }
+
     console.log(input);
     sendRequest()
       .then((data) => {

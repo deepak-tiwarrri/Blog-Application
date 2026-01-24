@@ -1,5 +1,5 @@
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "@/store";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -15,7 +15,13 @@ import { GoogleButton } from "./common/GoogleButton";
 const GoogleSignInButton = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const isLoggedIn = useSelector((state) => state.auth?.isLoggedIn);
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+  // Don't show Google signin if already logged in
+  if (isLoggedIn) {
+    return null;
+  }
 
   const handleGoogleSuccess = async (credentialResponse) => {
     try {

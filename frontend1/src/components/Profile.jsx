@@ -58,7 +58,8 @@ const Profile = () => {
   // Fetch profile data on component mount
   useEffect(() => {
     if (!userId) {
-      navigate("/login");
+      toast.error("Please login to view profile");
+      navigate("/login", { replace: true });
       return;
     }
     fetchProfile();
@@ -217,7 +218,7 @@ const Profile = () => {
                   <Edit2 size={18} />
                   Edit Profile
                 </button>
-                {/* {user?.authMethod === "email" && ( */}
+                {user?.authMethod === "email" && (
                 <button
                   onClick={() => navigate("/change-password")}
                   className="flex items-center gap-2 px-4 py-2 bg-yellow-500/40 hover:bg-yellow-500/60 text-white rounded-xl transition-all duration-300 hover:cursor-pointer font-medium backdrop-blur-md border border-yellow-400/30 hover:border-yellow-400/50"
@@ -225,7 +226,7 @@ const Profile = () => {
                   <Lock size={18} />
                   Change Password
                 </button>
-                {/* )} */}
+                )}
                 <button
                   onClick={handleSignOut}
                   className="flex items-center gap-2 px-4 py-2 bg-red-500/40 hover:bg-red-500/60 text-white rounded-xl transition-all duration-300 hover:cursor-pointer font-medium backdrop-blur-md border border-red-400/30 hover:border-red-400/50"
