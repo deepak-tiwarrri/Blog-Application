@@ -46,6 +46,9 @@ export const userApi = {
   login: (payload) => api.post(`${USER_URL}/login`, payload),
   googleSignIn: (payload) => api.post(`${USER_URL}/google-signin`, payload),
   getById: (id) => api.get(`${USER_URL}/${id}`),
+  getProfile: (id) => api.get(`${USER_URL}/${id}`),
+  updateProfile: (id, payload) => api.put(`${USER_URL}/${id}`, payload),
+  changePassword: (id, payload) => api.put(`${USER_URL}/${id}/change-password`, payload),
 };
 
 export default api;

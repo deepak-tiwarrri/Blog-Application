@@ -1,15 +1,13 @@
-
 // @eslint-ignore
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
-import { Link, NavLink, useLocation, useNavigate, useRoutes } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { authActions } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "../ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
+import { toast } from "sonner";
 import "@fontsource/poppins";
-// import Brightness4Icon from "@mui/icons-material/Brightness4";
-// import Brightness7Icon from "@mui/icons-material/Brightness7";
 
 const Header = () => {
   const location = useLocation();
@@ -21,11 +19,11 @@ const Header = () => {
   // Conditional rendering logic
   const isLoginPage = location.pathname === "/login";
   const isSignupPage = location.pathname === "/signup";
-  console.log(location.pathname);
 
   // Logout Handler
   const handleLogout = () => {
     dispatch(authActions.logout());
+    toast.success("Logged out successfully");
     navigate("/login");
     setMobileMenuOpen(false);
   };
@@ -39,14 +37,12 @@ const Header = () => {
     <div className="bg-gradient-to-r from-gray-950 to-gray-800 sticky top-0 shadow-lg z-50">
       <div className="px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
         <div className="flex justify-between items-center">
-
           {/* Left Section - Logo */}
-          <Link
-            to="/"
-            onClick={handleNavClick}
-            className="flex-shrink-0"
-          >
-            <h2 className="font-semibold text-xl sm:text-2xl lg:text-3xl cursor-pointer text-white hover:text-purple-300 transition-colors duration-200" style={{ fontFamily: "Playfair Display, serif" }}>
+          <Link to="/" onClick={handleNavClick} className="flex-shrink-0">
+            <h2
+              className="font-semibold text-xl sm:text-2xl lg:text-3xl cursor-pointer text-white hover:text-purple-300 transition-colors duration-200"
+              style={{ fontFamily: "Playfair Display, serif" }}
+            >
               Bite&Roam
             </h2>
           </Link>
@@ -54,7 +50,10 @@ const Header = () => {
           {/* Center Section - Navigation (Hidden on mobile) */}
           {isLoggedIn && (
             <div className="hidden md:block">
-              <nav className="inline-flex space-x-2 items-center bg-gray-900/20 p-1 rounded-full" aria-label="Blogs tabs">
+              <nav
+                className="inline-flex space-x-2 items-center bg-gray-900/20 p-1 rounded-full"
+                aria-label="Blogs tabs"
+              >
                 <NavLink
                   to="/blogs"
                   onClick={handleNavClick}
@@ -98,7 +97,7 @@ const Header = () => {
             )}
 
             {/* Conditionally show Signup button */}
-            {(!isLoggedIn && !isSignupPage) && (
+            {!isLoggedIn && !isSignupPage && (
               <NavLink
                 to="/signup"
                 onClick={handleNavClick}
@@ -109,10 +108,27 @@ const Header = () => {
               </NavLink>
             )}
 
+            {/* Profile Button */}
+            {isLoggedIn && (
+              <NavLink
+                to="/profile"
+                onClick={handleNavClick}
+                className={({ isActive }) =>
+                  isActive
+                    ? "flex items-center gap-2 rounded-full text-white bg-blue-600 hover:bg-blue-700 text-sm lg:text-base px-4 lg:px-6 py-2 transition-all"
+                    : "flex items-center gap-2 rounded-full text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-sm lg:text-base hover:shadow-xl duration-300 px-4 lg:px-6 py-2 transition-all hover:cursor-pointer"
+                }
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                <User size={18} />
+                Profile
+              </NavLink>
+            )}
+
             {/* Logout Button */}
             {isLoggedIn && (
               <Button
-                className="rounded-full text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-sm lg:text-base hover:shadow-xl duration-300 px-5 lg:px-6 py-2 transition-all hover:cursor-pointer"
+                className="rounded-full text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-sm lg:text-base hover:shadow-xl duration-300 px-5 lg:px-6 py-2 transition-all hover:cursor-pointer"
                 onClick={handleLogout}
                 style={{ fontFamily: "Poppins, sans-serif" }}
               >
@@ -128,11 +144,7 @@ const Header = () => {
               className="inline-flex items-center justify-center p-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800 transition-colors duration-200"
               aria-label="Toggle menu"
             >
-              {mobileMenuOpen ? (
-                <X size={24} />
-              ) : (
-                <Menu size={24} />
-              )}
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
@@ -140,7 +152,6 @@ const Header = () => {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden mt-4 pb-4 border-t border-gray-700 pt-4 space-y-3">
-
             {/* Mobile Navigation Links */}
             {isLoggedIn && (
               <nav className="space-y-2">
@@ -168,6 +179,19 @@ const Header = () => {
                 >
                   My Blogs
                 </NavLink>
+                <NavLink
+                  to="/profile"
+                  onClick={handleNavClick}
+                  className={({ isActive }) =>
+                    isActive
+                      ? "px-4 py-2 rounded-lg bg-blue-600 text-white font-medium transition flex items-center gap-2"
+                      : "px-4 py-2 rounded-lg text-gray-300 hover:bg-gray-800 font-medium transition flex items-center gap-2"
+                  }
+                  style={{ fontFamily: "Poppins, sans-serif" }}
+                >
+                  <User size={18} />
+                  My Profile
+                </NavLink>
               </nav>
             )}
 
@@ -184,7 +208,7 @@ const Header = () => {
                 </NavLink>
               )}
 
-              {(!isLoggedIn && !isSignupPage) && (
+              {!isLoggedIn && !isSignupPage && (
                 <NavLink
                   to="/signup"
                   onClick={handleNavClick}

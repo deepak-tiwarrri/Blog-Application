@@ -30,8 +30,47 @@ const userSchema = new Schema({
     enum: ['email', 'google'],
     default: 'email',
   },
+  bio: {
+    type: String,
+    default: "",
+    maxlength: 500,
+  },
+  location: {
+    type: String,
+    default: "",
+  },
+  phone: {
+    type: String,
+    default: "",
+  },
+  website: {
+    type: String,
+    default: "",
+  },
+  socialMedia: {
+    twitter: {
+      type: String,
+      default: "",
+    },
+    linkedin: {
+      type: String,
+      default: "",
+    },
+    instagram: {
+      type: String,
+      default: "",
+    },
+    github: {
+      type: String,
+      default: "",
+    },
+  },
   blogs: [{ type: mongoose.Types.ObjectId, ref: "Blog", required: true }],
   createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  updatedAt: {
     type: Date,
     default: Date.now,
   },

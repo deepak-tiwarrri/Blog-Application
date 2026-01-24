@@ -15,7 +15,7 @@ export const verifyGoogleToken = async (token) => {
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
-
+    console.log("google ticket response: ",ticket);
     const payload = ticket.getPayload();
 
     return {
