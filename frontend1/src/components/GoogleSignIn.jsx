@@ -39,7 +39,7 @@ const GoogleSignInButton = () => {
           email: user.email,
           profilePicture: user.profilePicture,
           _id: user._id,
-        })
+        }),
       );
 
       toast.success("Google Sign-In Successful!");
@@ -49,6 +49,7 @@ const GoogleSignInButton = () => {
       toast.error(error.response?.data?.message || "Google Sign-In failed");
     }
   };
+
   const handleClick = () => {
     // Trigger the actual GoogleLogin component
     const googleLoginButton = document.querySelector('[role="button"]');
@@ -65,7 +66,7 @@ const GoogleSignInButton = () => {
   if (!googleClientId) {
     console.warn("Google Client ID is not configured");
     return toast.error(
-      "Google Sign-In is not available at the moment, add google client id"
+      "Google Sign-In is not available at the moment, add google client id",
     );
   }
 

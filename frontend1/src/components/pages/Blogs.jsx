@@ -2,8 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import { blogApi } from "@/api";
 import Blog from "../features/Blog";
 import { toast } from "sonner";
-import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 import Loader from "../common/Loader";
 import { useScrollToTop } from "@/hooks/useScrollToTop.js";
 import { BookOpen } from "lucide-react";
@@ -36,7 +36,6 @@ const Blogs = () => {
 
   const totalPages = Math.max(1, Math.ceil(blogs.length / pageSize));
 
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto max-w-7xl">
@@ -60,7 +59,8 @@ const Blogs = () => {
             className="text-lg text-gray-600 max-w-2xl mx-auto"
             style={{ fontFamily: "Poppins, sans-serif" }}
           >
-            Explore inspiring stories, tips, and insights from our community of talented writers
+            Explore inspiring stories, tips, and insights from our community of
+            talented writers
           </p>
         </div>
 
@@ -69,7 +69,10 @@ const Blogs = () => {
           <Loader fullScreen={false} size={60} />
         ) : error ? (
           <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg">
-            <p className="text-red-700 font-semibold" style={{ fontFamily: "Poppins, sans-serif" }}>
+            <p
+              className="text-red-700 font-semibold"
+              style={{ fontFamily: "Poppins, sans-serif" }}
+            >
               {error}
             </p>
           </div>
@@ -87,15 +90,18 @@ const Blogs = () => {
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-12">
               {blogs
+                .filter((blog) => blog && blog.user && blog._id && blog.title)
                 .slice((currentPage - 1) * pageSize, currentPage * pageSize)
                 .map((blog, index) => (
                   <div
-                    key={index}
+                    key={blog._id || index}
                     className="transform hover:scale-105 transition-transform duration-300"
                   >
                     <Blog
-                      isUser={localStorage.getItem("userId") === blog.user._id}
-                      id={blog._id}
+                      isUser={
+                        localStorage.getItem("userId") === blog?.user?._id
+                      }
+                      id={blog?._id}
                       title={blog.title}
                       description={blog.description}
                       imageUrl={blog.image}

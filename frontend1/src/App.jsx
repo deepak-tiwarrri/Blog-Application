@@ -8,6 +8,8 @@ import BlogDetailPage from "./components/pages/BlogDetailPage";
 import AddBlog from "./components/features/AddBlog";
 import UserBlogs from "./components/pages/UserBlogs";
 import BlogDetail from "./components/features/EditBlog";
+import Profile from "./components/Profile";
+import ChangePassword from "./components/pages/ChangePassword";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import ErrorBoundary from "./components/common/ErrorBoundary";
@@ -47,10 +49,11 @@ const App = () => {
                 </>
               ) : (
                 <>
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/change-password" element={<ChangePassword />} />
                   <Route path="/blogs/add" element={<AddBlog />} />
                   <Route path="/myblogs" element={<UserBlogs />} />
                   <Route path="/myblogs/:id" element={<BlogDetail />} />
-                  {/* <Route path="/profile" element={<Profile />} /> */}
                 </>
               )}
             </Routes>
