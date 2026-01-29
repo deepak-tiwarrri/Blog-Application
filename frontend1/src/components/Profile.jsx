@@ -1,22 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { userApi } from "@/api";
 import { authActions } from "@/store";
 import { toast } from "sonner";
 import { useScrollToTop } from "@/hooks/useScrollToTop.js";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import EditProfileSection from "@/components/features/EditProfileSection";
 import {
   MapPin,
   Phone,
   Globe,
   LogOut,
   Edit2,
-  Save,
-  X,
   Lock,
   Twitter,
   Linkedin,
@@ -24,6 +19,7 @@ import {
   Instagram,
   Calendar,
 } from "lucide-react";
+import { useUserProfile } from "@/hooks/useBlogAPI";
 
 export const INITIAL_PROFILE_STATE = {
   name: "",
@@ -50,10 +46,9 @@ const Profile = () => {
   const user = useSelector((state) => state.auth?.user);
 
   // State Management
-  const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [profileData, setProfileData] = useState(INITIAL_PROFILE_STATE);
+  const [isEditing, setIsEditing] = React.useState(false);
+  const { profile, loading, saving, fetchProfile, updateProfile } = useUserProfile(userId);
+  const [profileData, setProfileData] = React.useState(INITIAL_PROFILE_STATE);
 
   // Fetch profile data on component mount
   useEffect(() => {
@@ -65,61 +60,27 @@ const Profile = () => {
     fetchProfile();
   }, [userId, navigate]);
 
-  // ==================== API Calls ====================
-  const fetchProfile = async () => {
-    try {
-      setLoading(true);
-      const response = await userApi.getProfile(userId);
-      const userData = response?.data?.user;
-      console.log("Fetched user data:", userData);
-      if (userData) {
-        setProfileData({
-          name: userData.name || "",
-          email: userData.email || "",
-          bio: userData.bio || "",
-          location: userData.location || "",
-          phone: userData.phone || "",
-          website: userData.website || "",
-          profilePicture: userData.profilePicture || "",
-          socialMedia: userData.socialMedia || {
-            twitter: "",
-            linkedin: "",
-            instagram: "",
-            github: "",
-          },
-          createdAt: userData.createdAt || "",
-        });
-      }
-    } catch (error) {
-      console.error("Failed to fetch profile:", error);
-      toast.error("Failed to load profile");
-    } finally {
-      setLoading(false);
+  // Update local state when profile is fetched
+  useEffect(() => {
+    if (profile) {
+      setProfileData({
+        name: profile.name || "",
+        email: profile.email || "",
+        bio: profile.bio || "",
+        location: profile.location || "",
+        phone: profile.phone || "",
+        website: profile.website || "",
+        profilePicture: profile.profilePicture || "",
+        socialMedia: profile.socialMedia || {
+          twitter: "",
+          linkedin: "",
+          instagram: "",
+          github: "",
+        },
+        createdAt: profile.createdAt || "",
+      });
     }
-  };
-
-  const handleSaveProfile = async () => {
-    try {
-      if (!profileData.name.trim()) {
-        toast.error("Name is required");
-        return;
-      }
-
-      setSaving(true);
-      const response = await userApi.updateProfile(userId, profileData);
-
-      if (response?.data?.user) {
-        dispatch(authActions.updateUser(response.data.user));
-        toast.success("Profile updated successfully!");
-        setIsEditing(false);
-      }
-    } catch (error) {
-      console.error("Failed to update profile:", error);
-      toast.error(error?.response?.data?.message || "Failed to update profile");
-    } finally {
-      setSaving(false);
-    }
-  };
+  }, [profile]);
 
   // ==================== Event Handlers ====================
   const handleInputChange = (e) => {
@@ -139,6 +100,23 @@ const Profile = () => {
         [name]: value,
       },
     }));
+  };
+
+  const handleSaveProfile = async () => {
+    try {
+      if (!profileData.name.trim()) {
+        toast.error("Name is required");
+        return;
+      }
+
+      const updatedUser = await updateProfile(profileData);
+      if (updatedUser) {
+        dispatch(authActions.updateUser(updatedUser));
+        setIsEditing(false);
+      }
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+    }
   };
 
   const handleSignOut = () => {
@@ -219,13 +197,13 @@ const Profile = () => {
                   Edit Profile
                 </button>
                 {user?.authMethod === "email" && (
-                <button
-                  onClick={() => navigate("/change-password")}
-                  className="flex items-center gap-2 px-4 py-2 bg-yellow-500/40 hover:bg-yellow-500/60 text-white rounded-xl transition-all duration-300 hover:cursor-pointer font-medium backdrop-blur-md border border-yellow-400/30 hover:border-yellow-400/50"
-                >
-                  <Lock size={18} />
-                  Change Password
-                </button>
+                  <button
+                    onClick={() => navigate("/change-password")}
+                    className="flex items-center gap-2 px-4 py-2 bg-yellow-500/40 hover:bg-yellow-500/60 text-white rounded-xl transition-all duration-300 hover:cursor-pointer font-medium backdrop-blur-md border border-yellow-400/30 hover:border-yellow-400/50"
+                  >
+                    <Lock size={18} />
+                    Change Password
+                  </button>
                 )}
                 <button
                   onClick={handleSignOut}
@@ -343,9 +321,9 @@ const Profile = () => {
                     Member since{" "}
                     {profileData.createdAt
                       ? new Date(profileData.createdAt).toLocaleDateString(
-                          "en-GB",
-                          { day: "numeric", month: "long", year: "numeric" }
-                        )
+                        "en-GB",
+                        { day: "numeric", month: "long", year: "numeric" }
+                      )
                       : "N/A"}
                   </span>
                 </div>
@@ -356,235 +334,15 @@ const Profile = () => {
           {/* Profile Content - Edit/View Mode */}
           <div className="space-y-6">
             {isEditing ? (
-              // Edit Mode
-              <>
-                {/* Name */}
-                <div>
-                  <Label
-                    htmlFor="name"
-                    className="block text-sm font-semibold text-gray-200 mb-2"
-                  >
-                    Full Name
-                  </Label>
-                  <Input
-                    id="name"
-                    name="name"
-                    type="text"
-                    value={profileData.name}
-                    onChange={handleInputChange}
-                    className="w-full bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-gray-400 rounded-xl focus:border-blue-400/50 focus:outline-none transition-all"
-                    placeholder="Enter your full name"
-                  />
-                </div>
-
-                {/* Email (Read-only) */}
-                <div>
-                  <Label
-                    htmlFor="email"
-                    className="block text-sm font-semibold text-gray-200 mb-2"
-                  >
-                    Email Address
-                  </Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={profileData.email}
-                    disabled
-                    className="w-full bg-white/5 backdrop-blur-md border border-white/10 text-gray-400 rounded-xl cursor-not-allowed"
-                  />
-                  <p className="text-xs text-gray-400 mt-1">
-                    Email cannot be changed
-                  </p>
-                </div>
-
-                {/* Bio */}
-                <div>
-                  <Label
-                    htmlFor="bio"
-                    className="block text-sm font-semibold text-gray-200 mb-2"
-                  >
-                    Bio
-                  </Label>
-                  <Textarea
-                    id="bio"
-                    name="bio"
-                    value={profileData.bio}
-                    onChange={handleInputChange}
-                    placeholder="Tell us about yourself (max 500 characters)"
-                    className="w-full bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-gray-400 rounded-xl focus:border-blue-400/50 focus:outline-none transition-all"
-                    maxLength={500}
-                  />
-                  <p className="text-xs text-gray-400 mt-1">
-                    {profileData.bio.length}/500
-                  </p>
-                </div>
-
-                {/* Location */}
-                <div>
-                  <Label
-                    htmlFor="location"
-                    className="text-sm font-semibold text-gray-200 mb-2 flex items-center gap-2"
-                  >
-                    <MapPin size={16} />
-                    Location
-                  </Label>
-                  <Input
-                    id="location"
-                    name="location"
-                    type="text"
-                    value={profileData.location}
-                    onChange={handleInputChange}
-                    placeholder="City, Country"
-                    className="w-full bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-gray-400 rounded-xl focus:border-blue-400/50 focus:outline-none transition-all"
-                  />
-                </div>
-
-                {/* Phone */}
-                <div>
-                  <Label
-                    htmlFor="phone"
-                    className="text-sm font-semibold text-gray-200 mb-2 flex items-center gap-2"
-                  >
-                    <Phone size={16} />
-                    Phone Number
-                  </Label>
-                  <Input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    value={profileData.phone}
-                    onChange={handleInputChange}
-                    placeholder="Your phone number"
-                    className="w-full bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-gray-400 rounded-xl focus:border-blue-400/50 focus:outline-none transition-all"
-                  />
-                </div>
-
-                {/* Website */}
-                <div>
-                  <Label
-                    htmlFor="website"
-                    className="text-sm font-semibold text-gray-200 mb-2 flex items-center gap-2"
-                  >
-                    <Globe size={16} />
-                    Website
-                  </Label>
-                  <Input
-                    id="website"
-                    name="website"
-                    type="url"
-                    value={profileData.website}
-                    onChange={handleInputChange}
-                    placeholder="https://yourwebsite.com"
-                    className="w-full bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-gray-400 rounded-xl focus:border-blue-400/50 focus:outline-none transition-all"
-                  />
-                </div>
-
-                {/* Social Media Section */}
-                <div className="border-t border-white/10 pt-6">
-                  <h3 className="text-lg font-semibold text-white mb-4">
-                    Social Media Handles
-                  </h3>
-
-                  {/* Twitter */}
-                  <div className="mb-4">
-                    <Label
-                      htmlFor="twitter"
-                      className="text-sm font-semibold text-gray-200 mb-2"
-                    >
-                      Twitter
-                    </Label>
-                    <Input
-                      id="twitter"
-                      name="twitter"
-                      type="text"
-                      value={profileData.socialMedia?.twitter || ""}
-                      onChange={handleSocialMediaChange}
-                      placeholder="@yourhandle"
-                      className="w-full bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-gray-400 rounded-xl focus:border-blue-400/50 focus:outline-none transition-all"
-                    />
-                  </div>
-
-                  {/* LinkedIn */}
-                  <div className="mb-4">
-                    <Label
-                      htmlFor="linkedin"
-                      className="text-sm font-semibold text-gray-200 mb-2"
-                    >
-                      LinkedIn
-                    </Label>
-                    <Input
-                      id="linkedin"
-                      name="linkedin"
-                      type="text"
-                      value={profileData.socialMedia?.linkedin || ""}
-                      onChange={handleSocialMediaChange}
-                      placeholder="your-profile-url"
-                      className="w-full bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-gray-400 rounded-xl focus:border-blue-400/50 focus:outline-none transition-all"
-                    />
-                  </div>
-
-                  {/* Instagram */}
-                  <div className="mb-4">
-                    <Label
-                      htmlFor="instagram"
-                      className="text-sm font-semibold text-gray-200 mb-2"
-                    >
-                      Instagram
-                    </Label>
-                    <Input
-                      id="instagram"
-                      name="instagram"
-                      type="text"
-                      value={profileData.socialMedia?.instagram || ""}
-                      onChange={handleSocialMediaChange}
-                      placeholder="@yourhandle"
-                      className="w-full bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-gray-400 rounded-xl focus:border-blue-400/50 focus:outline-none transition-all"
-                    />
-                  </div>
-
-                  {/* GitHub */}
-                  <div>
-                    <Label
-                      htmlFor="github"
-                      className="text-sm font-semibold text-gray-200 mb-2"
-                    >
-                      GitHub
-                    </Label>
-                    <Input
-                      id="github"
-                      name="github"
-                      type="text"
-                      value={profileData.socialMedia?.github || ""}
-                      onChange={handleSocialMediaChange}
-                      placeholder="your-username"
-                      className="w-full bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-gray-400 rounded-xl focus:border-blue-400/50 focus:outline-none transition-all"
-                    />
-                  </div>
-                </div>
-
-                {/* Save and Cancel Buttons */}
-                <div className="flex gap-3 pt-6 border-t border-white/10">
-                  <Button
-                    onClick={handleSaveProfile}
-                    disabled={saving}
-                    className="flex-1 bg-blue-500/40 hover:bg-blue-500/60 text-white flex items-center justify-center gap-2 rounded-xl backdrop-blur-md border border-blue-400/30 hover:border-blue-400/50 transition-all"
-                  >
-                    <Save size={18} />
-                    {saving ? "Saving..." : "Save Changes"}
-                  </Button>
-                  <Button
-                    onClick={handleCancelEdit}
-                    disabled={saving}
-                    className="flex-1 bg-gray-400/20 hover:bg-gray-400/30 text-white flex items-center justify-center gap-2 rounded-xl backdrop-blur-md border border-gray-300/20 hover:border-gray-300/40 transition-all"
-                  >
-                    <X size={18} />
-                    Cancel
-                  </Button>
-                </div>
-              </>
+              <EditProfileSection
+                profileData={profileData}
+                saving={saving}
+                onInputChange={handleInputChange}
+                onSocialMediaChange={handleSocialMediaChange}
+                onSave={handleSaveProfile}
+                onCancel={handleCancelEdit}
+              />
             ) : (
-              // View Mode
               <>
                 {/* Social Media Icons Section */}
                 {profileData.socialMedia &&
