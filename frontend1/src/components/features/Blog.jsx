@@ -1,13 +1,12 @@
-import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined";
-import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { blogApi } from "@/api";
 import { toast } from "sonner";
 import PropTypes from "prop-types";
 import { SquarePenIcon, Trash } from 'lucide-react';
-import FavoriteIcon from '@mui/icons-material/Favorite';
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import BlogActionButtons from "@/components/common/BlogActionButtons";
+import { useBlogInteractions, useCopyToClipboard } from "@/hooks/useCommonLogic";
+import { useBlogMutations } from "@/hooks/useBlogAPI";
 
 const Blog = ({
   title,
@@ -19,8 +18,8 @@ const Blog = ({
   onDelete,
 }) => {
   const navigate = useNavigate();
-  const [liked, setLiked] = useState(false);
-  const [bookmarked, setBookmarked] = useState(false);
+  const { liked, bookmarked, sharing, toggleLike, toggleBookmark, handleShare } = useBlogInteractions(id);
+  const { deleteBlog } = useBlogMutations();
 
   const handleEdit = () => {
     navigate(`/myblogs/${id}`);
@@ -30,35 +29,16 @@ const Blog = ({
     navigate(`/blogs/${id}`);
   };
 
-  const handleDelete = async () => {
-    try {
-      await blogApi.delete(id);
-      toast.success("Blog deleted successfully!");
-      if (onDelete) onDelete();
-    } catch (error) {
-      toast.error("Failed to delete blog", error);
+  const handleDeleteBlog = async () => {
+    const success = await deleteBlog(id);
+    if (success && onDelete) {
+      onDelete();
     }
   };
 
-  const handleLike = () => {
-    setLiked((v) => !v);
-    toast.success(liked ? "Removed like" : "Blog liked");
-  };
-
-  const handleBookmark = () => {
-    setBookmarked((v) => !v);
-    toast.success(bookmarked ? "Removed bookmark" : "Bookmarked");
-  };
-
-  const handleShare = async () => {
-    try {
-      const url = `${window.location.origin}/myblogs/${id}`;
-      await navigator.clipboard.writeText(url);
-      toast.success("Blog link copied to clipboard");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to copy link");
-    }
+  const handleShareBlog = async () => {
+    const url = `${window.location.origin}/blogs/${id}`;
+    await handleShare(url);
   };
 
   return (
@@ -68,7 +48,7 @@ const Blog = ({
           <button onClick={handleEdit} className="edit-btn">
             <SquarePenIcon sx={{ fontSize: "18px" }} size={20} />
           </button>
-          <button onClick={handleDelete} className="delete-btn">
+          <button onClick={handleDeleteBlog} className="delete-btn">
             <Trash sx={{ fontSize: "18px" }} size={20} />
           </button>
         </div>
@@ -93,29 +73,16 @@ const Blog = ({
             <AccessTimeIcon sx={{ fontSize: "16px" }} />
             <span>{/* publish date if available */}</span>
           </div>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={handleLike}
-              className="blogs-card-buttons hover:text-red-600 transition-colors duration-200"
-              title="Like this blog"
-            >
-              <FavoriteIcon sx={{ fontSize: "18px" }} color={liked ? "error" : "inherit"} />
-            </button>
-            <button
-              onClick={handleBookmark}
-              className="blogs-card-buttons hover:text-amber-500 transition-colors duration-200"
-              title="Bookmark this blog"
-            >
-              <BookmarkOutlinedIcon sx={{ fontSize: "18px" }} color={bookmarked ? "warning" : "inherit"} />
-            </button>
-            <button
-              onClick={handleShare}
-              className="blogs-card-buttons hover:text-emerald-600 transition-colors duration-200"
-              title="Share this blog"
-            >
-              <ShareOutlinedIcon sx={{ fontSize: "18px" }} />
-            </button>
-          </div>
+          <BlogActionButtons
+            liked={liked}
+            bookmarked={bookmarked}
+            sharing={sharing}
+            onLike={toggleLike}
+            onBookmark={toggleBookmark}
+            onShare={handleShareBlog}
+            variant="row"
+            size="sm"
+          />
         </div>
         <div className="blog-meta mt-4">
           <span className="blog-meta-author" style={{ fontFamily: "Poppins, sans-serif", fontSize: "0.85rem", fontWeight: "500", color: "#6b7280", letterSpacing: "0.3px" }}>By {userName}</span>

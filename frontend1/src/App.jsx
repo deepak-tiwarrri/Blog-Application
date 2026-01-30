@@ -13,6 +13,7 @@ import ChangePassword from "./components/pages/ChangePassword";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import ErrorBoundary from "./components/common/ErrorBoundary";
+import ProtectedRoute from "./components/common/ProtectedRoute";
 import { authActions } from "./store/index.js";
 import { useSelector, useDispatch } from "react-redux";
 import { Toaster } from "sonner";
@@ -39,23 +40,54 @@ const App = () => {
         <main>
           <ErrorBoundary>
             <Routes>
+              {/* Public Routes */}
               <Route path="/" element={<Home />} />
               <Route path="/blogs" element={<Blogs />} />
               <Route path="/blogs/:id" element={<BlogDetailPage />} />
-              {!isLoggedIn ? (
-                <>
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/signup" element={<Signup />} />
-                </>
-              ) : (
-                <>
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/change-password" element={<ChangePassword />} />
-                  <Route path="/blogs/add" element={<AddBlog />} />
-                  <Route path="/myblogs" element={<UserBlogs />} />
-                  <Route path="/myblogs/:id" element={<BlogDetail />} />
-                </>
-              )}
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+
+              {/* Protected Routes - Only accessible when logged in */}
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/change-password"
+                element={
+                  <ProtectedRoute>
+                    <ChangePassword />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/blogs/add"
+                element={
+                  <ProtectedRoute>
+                    <AddBlog />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/myblogs"
+                element={
+                  <ProtectedRoute>
+                    <UserBlogs />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/myblogs/:id"
+                element={
+                  <ProtectedRoute>
+                    <BlogDetail />
+                  </ProtectedRoute>
+                }
+              />
             </Routes>
           </ErrorBoundary>
         </main>

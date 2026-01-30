@@ -8,10 +8,18 @@ const Signup = () => {
   const input = useSelector((state) => state.auth?.input);
   const status = useSelector((state) => state.auth.status);
   const error = useSelector((state) => state.auth.error);
+  const isLoggedIn = useSelector((state) => state.auth?.isLoggedIn);
   const location = useLocation();
   const navigate = useNavigate();
   const isLoginMode = location.pathname === "/login";
   const dispatch = useDispatch();
+
+  // Redirect if already logged in
+  React.useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/blogs", { replace: true });
+    }
+  }, [isLoggedIn, navigate]);
 
 
   const handleSubmit = (e) => {

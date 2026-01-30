@@ -11,10 +11,18 @@ const Login = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const isLoggedIn = useSelector((state) => state.auth?.isLoggedIn);
   const input = useSelector((state) => state.auth?.input);
   const isLoginMode = location.pathname === "/login";
   const status = useSelector((state) => state.auth.status);
   const error = useSelector((state) => state.auth.error);
+
+  // Redirect if already logged in
+  React.useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/blogs", { replace: true });
+    }
+  }, [isLoggedIn, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
