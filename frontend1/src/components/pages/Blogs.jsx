@@ -1,97 +1,43 @@
-import { useCallback, useEffect, useState } from "react";
-import { blogApi } from "@/api";
+import { useEffect } from "react";
 import Blog from "../features/Blog";
-import { toast } from "sonner";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-import Loader from "../common/Loader";
 import { useScrollToTop } from "@/hooks/useScrollToTop.js";
-import { BookOpen } from "lucide-react";
+import SectionHeader from "../common/SectionHeader";
+import StateDisplay from "../common/StateDisplay";
+import { useFetchBlogs } from "@/hooks/useBlogAPI";
+import { usePagination } from "@/hooks/useCommonLogic";
 
 const Blogs = () => {
   useScrollToTop();
-  const [blogs, setBlogs] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 6;
-
-  const fetchBlogs = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await blogApi.getAll();
-      const data = response?.data?.blogs;
-      setBlogs(data || []);
-      setLoading(false);
-    } catch (err) {
-      setError(err.response?.data?.message || "Failed to fetch blogs");
-      toast.error(err.response?.data?.message || "Failed to fetch blogs");
-      setLoading(false);
-    }
-  }, []);
+  const { blogs, loading, error, fetchBlogs } = useFetchBlogs();
+  const { currentPage, totalPages, paginatedItems, setCurrentPage } = usePagination(blogs, 6);
 
   useEffect(() => {
     fetchBlogs();
-  }, [fetchBlogs]);
-
-  const totalPages = Math.max(1, Math.ceil(blogs.length / pageSize));
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto max-w-7xl">
-        {/* Header Section */}
-        <div className="text-center mb-12 md:mb-16">
-          <div className="inline-block mb-4 px-4 py-2 bg-blue-50 rounded-full">
-            <span
-              className="text-sm font-semibold text-blue-600"
-              style={{ fontFamily: "Poppins, sans-serif" }}
-            >
-              All Stories
-            </span>
-          </div>
-          <h1
-            className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4"
-            style={{ fontFamily: "Playfair Display, serif" }}
-          >
-            Discover All Blogs
-          </h1>
-          <p
-            className="text-lg text-gray-600 max-w-2xl mx-auto"
-            style={{ fontFamily: "Poppins, sans-serif" }}
-          >
-            Explore inspiring stories, tips, and insights from our community of
-            talented writers
-          </p>
-        </div>
+        <SectionHeader
+          badge="All Stories"
+          title="Discover All Blogs"
+          subtitle="Explore inspiring stories, tips, and insights from our community of talented writers"
+        />
 
-        {/* Content Section */}
-        {loading ? (
-          <Loader fullScreen={false} size={60} />
-        ) : error ? (
-          <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg">
-            <p
-              className="text-red-700 font-semibold"
-              style={{ fontFamily: "Poppins, sans-serif" }}
-            >
-              {error}
-            </p>
-          </div>
-        ) : blogs.length === 0 ? (
-          <div className="text-center py-20">
-            <BookOpen size={56} className="mx-auto text-gray-400 mb-4" />
-            <p
-              className="text-gray-600 text-lg"
-              style={{ fontFamily: "Poppins, sans-serif" }}
-            >
-              No blogs found yet. Be the first to share your story!
-            </p>
-          </div>
-        ) : (
+        <StateDisplay
+          loading={loading}
+          error={error}
+          isEmpty={blogs.length === 0}
+          errorMessage={error}
+          emptyMessage="No blogs found yet. Be the first to share your story!"
+          onRetry={fetchBlogs}
+        >
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-12">
-              {blogs
+              {paginatedItems
                 .filter((blog) => blog && blog.user && blog._id && blog.title)
-                .slice((currentPage - 1) * pageSize, currentPage * pageSize)
                 .map((blog, index) => (
                   <div
                     key={blog._id || index}
@@ -126,7 +72,7 @@ const Blogs = () => {
               />
             </Stack>
           </>
-        )}
+        </StateDisplay>
       </div>
     </div>
   );
