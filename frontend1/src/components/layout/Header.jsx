@@ -34,7 +34,7 @@ const Header = () => {
   };
 
   return (
-    <div className="bg-gradient-to-r from-gray-950 to-gray-800 sticky top-0 shadow-lg z-50">
+    <div className="glass-dark sticky top-0 shadow-lg z-50 transition-all duration-300">
       <div className="px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
         <div className="flex justify-between items-center">
           {/* Left Section - Logo */}

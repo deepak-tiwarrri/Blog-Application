@@ -6,7 +6,7 @@ import PageHeader from "../common/PageHeader";
 import BlogActionButtons from "@/components/common/BlogActionButtons";
 import { useFetchBlogById } from "@/hooks/useBlogAPI";
 import { useBlogInteractions, useCopyToClipboard } from "@/hooks/useCommonLogic";
-import { Calendar } from "lucide-react";
+import { Calendar, Clock } from "lucide-react";
 
 const BlogDetailPage = () => {
     useScrollToTop();
@@ -23,6 +23,9 @@ const BlogDetailPage = () => {
         const url = `${window.location.origin}/blogs/${id}`;
         await handleShareInteraction(url);
     };
+
+    // Calculate reading time from backend or fallback to description
+    const readingTime = blog?.readingTime || (blog?.description ? Math.ceil(blog.description.split(/\s+/).length / 200) : 0);
 
     if (loading) {
         return <Loader fullScreen={true} size={60} />;
@@ -77,11 +80,11 @@ const BlogDetailPage = () => {
                     </h1>
 
                     {/* Meta Information */}
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 mb-8 pb-8 border-b border-gray-200">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 mb-8 pb-8 border-b border-gray-200 flex-wrap">
                         {/* Author Info */}
                         <div className="flex items-center gap-3">
                             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-semibold text-lg">
-                                {blog.user?.name?.charAt(0).toUpperCase() || "U"}
+                                {blog.user?.name ? blog.user.name.charAt(0).toUpperCase() : "U"}
                             </div>
                             <div>
                                 <p style={{ fontFamily: "Poppins, sans-serif" }} className="font-semibold text-gray-900">
@@ -102,6 +105,14 @@ const BlogDetailPage = () => {
                                     month: "long",
                                     day: "numeric",
                                 }) : "No date available"}
+                            </p>
+                        </div>
+
+                        {/* Reading Time */}
+                        <div className="flex items-center gap-2 text-gray-600">
+                            <Clock className="w-4 h-4" />
+                            <p style={{ fontFamily: "Poppins, sans-serif" }} className="text-sm">
+                                {readingTime} min read
                             </p>
                         </div>
                     </div>

@@ -17,11 +17,15 @@ import ProtectedRoute from "./components/common/ProtectedRoute";
 import { authActions } from "./store/index.js";
 import { useSelector, useDispatch } from "react-redux";
 import { Toaster } from "sonner";
+import { useTokenExpiration } from "./hooks/useTokenExpiration";
 
 const App = () => {
   const isLoggedIn = useSelector((state) => state.auth?.isLoggedIn);
-  //if user is logged in while loading the first page then directly go the blog page
   const dispatch = useDispatch();
+
+  // Check token expiration on app load and periodically
+  useTokenExpiration();
+
   useEffect(() => {
     if (localStorage.getItem("userId")) {
       // preserve userId in localStorage and mark user as logged in
@@ -30,7 +34,7 @@ const App = () => {
   }, [dispatch]);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 dark:from-gray-900 dark:via-gray-800 dark:to-black transition-colors duration-500">
       <Toaster richColors position="top-right" />
       <header>
         <Header />

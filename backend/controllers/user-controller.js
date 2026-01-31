@@ -37,7 +37,7 @@ const signUp = async (req, res) => {
     await newUser.save();
     // Generate JWT token
 
-    const token = generateToken(newUser._id, "2h");
+    const token = generateToken(newUser._id, "1d");
 
     return res.status(201).json({
       message: "User created successfully",
@@ -70,7 +70,7 @@ const login = async (req, res) => {
       return res.status(400).json({ message: "Password is wrong" });
     }
     // Generate JWT token
-    const token = generateToken(user._id, "2h");
+    const token = generateToken(user._id, "1d");
 
     return res.status(200).json({
       message: "Login Successfully",

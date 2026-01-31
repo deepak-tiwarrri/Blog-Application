@@ -13,6 +13,7 @@ import PropTypes from "prop-types";
 import { BookOpen, ArrowRight } from "lucide-react";
 import { useStyles } from "@/lib/utils";
 import FeatureList from "./FeatureList";
+import GlassCard from "../common/GlassCard";
 
 const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
   const input = useSelector((state) => state.auth?.input);
@@ -77,7 +78,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
 
           {/* Right Side - Form */}
           <div>
-            <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-10 border border-gray-100">
+            <GlassCard className="p-8 md:p-10 border border-white/20">
               {/* Mobile Header */}
               <div className="lg:hidden mb-8 text-center">
                 <div className="flex items-center justify-center gap-2 mb-4">
@@ -277,7 +278,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                   Privacy Policy
                 </Link>
               </p>
-            </div>
+            </GlassCard>
           </div>
         </div>
       </div>

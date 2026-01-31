@@ -39,6 +39,12 @@ export const blogApi = {
   update: (id, payload) => api.put(`${BLOG_URL}/update/${id}`, payload),
   delete: (id) => api.delete(`${BLOG_URL}/${id}`),
   getBlogByUserId: (id) => api.get(`${BLOG_URL}/user/${id}`),
+  // Like and bookmark endpoints
+  likeBlog: (blogId) => api.post(`${BLOG_URL}/${blogId}/like`),
+  unlikeBlog: (blogId) => api.delete(`${BLOG_URL}/${blogId}/like`),
+  bookmarkBlog: (blogId) => api.post(`${BLOG_URL}/${blogId}/bookmark`),
+  removeBookmark: (blogId) => api.delete(`${BLOG_URL}/${blogId}/bookmark`),
+  checkInteractions: (blogId) => api.get(`${BLOG_URL}/${blogId}/interactions`),
 };
 
 export const userApi = {

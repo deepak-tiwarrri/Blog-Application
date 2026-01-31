@@ -9,7 +9,7 @@ import "@fontsource/poppins/700.css";
 import "@fontsource/playfair-display/700.css";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
-import { store } from "./store";
+import { store } from "./store/store.js";
 import App from "./App.jsx";
 import { setAuthToken } from "./api";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";

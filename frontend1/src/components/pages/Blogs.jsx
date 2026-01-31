@@ -52,6 +52,8 @@ const Blogs = () => {
                       description={blog.description}
                       imageUrl={blog.image}
                       userName={blog.user.name}
+                      createdAt={blog.createdAt}
+                      readingTime={blog.readingTime}
                       onDelete={fetchBlogs}
                     />
                   </div>

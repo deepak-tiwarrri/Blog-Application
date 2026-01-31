@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import AuthForm from "./features/AuthForm";
 import { USER_URL } from "./utils";
 import { userApi, setAuthToken } from "@/api";
+import { setTokenWithTimestamp } from "@/hooks/useTokenExpiration";
+
 const Auth = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -17,7 +19,7 @@ const Auth = () => {
       const res = await (type === 'signup' ? userApi.signup({ name: input.name, email: input.email, password: input.password }) : userApi.login({ email: input.email, password: input.password }));
       const data = res.data;
       if (data?.token) {
-        localStorage.setItem('token', data.token);
+        setTokenWithTimestamp(data.token);
         setAuthToken(data.token);
       }
       return data;
@@ -26,8 +28,6 @@ const Auth = () => {
       return null;
     }
   };
-
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -40,7 +40,7 @@ const Auth = () => {
         }
       });
   };
-  console.log(location.pathname);
+
   return (
     <>
       <AuthForm

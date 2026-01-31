@@ -54,6 +54,8 @@ const UserBlogs = () => {
                   description={blog.description}
                   imageUrl={blog.image}
                   userName={user.name}
+                  createdAt={blog.createdAt}
+                  readingTime={blog.readingTime}
                   onDelete={() => handleDelete(blog._id)}
                   isUser={true}
                 />

@@ -8,6 +8,7 @@ import { useScrollToTop } from "@/hooks/useScrollToTop.js";
 import { useSelector } from "react-redux";
 import { ArrowRight, BookOpen, Users, Sparkles } from "lucide-react";
 import FeaturedSection from "../features/FeaturedSection";
+import HeroCarousel from "../features/HeroCarousel";
 
 const Home = () => {
   useScrollToTop();
@@ -64,7 +65,6 @@ const Home = () => {
                   Sharing
                 </span>
               </h1>
-
               <p
                 className="text-lg md:text-xl text-gray-600 leading-relaxed"
                 style={{ fontFamily: "Poppins, sans-serif", lineHeight: "1.8" }}
@@ -116,17 +116,9 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Right Image */}
-            <div className="relative hidden md:block">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-purple-400 rounded-2xl opacity-10"></div>
-              <img
-                src="/assets/dish.jpg"
-                alt="hero"
-                className="w-full h-96 object-cover rounded-2xl shadow-2xl hover:shadow-3xl transition-shadow duration-300"
-              />
-              <div className="absolute -bottom-4 -right-4 bg-white rounded-full p-6 shadow-lg">
-                <Users size={32} className="text-blue-600" />
-              </div>
+            {/* Right - Carousel */}
+            <div className="relative">
+              <HeroCarousel />
             </div>
           </div>
         </div>
@@ -187,7 +179,7 @@ const Home = () => {
               {blogs.slice(0, 6).map((blog) => (
                 <div
                   key={blog._id}
-                  className="transform hover:scale-105 transition-transform duration-300"
+                  className="transform hover:scale-105 transition-transform duration-300 hover:cursor-pointer"
                 >
                   <BlogCard blog={blog} />
                 </div>

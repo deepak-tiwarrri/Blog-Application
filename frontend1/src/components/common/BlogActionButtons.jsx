@@ -1,6 +1,5 @@
 import React from "react";
 import { Heart, Bookmark, Share2 } from "lucide-react";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 
 /**
  * Reusable blog action buttons component
@@ -30,11 +29,11 @@ const BlogActionButtons = ({
   const containerClass =
     variant === "column"
       ? "flex flex-col gap-3"
-      : "flex flex-wrap gap-4";
+      : "flex items-center gap-2 flex-nowrap overflow-x-auto";
 
   const getButtonClass = (isActive, theme) => {
     const baseClass =
-      "flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 text-sm font-medium";
+      "flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 text-sm font-medium cursor-pointer";
 
     if (size === "sm") {
       return `${baseClass} px-3 py-1.5 text-xs`;
@@ -42,10 +41,10 @@ const BlogActionButtons = ({
 
     if (isActive) {
       const activeTheme = {
-        like: "bg-red-50 text-red-600 border border-red-200",
+        like: "bg-red-100 text-red-700 border-2 border-red-400 shadow-lg shadow-red-200/50",
         bookmark:
-          "bg-amber-50 text-amber-600 border border-amber-200",
-        share: "bg-emerald-50 text-emerald-600 border border-emerald-200",
+          "bg-amber-100 text-amber-700 border-2 border-amber-400 shadow-lg shadow-amber-200/50",
+        share: "bg-emerald-100 text-emerald-700 border-2 border-emerald-400 shadow-lg shadow-emerald-200/50",
       };
       return `${baseClass} ${activeTheme[theme]}`;
     } else {
@@ -63,7 +62,10 @@ const BlogActionButtons = ({
     <div className={`${containerClass} ${className}`}>
       {onLike && (
         <button
-          onClick={onLike}
+          onClick={(e) => {
+            e.stopPropagation();
+            onLike();
+          }}
           className={getButtonClass(liked, "like")}
           title={liked ? "Unlike" : "Like this blog"}
         >
@@ -76,7 +78,10 @@ const BlogActionButtons = ({
 
       {onBookmark && (
         <button
-          onClick={onBookmark}
+          onClick={(e) => {
+            e.stopPropagation();
+            onBookmark();
+          }}
           className={getButtonClass(bookmarked, "bookmark")}
           title={bookmarked ? "Remove bookmark" : "Bookmark this blog"}
         >
@@ -89,7 +94,10 @@ const BlogActionButtons = ({
 
       {onShare && (
         <button
-          onClick={onShare}
+          onClick={(e) => {
+            e.stopPropagation();
+            onShare();
+          }}
           disabled={sharing}
           className={getButtonClass(false, "share")}
           title="Share this blog"

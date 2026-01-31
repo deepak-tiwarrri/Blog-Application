@@ -1,11 +1,13 @@
 import mongoose from "mongoose";
 import Blog from "../models/Blog.js";
 import User from "../models/User.js";
+import Like from "../models/Like.js";
+import Bookmark from "../models/Bookmark.js";
 
 //get all the blogs available
 const getAllBlogs = async (req, res) => {
   try {
-    let blogs = await Blog.find({}).populate("user");
+    let blogs = await Blog.find({}).populate("user").sort({ createdAt: -1 });
     if (!blogs || blogs.length === 0) {
       return res.status(400).json({ message: "No Blogs Found" });
     }
@@ -19,7 +21,7 @@ const getAllBlogById = async (req, res) => {
   const { id } = req.params;
   let blog;
   try {
-    blog = await Blog.findById(id);
+    blog = await Blog.findById(id).populate("user");
   } catch (error) {
     return res.status(500).json({ message: "Could not find Blog" });
   }
@@ -151,4 +153,151 @@ const deleteBlog = async (req, res) => {
   }
 };
 
-export default { getAllBlogs, addBlog, updateBlog, getUserById, deleteBlog, getAllBlogById };
+// Like a blog
+const likeBlog = async (req, res) => {
+  try {
+    const { blogId } = req.params;
+    const userId = req.userId;
+
+    if (!userId) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+
+    // Check if blog exists
+    const blog = await Blog.findById(blogId);
+    if (!blog) {
+      return res.status(404).json({ message: "Blog not found" });
+    }
+
+    // Check if user already liked this blog
+    const existingLike = await Like.findOne({ user: userId, blog: blogId });
+    if (existingLike) {
+      return res.status(400).json({ message: "Blog already liked" });
+    }
+
+    // Create new like
+    const like = new Like({ user: userId, blog: blogId });
+    await like.save();
+
+    // Add like reference to blog
+    blog.likes.push(like._id);
+    await blog.save();
+
+    return res.status(201).json({ message: "Blog liked successfully", like });
+  } catch (error) {
+    return res.status(500).json({ message: "Failed to like blog", error: error.message });
+  }
+};
+
+// Unlike a blog
+const unlikeBlog = async (req, res) => {
+  try {
+    const { blogId } = req.params;
+    const userId = req.userId;
+
+    if (!userId) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+
+    // Find and delete the like
+    const like = await Like.findOneAndDelete({ user: userId, blog: blogId });
+    if (!like) {
+      return res.status(404).json({ message: "Like not found" });
+    }
+
+    // Remove like reference from blog
+    await Blog.findByIdAndUpdate(blogId, { $pull: { likes: like._id } });
+
+    return res.status(200).json({ message: "Blog unliked successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Failed to unlike blog", error: error.message });
+  }
+};
+
+// Bookmark a blog
+const bookmarkBlog = async (req, res) => {
+  try {
+    const { blogId } = req.params;
+    const userId = req.userId;
+
+    if (!userId) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+
+    // Check if blog exists
+    const blog = await Blog.findById(blogId);
+    if (!blog) {
+      return res.status(404).json({ message: "Blog not found" });
+    }
+
+    // Check if user already bookmarked this blog
+    const existingBookmark = await Bookmark.findOne({
+      user: userId,
+      blog: blogId,
+    });
+    if (existingBookmark) {
+      return res.status(400).json({ message: "Blog already bookmarked" });
+    }
+
+    // Create new bookmark
+    const bookmark = new Bookmark({ user: userId, blog: blogId });
+    await bookmark.save();
+
+    // Add bookmark reference to blog
+    blog.bookmarks.push(bookmark._id);
+    await blog.save();
+
+    return res.status(201).json({ message: "Blog bookmarked successfully", bookmark });
+  } catch (error) {
+    return res.status(500).json({ message: "Failed to bookmark blog", error: error.message });
+  }
+};
+
+// Remove bookmark
+const removeBookmark = async (req, res) => {
+  try {
+    const { blogId } = req.params;
+    const userId = req.userId;
+
+    if (!userId) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+
+    // Find and delete the bookmark
+    const bookmark = await Bookmark.findOneAndDelete({
+      user: userId,
+      blog: blogId,
+    });
+    if (!bookmark) {
+      return res.status(404).json({ message: "Bookmark not found" });
+    }
+
+    // Remove bookmark reference from blog
+    await Blog.findByIdAndUpdate(blogId, { $pull: { bookmarks: bookmark._id } });
+
+    return res.status(200).json({ message: "Bookmark removed successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Failed to remove bookmark", error: error.message });
+  }
+};
+
+// Check if user has liked or bookmarked a blog
+const checkUserInteractions = async (req, res) => {
+  try {
+    const { blogId } = req.params;
+    const userId = req.userId;
+
+    if (!userId) {
+      return res.status(200).json({ liked: false, bookmarked: false });
+    }
+
+    const liked = await Like.exists({ user: userId, blog: blogId });
+    const bookmarked = await Bookmark.exists({ user: userId, blog: blogId });
+
+    return res.status(200).json({ liked: !!liked, bookmarked: !!bookmarked });
+  } catch (error) {
+    return res.status(500).json({ message: "Failed to check interactions", error: error.message });
+  }
+};
+
+export default { getAllBlogs, addBlog, updateBlog, getUserById, deleteBlog, getAllBlogById, likeBlog, unlikeBlog, bookmarkBlog, removeBookmark, checkUserInteractions };

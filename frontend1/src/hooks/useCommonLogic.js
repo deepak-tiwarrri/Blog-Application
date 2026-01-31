@@ -1,9 +1,10 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { toast } from "sonner";
+import { blogApi } from "@/api";
 
 /**
  * Custom hook for managing blog interaction states (like, bookmark, share)
- * Reduces duplication of interaction logic across Blog and BlogDetailPage
+ * Fetches initial state from backend and syncs with server on changes
  * 
  * @example
  * const { liked, bookmarked, toggleLike, toggleBookmark, handleShare } = useBlogInteractions(blogId);
@@ -12,16 +13,78 @@ export const useBlogInteractions = (blogId) => {
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
   const [sharing, setSharing] = useState(false);
+  const token = localStorage.getItem("token");
 
-  const toggleLike = useCallback(() => {
-    setLiked((prev) => !prev);
-    toast.success(liked ? "Removed like" : "Blog liked");
-  }, [liked]);
+  // Fetch initial state from backend
+  useEffect(() => {
+    if (!token || !blogId) return;
 
-  const toggleBookmark = useCallback(() => {
-    setBookmarked((prev) => !prev);
-    toast.success(bookmarked ? "Removed bookmark" : "Bookmarked");
-  }, [bookmarked]);
+    const checkInteractions = async () => {
+      try {
+        const response = await blogApi.checkInteractions(blogId);
+        setLiked(response?.data?.liked || false);
+        setBookmarked(response?.data?.bookmarked || false);
+      } catch (error) {
+        console.error("Failed to fetch interaction state:", error);
+      }
+    };
+
+    checkInteractions();
+  }, [blogId, token]);
+
+  const toggleLike = useCallback(async () => {
+    if (!token) {
+      toast.error("Please log in to like blogs");
+      return;
+    }
+
+    try {
+      if (liked) {
+        // Unlike
+        await blogApi.unlikeBlog(blogId);
+        setLiked(false);
+        toast.success("Removed like");
+      } else {
+        // Like
+        await blogApi.likeBlog(blogId);
+        setLiked(true);
+        toast.success("Blog liked");
+      }
+    } catch (error) {
+      const errorMsg = error.response?.data?.message || "Failed to update like";
+      toast.error(errorMsg);
+      // Reset state if the request failed
+      if (!liked) setLiked(true);
+      else setLiked(false);
+    }
+  }, [liked, blogId, token]);
+
+  const toggleBookmark = useCallback(async () => {
+    if (!token) {
+      toast.error("Please log in to bookmark blogs");
+      return;
+    }
+
+    try {
+      if (bookmarked) {
+        // Remove bookmark
+        await blogApi.removeBookmark(blogId);
+        setBookmarked(false);
+        toast.success("Removed bookmark");
+      } else {
+        // Bookmark
+        await blogApi.bookmarkBlog(blogId);
+        setBookmarked(true);
+        toast.success("Bookmarked");
+      }
+    } catch (error) {
+      const errorMsg = error.response?.data?.message || "Failed to update bookmark";
+      toast.error(errorMsg);
+      // Reset state if the request failed
+      if (!bookmarked) setBookmarked(true);
+      else setBookmarked(false);
+    }
+  }, [bookmarked, blogId, token]);
 
   const handleShare = useCallback(
     async (shareUrl) => {

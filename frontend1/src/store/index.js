@@ -89,8 +89,6 @@ export const sendRequest = createAsyncThunk(
   }
 );
 export const authActions = authSlice.actions;
-export const store = configureStore({
-  reducer: {
-    auth: authSlice.reducer,
-  },
-});
+export const { logout, updateInput, updateUser, login } = authSlice.actions;
+
+export default authSlice.reducer; 
