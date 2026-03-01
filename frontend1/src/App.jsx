@@ -18,6 +18,7 @@ import { authActions } from "./store/index.js";
 import { useSelector, useDispatch } from "react-redux";
 import { Toaster } from "sonner";
 import { useTokenExpiration } from "./hooks/useTokenExpiration";
+import "./components/styles/glassmorphism.css";
 
 const App = () => {
   const isLoggedIn = useSelector((state) => state.auth?.isLoggedIn);

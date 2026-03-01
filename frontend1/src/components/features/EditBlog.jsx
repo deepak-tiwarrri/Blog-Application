@@ -132,14 +132,14 @@ const BlogDetail = () => {
                 <Button
                   type="button"
                   onClick={() => navigate("/myblogs")}
-                  className="flex-1 px-6 py-3 md:py-3.5 border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 text-sm md:text-base"
+                  className="flex-1 px-6 py-3 md:py-3.5 border border-gray-300 text-gray-900 bg-gray-400 font-semibold rounded-xl hover:bg-gray-500 hover:border-gray-400 transition-all duration-200 text-sm md:text-base hover:cursor-pointer"
                 >
                   Cancel
                 </Button>
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="flex-1 px-6 py-3 md:py-3.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 active:scale-95 transition-all duration-200 shadow-md hover:shadow-lg text-sm md:text-base disabled:opacity-50"
+                  className="flex-1 px-6 py-3 md:py-3.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 active:scale-95 transition-all duration-200 shadow-md hover:shadow-lg text-sm md:text-base disabled:opacity-50 hover:cursor-pointer"
                 >
                   {isLoading ? "Publishing..." : "Publish Changes"}
                 </Button>

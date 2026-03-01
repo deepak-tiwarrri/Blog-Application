@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import GlassCard from "../common/GlassCard";
+// removed glass effect for simpler card
+
 
 const BlogCard = ({ blog }) => {
   // Use reading time from backend, or calculate as fallback
@@ -9,12 +10,9 @@ const BlogCard = ({ blog }) => {
   );
 
   return (
-    <GlassCard
-      className="flex flex-col h-full overflow-hidden hover:cursor-pointer"
-      onClick={() => { }} // Pass onClick if needed or keep link wrapping. Wait, BlogCard uses Link inside. but the top level article had onClick? No, it has key and class.
-    >
+    <div className="flex flex-col h-full overflow-hidden hover:cursor-pointer bg-primary/10 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300">
       {/* Fixed image dimensions: 16:9 aspect ratio */}
-      <div className="relative w-full pt-[56.25%] bg-gray-200 overflow-hidden">
+      <div className="relative w-full pt-[56.25%] bg-primary/20 overflow-hidden">
         <img
           src={blog.image}
           onError={(e) => {
@@ -31,7 +29,7 @@ const BlogCard = ({ blog }) => {
       >
         <div>
           <h3
-            className="text-lg md:text-xl font-semibold text-gray-900 mb-2 line-clamp-2"
+            className="text-lg md:text-xl font-semibold text-primary-foreground mb-2 line-clamp-2"
             style={{
               fontFamily: "'Playfair Display', serif",
               fontWeight: "700",
@@ -41,7 +39,7 @@ const BlogCard = ({ blog }) => {
             {blog.title}
           </h3>
           <p
-            className="text-gray-700 mb-3 line-clamp-2"
+            className="text-primary-foreground/80 mb-3 line-clamp-2"
             style={{
               fontFamily: "'Poppins', sans-serif",
               lineHeight: "1.6",
@@ -55,7 +53,7 @@ const BlogCard = ({ blog }) => {
         <div className="space-y-3">
           {/* Author, Date, and Reading Time */}
           <div
-            className="flex items-center justify-between text-xs text-gray-500"
+            className="flex items-center justify-between text-xs text-primary-foreground/70"
             style={{ fontFamily: "'Poppins', sans-serif" }}
           >
             <div className="flex items-center gap-2">
@@ -74,7 +72,7 @@ const BlogCard = ({ blog }) => {
               )}
             </div>
             {readingTime && (
-              <span className="text-gray-500">
+              <span className="text-primary-foreground/70">
                 {readingTime} min read
               </span>
             )}
@@ -82,14 +80,14 @@ const BlogCard = ({ blog }) => {
 
           <Link
             to={`/blogs/${blog._id}`}
-            className="text-blue-500 hover:underline font-medium transition-colors inline-block hover:cursor-pointer"
+            className="text-primary-foreground hover:underline font-medium transition-colors inline-block hover:cursor-pointer"
             style={{ fontFamily: "'Poppins', sans-serif", fontWeight: "500" }}
           >
             Read More →
           </Link>
         </div>
       </div>
-    </GlassCard>
+    </div>
   );
 };
 
