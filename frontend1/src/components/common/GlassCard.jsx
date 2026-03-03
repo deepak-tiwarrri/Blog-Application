@@ -11,7 +11,7 @@ const GlassCard = ({ children, className, hoverEffect = true, ...props }) => {
          transition={{ duration: 0.4 }}
          whileHover={hoverEffect ? { y: -8, scale: 1.02 } : {}}
          className={cn(
-            "glass rounded-xl border border-white/20 shadow-lg backdrop-blur-md bg-white/30",
+            "glass rounded-xl border border-white/20 shadow-lg backdrop-blur-md bg-white/20",
             hoverEffect && "transition-all duration-300",
             className
          )}

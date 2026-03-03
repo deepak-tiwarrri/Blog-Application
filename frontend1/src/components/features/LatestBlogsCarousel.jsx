@@ -176,12 +176,9 @@ const LatestBlogsCarousel = ({ blogs, loading, error }) => {
                      className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 md:-translate-x-4 z-20 group/btn focus:outline-none"
                      aria-label="Previous blogs"
                   >
-                     <div className="relative">
-
-                        <button className="relative p-3 rounded-full bg-primary/20 border border-primary/30 text-primary-foreground hover:bg-primary/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
-                           <ChevronLeft size={24} strokeWidth={2.5} />
-                        </button>
-                     </div>
+                     <span className="relative inline-flex items-center p-3 rounded-full bg-primary/20 border border-primary/30 text-primary-foreground hover:bg-primary/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <ChevronLeft size={24} strokeWidth={2.5} />
+                     </span>
                   </button>
 
                   {/* Next Button */}
@@ -191,11 +188,9 @@ const LatestBlogsCarousel = ({ blogs, loading, error }) => {
                      className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 md:translate-x-4 z-20 group/btn focus:outline-none"
                      aria-label="Next blogs"
                   >
-                     <div className="relative">
-                        <button className="relative p-3 rounded-full bg-primary/20 border border-primary/30 text-primary-foreground hover:bg-primary/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
-                           <ChevronRight size={24} strokeWidth={2.5} />
-                        </button>
-                     </div>
+                     <span className="relative inline-flex items-center p-3 rounded-full bg-primary/20 border border-primary/30 text-primary-foreground hover:bg-primary/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <ChevronRight size={24} strokeWidth={2.5} />
+                     </span>
                   </button>
                </>
             )}

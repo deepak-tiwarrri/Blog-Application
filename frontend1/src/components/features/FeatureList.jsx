@@ -24,13 +24,13 @@ const FeatureList = () => {
           </div>
           <div>
             <h3
-              className="font-semibold text-gray-900"
+              className="font-semibold text-primary-foreground"
               style={{ fontFamily: "Poppins, sans-serif" }}
             >
               {feature.title}
             </h3>
             <p
-              className="text-sm text-gray-600"
+              className="text-sm text-primary-foreground/60"
               style={{ fontFamily: "Poppins, sans-serif" }}
             >
               {feature.desc}

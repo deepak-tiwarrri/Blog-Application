@@ -28,11 +28,11 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
   const status = useSelector((state) => state.auth.status);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 relative overflow-hidden">
-      {/* Decorative Elements */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 -z-10"></div>
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 -z-10"></div>
-      <div className="absolute top-1/2 left-1/3 w-72 h-72 bg-pink-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 -z-10"></div>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 dark:from-gray-900 dark:via-gray-800 dark:to-black transition-colors duration-500 text-foreground relative overflow-hidden">
+      {/* Decorative Elements (tinted to primary for subtlety) */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full mix-blend-multiply filter blur-2xl opacity-10 -z-10" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/10 rounded-full mix-blend-multiply filter blur-2xl opacity-8 -z-10" />
+      <div className="absolute top-1/2 left-1/3 w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-2xl opacity-8 -z-10" />
 
       <div className="w-full max-w-5xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
@@ -44,7 +44,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                   <BookOpen size={32} className="text-white" />
                 </div>
                 <h1
-                  className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+                  className="text-3xl font-bold text-primary-foreground"
                   style={{ fontFamily: "Playfair Display, serif" }}
                 >
                   Bite&Roam
@@ -53,7 +53,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
 
               <div>
                 <h2
-                  className="text-4xl font-bold text-gray-900 mb-4"
+                  className="text-4xl font-bold text-primary-foreground mb-4"
                   style={{
                     fontFamily: "Playfair Display, serif",
                     letterSpacing: "-0.5px",
@@ -62,7 +62,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                   {isLoginMode ? "Welcome Back" : "Join Our Community"}
                 </h2>
                 <p
-                  className="text-lg text-gray-600 leading-relaxed"
+                  className="text-lg text-primary-foreground/80 leading-relaxed"
                   style={{ fontFamily: "Poppins, sans-serif" }}
                 >
                   {isLoginMode
@@ -78,7 +78,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
 
           {/* Right Side - Form */}
           <div>
-            <GlassCard className="p-8 md:p-10 border border-white/20">
+            <GlassCard className="p-8 md:p-10 border border-border">
               {/* Mobile Header */}
               <div className="lg:hidden mb-8 text-center">
                 <div className="flex items-center justify-center gap-2 mb-4">
@@ -86,14 +86,14 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                     <BookOpen size={28} className="text-white" />
                   </div>
                   <h1
-                    className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+                    className="text-2xl font-bold text-primary-foreground"
                     style={{ fontFamily: "Playfair Display, serif" }}
                   >
                     Bite&Roam
                   </h1>
                 </div>
                 <h2
-                  className="text-2xl font-bold text-gray-900"
+                  className="text-2xl font-bold text-primary-foreground"
                   style={{ fontFamily: "Playfair Display, serif" }}
                 >
                   {isLoginMode ? "Welcome Back" : "Create Account"}
@@ -106,13 +106,13 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                   <div className="flex flex-col gap-3">
                     <Label
                       htmlFor="name"
-                      className="text-sm font-semibold text-gray-700"
+                      className="text-sm font-semibold text-primary-foreground/90"
                       style={{ fontFamily: "Poppins, sans-serif" }}
                     >
                       Full Name
                     </Label>
                     <div className="relative flex items-center group">
-                      <span className="absolute left-4 text-gray-400 flex items-center h-full group-focus-within:text-blue-600 transition-colors">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-primary-foreground/60 flex items-center group-focus-within:text-primary transition-colors">
                         <PersonIcon fontSize="small" />
                       </span>
                       <Input
@@ -123,7 +123,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                         value={input?.name}
                         onChange={handleChange}
                         required
-                        className={`${classes.font} pl-12 py-3 rounded-lg border-2 border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-500 focus:outline-none focus:ring-0 focus-visible:ring-0 transition-all duration-200 placeholder:text-gray-400`}
+                        className={`${classes.font} h-12 pl-14 rounded-lg border-2 border-border bg-card focus:bg-card focus:border-primary focus:outline-none focus:ring-0 focus-visible:ring-0 transition-all duration-200 placeholder:text-primary-foreground/50`}
                       />
                     </div>
                   </div>
@@ -133,13 +133,13 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                 <div className="flex flex-col gap-3">
                   <Label
                     htmlFor="email"
-                    className="text-sm font-semibold text-gray-700"
+                    className="text-sm font-semibold text-primary-foreground/90"
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     Email Address
                   </Label>
                   <div className="relative flex items-center group">
-                    <span className="absolute left-4 text-gray-400 flex items-center h-full group-focus-within:text-blue-600 transition-colors">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-primary-foreground/60 flex items-center group-focus-within:text-primary transition-colors">
                       <MailOutlineIcon fontSize="small" />
                     </span>
                     <Input
@@ -149,7 +149,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                       placeholder="you@example.com"
                       value={input?.email}
                       onChange={handleChange}
-                      className={`${classes.font} pl-12 py-3 rounded-lg border-2 border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-500 focus:outline-none focus:ring-0 focus-visible:ring-0 transition-all duration-200 placeholder:text-gray-400`}
+                      className={`${classes.font} h-12 pl-14 rounded-lg border-2 border-border bg-card focus:bg-card focus:border-primary focus:outline-none focus:ring-0 focus-visible:ring-0 transition-all duration-200 placeholder:text-primary-foreground/50`}
                       required
                     />
                   </div>
@@ -160,7 +160,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                   <div className="flex justify-between items-center">
                     <Label
                       htmlFor="password"
-                      className="text-sm font-semibold text-gray-700"
+                      className="text-sm font-semibold text-primary-foreground/90"
                       style={{ fontFamily: "Poppins, sans-serif" }}
                     >
                       Password
@@ -175,7 +175,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                     )}
                   </div>
                   <div className="relative flex items-center group">
-                    <span className="absolute left-4 text-gray-400 flex items-center h-full group-focus-within:text-blue-600 transition-colors">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-primary-foreground/60 flex items-center group-focus-within:text-primary transition-colors">
                       <LockOutlinedIcon fontSize="small" />
                     </span>
                     <Input
@@ -186,7 +186,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                       placeholder="••••••••"
                       onChange={handleChange}
                       required
-                      className={`${classes.font} input-field`}
+                      className={`${classes.font} h-12 pl-14 rounded-lg border-2 border-border bg-card focus:bg-card focus:border-primary focus:outline-none focus:ring-0 focus-visible:ring-0 transition-all duration-200 placeholder:text-primary-foreground/50`}
                     />
                   </div>
                 </div>
@@ -215,11 +215,11 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
               {/* Divider */}
               <div className="relative my-8">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-200"></div>
+                  <div className="w-full border-t border-border"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
                   <span
-                    className="px-3 bg-white text-gray-500"
+                    className="px-3 bg-background text-primary-foreground/70"
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     or continue with
@@ -237,7 +237,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
               {/* Toggle Auth Mode */}
               <div className="text-center">
                 <p
-                  className="text-sm text-gray-600 mb-4"
+                  className="text-sm text-primary-foreground/80 mb-4"
                   style={{ fontFamily: "Poppins, sans-serif" }}
                 >
                   {isLoginMode ? (
@@ -266,7 +266,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
 
               {/* Terms & Privacy */}
               <p
-                className="text-xs text-gray-500 text-center mt-6"
+                className="text-xs text-primary-foreground/70 text-center mt-6"
                 style={{ fontFamily: "Poppins, sans-serif" }}
               >
                 By continuing, you agree to our{" "}
