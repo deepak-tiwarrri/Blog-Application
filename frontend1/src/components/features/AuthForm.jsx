@@ -78,22 +78,22 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
 
           {/* Right Side - Form */}
           <div>
-            <GlassCard className="p-8 md:p-10 border border-border">
+            <GlassCard className="p-8 md:p-10 border border-white/10">
               {/* Mobile Header */}
               <div className="lg:hidden mb-8 text-center">
                 <div className="flex items-center justify-center gap-2 mb-4">
-                  <div className="p-3 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg">
+                  <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg shadow-lg">
                     <BookOpen size={28} className="text-white" />
                   </div>
                   <h1
-                    className="text-2xl font-bold text-primary-foreground"
+                    className="text-2xl font-bold text-white"
                     style={{ fontFamily: "Playfair Display, serif" }}
                   >
                     Bite&Roam
                   </h1>
                 </div>
                 <h2
-                  className="text-2xl font-bold text-primary-foreground"
+                  className="text-2xl font-bold text-white/90"
                   style={{ fontFamily: "Playfair Display, serif" }}
                 >
                   {isLoginMode ? "Welcome Back" : "Create Account"}
@@ -103,16 +103,16 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
               <form onSubmit={onHandleSubmit} className="flex flex-col gap-5">
                 {/* Name field for Signup */}
                 {!isLoginMode && (
-                  <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-2">
                     <Label
                       htmlFor="name"
-                      className="text-sm font-semibold text-primary-foreground/90"
+                      className="text-sm font-medium text-gray-300"
                       style={{ fontFamily: "Poppins, sans-serif" }}
                     >
                       Full Name
                     </Label>
                     <div className="relative flex items-center group">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-primary-foreground/60 flex items-center group-focus-within:text-primary transition-colors">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 flex items-center group-focus-within:text-blue-400 transition-colors">
                         <PersonIcon fontSize="small" />
                       </span>
                       <Input
@@ -123,23 +123,23 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                         value={input?.name}
                         onChange={handleChange}
                         required
-                        className={`${classes.font} h-12 pl-14 rounded-lg border-2 border-border bg-card focus:bg-card focus:border-primary focus:outline-none focus:ring-0 focus-visible:ring-0 transition-all duration-200 placeholder:text-primary-foreground/50`}
+                        className={`${classes.font} h-12 pl-14 rounded-lg border border-white/15 bg-white/8 text-white placeholder:text-gray-500 focus:border-blue-500/70 focus:bg-white/12 focus:outline-none focus:ring-0 focus-visible:ring-0 transition-all duration-200`}
                       />
                     </div>
                   </div>
                 )}
 
                 {/* Email field */}
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-2">
                   <Label
                     htmlFor="email"
-                    className="text-sm font-semibold text-primary-foreground/90"
+                    className="text-sm font-medium text-gray-300"
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     Email Address
                   </Label>
                   <div className="relative flex items-center group">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-primary-foreground/60 flex items-center group-focus-within:text-primary transition-colors">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 flex items-center group-focus-within:text-blue-400 transition-colors">
                       <MailOutlineIcon fontSize="small" />
                     </span>
                     <Input
@@ -149,18 +149,18 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                       placeholder="you@example.com"
                       value={input?.email}
                       onChange={handleChange}
-                      className={`${classes.font} h-12 pl-14 rounded-lg border-2 border-border bg-card focus:bg-card focus:border-primary focus:outline-none focus:ring-0 focus-visible:ring-0 transition-all duration-200 placeholder:text-primary-foreground/50`}
                       required
+                      className={`${classes.font} h-12 pl-14 rounded-lg border border-white/15 bg-white/8 text-white placeholder:text-gray-500 focus:border-blue-500/70 focus:bg-white/12 focus:outline-none focus:ring-0 focus-visible:ring-0 transition-all duration-200`}
                     />
                   </div>
                 </div>
 
                 {/* Password field */}
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-2">
                   <div className="flex justify-between items-center">
                     <Label
                       htmlFor="password"
-                      className="text-sm font-semibold text-primary-foreground/90"
+                      className="text-sm font-medium text-gray-300"
                       style={{ fontFamily: "Poppins, sans-serif" }}
                     >
                       Password
@@ -168,14 +168,14 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                     {isLoginMode && (
                       <Link
                         to="#"
-                        className="text-xs text-blue-600 hover:text-blue-700 font-medium"
+                        className="text-xs text-blue-400 hover:text-blue-300 font-medium transition-colors"
                       >
                         Forgot?
                       </Link>
                     )}
                   </div>
                   <div className="relative flex items-center group">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-primary-foreground/60 flex items-center group-focus-within:text-primary transition-colors">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 flex items-center group-focus-within:text-blue-400 transition-colors">
                       <LockOutlinedIcon fontSize="small" />
                     </span>
                     <Input
@@ -186,7 +186,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                       placeholder="••••••••"
                       onChange={handleChange}
                       required
-                      className={`${classes.font} h-12 pl-14 rounded-lg border-2 border-border bg-card focus:bg-card focus:border-primary focus:outline-none focus:ring-0 focus-visible:ring-0 transition-all duration-200 placeholder:text-primary-foreground/50`}
+                      className={`${classes.font} h-12 pl-14 rounded-lg border border-white/15 bg-white/8 text-white placeholder:text-gray-500 focus:border-blue-500/70 focus:bg-white/12 focus:outline-none focus:ring-0 focus-visible:ring-0 transition-all duration-200`}
                     />
                   </div>
                 </div>
@@ -195,7 +195,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                 <Button
                   type="submit"
                   disabled={status === "loading"}
-                  className="w-full py-3 mt-4 text-base font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+                  className="w-full py-3 mt-4 text-base font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-900/30 hover:shadow-blue-800/40"
                   style={{ fontFamily: "Poppins, sans-serif" }}
                 >
                   {status === "loading" ? (
@@ -215,11 +215,11 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
               {/* Divider */}
               <div className="relative my-8">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-border"></div>
+                  <div className="w-full border-t border-white/10"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
                   <span
-                    className="px-3 bg-background text-primary-foreground/70"
+                    className="px-3 bg-transparent text-gray-400"
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     or continue with
@@ -237,7 +237,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
               {/* Toggle Auth Mode */}
               <div className="text-center">
                 <p
-                  className="text-sm text-primary-foreground/80 mb-4"
+                  className="text-sm text-gray-400 mb-4"
                   style={{ fontFamily: "Poppins, sans-serif" }}
                 >
                   {isLoginMode ? (
@@ -245,7 +245,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                       Don&apos;t have an account?{" "}
                       <Link
                         to="/signup"
-                        className="font-semibold text-blue-600 hover:text-blue-700 hover:underline transition-colors"
+                        className="font-semibold text-blue-400 hover:text-blue-300 hover:underline transition-colors"
                       >
                         Sign up here
                       </Link>
@@ -255,7 +255,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                       Already have an account?{" "}
                       <Link
                         to="/login"
-                        className="font-semibold text-blue-600 hover:text-blue-700 hover:underline transition-colors"
+                        className="font-semibold text-blue-400 hover:text-blue-300 hover:underline transition-colors"
                       >
                         Login here
                       </Link>
@@ -266,19 +266,20 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
 
               {/* Terms & Privacy */}
               <p
-                className="text-xs text-primary-foreground/70 text-center mt-6"
+                className="text-xs text-gray-500 text-center mt-6"
                 style={{ fontFamily: "Poppins, sans-serif" }}
               >
                 By continuing, you agree to our{" "}
-                <Link to="#" className="text-blue-600 hover:underline">
+                <Link to="#" className="text-blue-400 hover:text-blue-300 hover:underline transition-colors">
                   Terms of Service
                 </Link>{" "}
                 and{" "}
-                <Link to="#" className="text-blue-600 hover:underline">
+                <Link to="#" className="text-blue-400 hover:text-blue-300 hover:underline transition-colors">
                   Privacy Policy
                 </Link>
               </p>
             </GlassCard>
+
           </div>
         </div>
       </div>
