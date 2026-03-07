@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 
 
 const BlogCard = ({ blog }) => {
-  // Use reading time from backend, or calculate as fallback
   const readingTime = blog.readingTime || Math.ceil(
     (blog.description?.split(/\s+/).length || 0) / 200
   );

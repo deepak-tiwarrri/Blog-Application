@@ -1,11 +1,9 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 import PropTypes from "prop-types";
-import { SquarePenIcon, Trash } from 'lucide-react';
+import { SquarePenIcon, Trash } from "lucide-react";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import BlogActionButtons from "@/components/common/BlogActionButtons";
-import { useBlogInteractions, useCopyToClipboard } from "@/hooks/useCommonLogic";
+import { useBlogInteractions } from "@/hooks/useCommonLogic";
 import { useBlogMutations } from "@/hooks/useBlogAPI";
 import GlassCard from "../common/GlassCard";
 
@@ -21,22 +19,16 @@ const Blog = ({
   readingTime: propReadingTime,
 }) => {
   const navigate = useNavigate();
-  const { liked, bookmarked, sharing, toggleLike, toggleBookmark, handleShare } = useBlogInteractions(id);
+  const { liked, bookmarked, sharing, toggleLike, toggleBookmark, handleShare } =
+    useBlogInteractions(id);
   const { deleteBlog } = useBlogMutations();
 
-  const handleEdit = () => {
-    navigate(`/myblogs/${id}`);
-  };
-
-  const handleViewBlog = () => {
-    navigate(`/blogs/${id}`);
-  };
+  const handleEdit = () => navigate(`/myblogs/${id}`);
+  const handleViewBlog = () => navigate(`/blogs/${id}`);
 
   const handleDeleteBlog = async () => {
     const success = await deleteBlog(id);
-    if (success && onDelete) {
-      onDelete();
-    }
+    if (success && onDelete) onDelete();
   };
 
   const handleShareBlog = async () => {
@@ -44,42 +36,78 @@ const Blog = ({
     await handleShare(url);
   };
 
-  // Calculate reading time from prop or fallback to description
-  const readingTime = propReadingTime || Math.ceil((description?.split(/\s+/).length || 0) / 200);
+  const readingTime =
+    propReadingTime ||
+    Math.ceil((description?.split(/\s+/).length || 0) / 200);
 
   return (
-    <GlassCard className="group cursor-pointer flex flex-col w-full" onClick={handleViewBlog}>
+    <GlassCard
+      className="group cursor-pointer flex flex-col w-full overflow-hidden"
+      onClick={handleViewBlog}
+    >
+      {/* Edit / Delete actions */}
       {isUser && (
-        <div className="card-header-actions" onClick={(e) => e.stopPropagation()}>
-          <button onClick={handleEdit} className="edit-btn cursor-pointer hover:scale-110 transition-transform">
-            <SquarePenIcon sx={{ fontSize: "18px" }} size={20} />
+        <div
+          className="absolute top-3 right-3 z-10 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            onClick={handleEdit}
+            className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white backdrop-blur-sm transition-all duration-200 hover:scale-110"
+          >
+            <SquarePenIcon size={16} />
           </button>
-          <button onClick={handleDeleteBlog} className="delete-btn cursor-pointer hover:scale-110 transition-transform">
-            <Trash sx={{ fontSize: "18px" }} size={20} />
+          <button
+            onClick={handleDeleteBlog}
+            className="p-1.5 rounded-lg bg-white/10 hover:bg-red-500/30 text-gray-300 hover:text-red-400 backdrop-blur-sm transition-all duration-200 hover:scale-110"
+          >
+            <Trash size={16} />
           </button>
         </div>
       )}
-      <div className="relative w-full pt-[56.25%] overflow-hidden bg-gray-100">
+
+      {/* Thumbnail */}
+      <div className="relative w-full pt-[56.25%] overflow-hidden">
         <img
           src={imageUrl}
           onError={(e) => {
             e.target.src = "/assets/dish.jpg";
           }}
-          alt="Blog"
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          alt={title}
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
+        {/* Gradient overlay for depth */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
       </div>
-      <div className="card-content" style={{ fontFamily: "Poppins, sans-serif" }}>
+
+      {/* Content */}
+      <div className="flex flex-col flex-1 p-5" style={{ fontFamily: "Poppins, sans-serif" }}>
+        {/* Author + Title */}
         <div className="flex items-center gap-3 mb-3">
-          <span className="avatar-circle" style={{ fontFamily: "Poppins, sans-serif", fontSize: "0.75rem", fontWeight: "600" }}>
-            {userName ? userName.charAt(0).toUpperCase() : ""}
+          <span
+            className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold shadow-md"
+          >
+            {userName ? userName.charAt(0).toUpperCase() : "?"}
           </span>
-          <span className="blog-title" style={{ fontFamily: "Playfair Display, serif", fontWeight: "700", letterSpacing: "0.5px" }}>{title}</span>
+          <h3
+            className="text-white font-bold text-sm leading-snug line-clamp-2"
+            style={{ fontFamily: "Playfair Display, serif", letterSpacing: "0.3px" }}
+          >
+            {title}
+          </h3>
         </div>
-        <p className="blog-description" style={{ fontFamily: "Poppins, sans-serif", lineHeight: "1.7", fontSize: "0.95rem", color: "#4b5563" }}>{description}</p>
-        <div className="flex items-center justify-between mt-5">
-          <div className="flex items-center gap-2 text-xs" style={{ fontFamily: "Poppins, sans-serif", color: "#9ca3af", letterSpacing: "0.3px" }}>
-            <AccessTimeIcon sx={{ fontSize: "16px" }} />
+
+        {/* Description */}
+        <p
+          className="text-gray-400 text-sm line-clamp-3 leading-relaxed flex-1"
+        >
+          {description}
+        </p>
+
+        {/* Reading time + actions */}
+        <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/10">
+          <div className="flex items-center gap-1.5 text-xs text-gray-500">
+            <AccessTimeIcon sx={{ fontSize: "14px" }} />
             <span>{readingTime} min read</span>
           </div>
           <div onClick={(e) => e.stopPropagation()}>
@@ -95,11 +123,22 @@ const Blog = ({
             />
           </div>
         </div>
-        <div className="blog-meta mt-4">
-          <span className="blog-meta-author" style={{ fontFamily: "Poppins, sans-serif", fontSize: "0.85rem", fontWeight: "500", color: "#6b7280", letterSpacing: "0.3px" }}>
-            By {userName}
+
+        {/* Meta: author + date */}
+        <div className="mt-3">
+          <span className="text-xs text-gray-500" style={{ letterSpacing: "0.3px" }}>
+            By{" "}
+            <span className="text-gray-400 font-medium">{userName}</span>
             {createdAt && (
-              <> • {new Date(createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</>
+              <>
+                {" "}
+                •{" "}
+                {new Date(createdAt).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </>
             )}
           </span>
         </div>

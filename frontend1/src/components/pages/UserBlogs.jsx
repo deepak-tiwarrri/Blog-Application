@@ -3,8 +3,7 @@ import Blog from "../features/Blog";
 import { useScrollToTop } from "@/hooks/useScrollToTop.js";
 import SectionHeader from "../common/SectionHeader";
 import StateDisplay from "../common/StateDisplay";
-import { useFetchUserBlogs } from "@/hooks/useBlogAPI";
-import { useBlogMutations } from "@/hooks/useBlogAPI";
+import { useFetchUserBlogs, useBlogMutations } from "@/hooks/useBlogAPI";
 
 const UserBlogs = () => {
   useScrollToTop();
@@ -26,12 +25,29 @@ const UserBlogs = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white py-8 md:py-12 lg:py-16">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+    <div className="min-h-screen py-8 md:py-12 lg:py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-900 to-gray-950">
+      {/* Ambient glow blobs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-0">
+        <div
+          className="absolute -top-40 -left-40 w-96 h-96 rounded-full opacity-20 blur-3xl"
+          style={{ background: "radial-gradient(circle, #6366f1, transparent)" }}
+        />
+        <div
+          className="absolute top-1/3 -right-32 w-80 h-80 rounded-full opacity-15 blur-3xl"
+          style={{ background: "radial-gradient(circle, #8b5cf6, transparent)" }}
+        />
+        <div
+          className="absolute bottom-20 left-1/3 w-72 h-72 rounded-full opacity-10 blur-3xl"
+          style={{ background: "radial-gradient(circle, #3b82f6, transparent)" }}
+        />
+      </div>
+
+      <div className="relative z-10 container mx-auto max-w-7xl">
         <SectionHeader
           badge="Your Content"
           title="My Blogs"
           subtitle="Manage and showcase all your published stories"
+          badgeClassName="text-blue-400 bg-blue-500/15 border border-blue-500/25"
         />
 
         <StateDisplay
@@ -43,23 +59,19 @@ const UserBlogs = () => {
           onRetry={fetchUserBlogs}
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
-            {user?.blogs?.map((blog, index) => (
-              <div
-                key={index}
-                className="transform hover:scale-105 transition-transform duration-300"
-              >
-                <Blog
-                  id={blog._id}
-                  title={blog.title}
-                  description={blog.description}
-                  imageUrl={blog.image}
-                  userName={user.name}
-                  createdAt={blog.createdAt}
-                  readingTime={blog.readingTime}
-                  onDelete={() => handleDelete(blog._id)}
-                  isUser={true}
-                />
-              </div>
+            {user?.blogs?.map((blog) => (
+              <Blog
+                key={blog._id}
+                id={blog._id}
+                title={blog.title}
+                description={blog.description}
+                imageUrl={blog.image}
+                userName={user.name}
+                createdAt={blog.createdAt}
+                readingTime={blog.readingTime}
+                onDelete={() => handleDelete(blog._id)}
+                isUser={true}
+              />
             ))}
           </div>
         </StateDisplay>
