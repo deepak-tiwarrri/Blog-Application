@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useScrollToTop } from "@/hooks/useScrollToTop.js";
-import { useStyles } from "@/lib/utils.js";
+import { useStyles } from "@/lib/utils.jsx";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -82,8 +82,6 @@ const AddBlog = () => {
         >
           Post Your Blog
         </h3>
-
-        {/* title */}
         <Label
           htmlFor="title"
           className={`${classes.font} mb-2 text-start mt-2`}
@@ -98,8 +96,6 @@ const AddBlog = () => {
           placeholder="Title"
           variant="outlined"
         />
-
-        {/* description */}
         <Label
           htmlFor="description"
           className={`${classes.font} mb-2 text-start mt-4`}
@@ -114,8 +110,6 @@ const AddBlog = () => {
           variant="outlined"
           placeholder="Description"
         />
-
-        {/* image url */}
         <Label
           htmlFor="image"
           className={`${classes.font} mb-2 text-start mt-4`}
@@ -130,8 +124,6 @@ const AddBlog = () => {
           placeholder="ImageURL"
           variant="outlined"
         />
-
-        {/* Button */}
         <Button
           type="submit"
           disabled={isLoading}

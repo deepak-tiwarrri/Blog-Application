@@ -17,6 +17,7 @@ import GlassCard from "../common/GlassCard";
 
 const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
   const input = useSelector((state) => state.auth?.input);
+  console.log("input");
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -234,7 +235,6 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                 </div>
               </div>
 
-              {/* Toggle Auth Mode */}
               <div className="text-center">
                 <p
                   className="text-sm text-gray-400 mb-4"

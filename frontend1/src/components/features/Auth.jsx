@@ -1,15 +1,13 @@
 import { authActions } from "@/store";
-import React, { useState } from "react";
-import { useDispatch, useLocation } from "react-redux";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import AuthForm from "./features/AuthForm";
-import { USER_URL } from "./utils";
 import { userApi, setAuthToken } from "@/api";
 import { setTokenWithTimestamp } from "@/hooks/useTokenExpiration";
 
 const Auth = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const dispatch = useDispatch();
   const [isSignup, setIsSignUp] = useState(true);
   const [input, setInput] = useState({ name: '', email: '', password: '' });

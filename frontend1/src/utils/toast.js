@@ -1,6 +1,6 @@
 /**
  * Toast Notification Utilities
- * Centralized toast notification handling to reduce code duplication
+ * Centralized toast notification 
  */
 
 import { toast } from 'sonner';

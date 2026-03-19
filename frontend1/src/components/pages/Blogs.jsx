@@ -86,7 +86,7 @@ const Blogs = () => {
               color="secondary"
               showFirstButton
               showLastButton
-              size="large"
+              size="small"
               sx={{
                 "& .MuiPaginationItem-root": {
                   color: "rgba(255,255,255,0.6)",

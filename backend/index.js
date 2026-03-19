@@ -8,6 +8,8 @@ import blogRouter from "./routes/blog-routes.js";
 dotenv.config();
 const app = express();
 app.use(express.json());
+
+
 //connect mongodb
 app.use(
   cors({
@@ -19,7 +21,6 @@ app.use(
 connectDB();
 
 app.use("/api/user", userRouter);
-//http://localhost:5000/api/user
 app.use("/api/blog", blogRouter);
 
 const PORT = process.env.PORT || 8000;
@@ -27,5 +28,3 @@ const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
-
-//deepak@99

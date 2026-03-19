@@ -34,12 +34,8 @@ export const useTokenExpiration = () => {
       }
     };
   useEffect(() => {
-    // Check on component mount
     checkTokenExpiration();
-
-    // Set up interval to check every minute
     const interval = setInterval(checkTokenExpiration, 60 * 1000);
-
     return () => clearInterval(interval);
   }, [dispatch, navigate]);
 };

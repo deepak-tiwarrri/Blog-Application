@@ -1,11 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
-import { toast } from "sonner";
 import { ArrowRight, BookOpen, Sparkles } from "lucide-react";
 
-import { blogApi } from "@/api";
 import { useScrollToTop } from "@/hooks/useScrollToTop.js";
 import { ANIMATION_VARIANTS } from "@/constants/animations";
 import { H1, BodyLarge, BadgeText, GradientText } from "@/components/Typography";
@@ -13,7 +11,6 @@ import { PrimaryButton, SecondaryButton } from "@/components/Button";
 
 import FeaturedSection from "../features/FeaturedSection";
 import HeroCarousel from "../features/HeroCarousel";
-import LatestBlogsCarousel from "../features/LatestBlogsCarousel";
 import CTASection from "../sections/CTASection";
 import FeaturedContent from "../features/FeaturedContent";
 

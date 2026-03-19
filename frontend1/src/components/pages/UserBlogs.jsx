@@ -4,12 +4,17 @@ import { useScrollToTop } from "@/hooks/useScrollToTop.js";
 import SectionHeader from "../common/SectionHeader";
 import StateDisplay from "../common/StateDisplay";
 import { useFetchUserBlogs, useBlogMutations } from "@/hooks/useBlogAPI";
+import { usePagination } from "@/hooks/useCommonLogic";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 
 const UserBlogs = () => {
   useScrollToTop();
   const userId = localStorage.getItem("userId");
   const { user, loading, error, fetchUserBlogs } = useFetchUserBlogs(userId);
   const { deleteBlog } = useBlogMutations();
+  const { currentPage, totalPages, paginatedItems, setCurrentPage } = usePagination(user?.blogs || [], 6);
+
 
   useEffect(() => {
     if (userId) {
@@ -58,8 +63,8 @@ const UserBlogs = () => {
           emptyMessage="No blogs yet. Start creating your first blog!"
           onRetry={fetchUserBlogs}
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
-            {user?.blogs?.map((blog) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 mb-12">
+            {paginatedItems.map((blog) => (
               <Blog
                 key={blog._id}
                 id={blog._id}
@@ -74,10 +79,39 @@ const UserBlogs = () => {
               />
             ))}
           </div>
+          <Stack spacing={2} className="flex justify-center items-center">
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={(_, page) => setCurrentPage(page)}
+              variant="outlined"
+              color="secondary"
+              showFirstButton
+              showLastButton
+              size="small"
+              sx={
+                {
+                  "& .MuiPaginationItem-root": {
+                    color: "rgba(255,255,255,0.6)",
+                    borderColor: "rgba(255,255,255,0.15)",
+                    "&:hover": {
+                      backgroundColor: "rgba(255,255,255,0.08)",
+                      borderColor: "rgba(255,255,255,0.3)",
+                    },
+                    "&.Mui-selected": {
+                      backgroundColor: "rgba(99,102,241,0.35)",
+                      borderColor: "rgba(139,92,246,0.6)",
+                      color: "#fff",
+                    },
+                  },
+                }
+              }
+            />
+          </Stack>
         </StateDisplay>
       </div>
     </div>
   );
 };
 
-export default UserBlogs;
+export default UserBlogs; 

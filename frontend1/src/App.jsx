@@ -21,15 +21,12 @@ import { useTokenExpiration } from "./hooks/useTokenExpiration";
 import "./components/styles/glassmorphism.css";
 
 const App = () => {
-  const isLoggedIn = useSelector((state) => state.auth?.isLoggedIn);
   const dispatch = useDispatch();
 
   // Check token expiration on app load and periodically
   useTokenExpiration();
-
   useEffect(() => {
     if (localStorage.getItem("userId")) {
-      // preserve userId in localStorage and mark user as logged in
       dispatch(authActions.login());
     }
   }, [dispatch]);
@@ -51,8 +48,6 @@ const App = () => {
               <Route path="/blogs/:id" element={<BlogDetailPage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
-
-              {/* Protected Routes - Only accessible when logged in */}
               <Route
                 path="/profile"
                 element={
