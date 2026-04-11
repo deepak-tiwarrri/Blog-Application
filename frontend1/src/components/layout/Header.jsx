@@ -34,7 +34,7 @@ const Header = () => {
   };
 
   return (
-    <div className="bg-gradient-to-r from-gray-950 to-gray-800 sticky top-0 shadow-lg z-50">
+    <div className="glass-dark sticky top-0 shadow-lg z-50 transition-all duration-300">
       <div className="px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
         <div className="flex justify-between items-center">
           {/* Left Section - Logo */}
@@ -77,6 +77,18 @@ const Header = () => {
                   style={{ fontFamily: "Poppins, sans-serif" }}
                 >
                   My Blogs
+                </NavLink>
+                <NavLink
+                  to="/blogs/add"
+                  onClick={handleNavClick}
+                  className={({ isActive }) =>
+                    isActive
+                      ? "nav-link bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium transition"
+                      : "nav-link text-gray-300 hover:bg-white/5 px-4 py-2 rounded-full text-sm font-medium transition"
+                  }
+                  style={{ fontFamily: "Poppins, sans-serif" }}
+                >
+                  Create Blog
                 </NavLink>
               </nav>
             </div>
@@ -178,6 +190,18 @@ const Header = () => {
                   style={{ fontFamily: "Poppins, sans-serif" }}
                 >
                   My Blogs
+                </NavLink>
+                <NavLink
+                  to="/blogs/add"
+                  onClick={handleNavClick}
+                  className={({ isActive }) =>
+                    isActive
+                      ? "block px-4 py-2 rounded-lg bg-blue-600 text-white font-medium transition"
+                      : "block px-4 py-2 rounded-lg text-gray-300 hover:bg-gray-800 font-medium transition"
+                  }
+                  style={{ fontFamily: "Poppins, sans-serif" }}
+                >
+                  Create Blog
                 </NavLink>
                 <NavLink
                   to="/profile"

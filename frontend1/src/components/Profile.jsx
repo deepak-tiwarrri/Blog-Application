@@ -3,7 +3,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { authActions } from "@/store";
 import { toast } from "sonner";
+import { getSocialMediaIcon } from "@/lib/utils.jsx"
 import { useScrollToTop } from "@/hooks/useScrollToTop.js";
+import { INITIAL_PROFILE_STATE } from "@/constants/profile.js";
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 import { Button } from "@/components/ui/button";
 import EditProfileSection from "@/components/features/EditProfileSection";
 import {
@@ -13,29 +17,9 @@ import {
   LogOut,
   Edit2,
   Lock,
-  Twitter,
-  Linkedin,
-  Github,
-  Instagram,
   Calendar,
 } from "lucide-react";
 import { useUserProfile } from "@/hooks/useBlogAPI";
-
-export const INITIAL_PROFILE_STATE = {
-  name: "",
-  email: "",
-  bio: "",
-  location: "",
-  phone: "",
-  website: "",
-  profilePicture: "",
-  socialMedia: {
-    twitter: "",
-    linkedin: "",
-    instagram: "",
-    github: "",
-  },
-};
 
 const Profile = () => {
   // Hooks
@@ -60,6 +44,8 @@ const Profile = () => {
     fetchProfile();
   }, [userId, navigate]);
 
+
+
   // Update local state when profile is fetched
   useEffect(() => {
     if (profile) {
@@ -82,7 +68,6 @@ const Profile = () => {
     }
   }, [profile]);
 
-  // ==================== Event Handlers ====================
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProfileData((prev) => ({
@@ -130,17 +115,7 @@ const Profile = () => {
     fetchProfile();
   };
 
-  // ==================== Utility Functions ====================
-  const getSocialMediaIcon = (platform) => {
-    const iconProps = { size: 20, className: "text-white" };
-    const iconMap = {
-      twitter: <Twitter {...iconProps} />,
-      linkedin: <Linkedin {...iconProps} />,
-      instagram: <Instagram {...iconProps} />,
-      github: <Github {...iconProps} />,
-    };
-    return iconMap[platform] || null;
-  };
+
 
   const getSocialMediaUrl = (platform, handle) => {
     if (!handle) return "";
@@ -177,8 +152,8 @@ const Profile = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        {/* Profile Card - Glass Morphism */}
-        <div className="bg-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl p-8 md:p-10 border border-white/20 hover:border-white/30 transition-all duration-300">
+        <div className="bg-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl p-8 md:p-10 border 
+        border-white/20 hover:border-white/30 transition-all duration-300">
           {/* Header with Title and Actions */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
             <h1
@@ -189,29 +164,38 @@ const Profile = () => {
             </h1>
             {!isEditing && (
               <div className="flex flex-wrap gap-2">
-                <button
+                <Button
                   onClick={() => setIsEditing(true)}
                   className="flex items-center gap-2 px-4 py-2 bg-blue-500/40 hover:bg-blue-500/60 text-white rounded-xl transition-all duration-300 hover:cursor-pointer font-medium backdrop-blur-md border border-blue-400/30 hover:border-blue-400/50"
                 >
-                  <Edit2 size={18} />
-                  Edit Profile
-                </button>
+                  <Tooltip title="Edit Profile">
+                    <IconButton>
+                      <Edit2 size={18} />
+                    </IconButton>
+                  </Tooltip>
+                </Button>
                 {user?.authMethod === "email" && (
-                  <button
+                  <Button
                     onClick={() => navigate("/change-password")}
                     className="flex items-center gap-2 px-4 py-2 bg-yellow-500/40 hover:bg-yellow-500/60 text-white rounded-xl transition-all duration-300 hover:cursor-pointer font-medium backdrop-blur-md border border-yellow-400/30 hover:border-yellow-400/50"
                   >
-                    <Lock size={18} />
-                    Change Password
-                  </button>
+                    <Tooltip title="Change Password">
+                      <IconButton>
+                        <Lock size={18} />
+                      </IconButton>
+                    </Tooltip>
+                  </Button>
                 )}
-                <button
+                <Button
                   onClick={handleSignOut}
                   className="flex items-center gap-2 px-4 py-2 bg-red-500/40 hover:bg-red-500/60 text-white rounded-xl transition-all duration-300 hover:cursor-pointer font-medium backdrop-blur-md border border-red-400/30 hover:border-red-400/50"
                 >
-                  <LogOut size={18} />
-                  Sign Out
-                </button>
+                  <Tooltip title="Sign Out">
+                    <IconButton>
+                      <LogOut size={18} />
+                    </IconButton>
+                  </Tooltip>
+                </Button>
               </div>
             )}
           </div>
@@ -221,24 +205,35 @@ const Profile = () => {
             <div className="flex flex-col md:flex-row gap-8 items-start mb-8">
               {/* Profile Picture Section - Left Side */}
               <div className="flex-shrink-0">
-                <div className="relative group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-3xl blur-2xl opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
-                  <div className="relative w-40 h-40 rounded-3xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white text-7xl font-bold shadow-2xl ring-4 ring-white/20 hover:ring-white/40 transition-all duration-300">
-                    {profileData.name
-                      ? profileData.name.charAt(0).toUpperCase()
-                      : "U"}
-                  </div>
+                <div className="relative group cursor-pointer hover:scale-105 transition-transform duration-300">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-full blur-xl opacity-40 group-hover:opacity-70 transition-opacity duration-300"></div>
+                  {profileData.profilePicture ? (
+                    <img 
+                      src={profileData.profilePicture} 
+                      alt="Profile" 
+                      className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover shadow-2xl ring-4 ring-white/20 group-hover:ring-white/40 transition-all duration-300"
+                    />
+                  ) : (
+                    <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-blue-500 via-purple-600 to-pink-500 flex items-center justify-center text-white text-4xl sm:text-5xl font-bold shadow-2xl ring-4 ring-white/20 group-hover:ring-white/40 transition-all duration-300">
+                      {profileData.name
+                        ? profileData.name.charAt(0).toUpperCase()
+                        : "U"}
+                    </div>
+                  )}
                 </div>
               </div>
 
               {/* Profile Details - Right Side */}
               <div className="flex-1 min-w-0">
                 {/* Name and Email */}
-                <div className="mb-4">
-                  <h2 className="text-3xl font-bold text-white">
+                <div className="mb-6">
+                  <h2 
+                    className="text-3xl sm:text-4xl font-bold text-white mb-1 tracking-tight"
+                    style={{ fontFamily: "Playfair Display, serif" }}
+                  >
                     {profileData.name}
                   </h2>
-                  <p className="text-sm text-gray-300 mt-1">
+                  <p className="text-sm sm:text-base text-gray-400 font-['Poppins']">
                     {profileData.email}
                   </p>
                 </div>

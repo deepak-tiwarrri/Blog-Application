@@ -1,54 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import AuthForm from "./features/AuthForm";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { useScrollToTop } from "@/hooks/useScrollToTop.js";
-import { sendRequest } from "@/store";
-import { toast } from "sonner";
+import { useAuthSubmit, useAuthRedirect } from "@/hooks/useAuthSubmit";
 
 const Login = () => {
   useScrollToTop();
+  useAuthRedirect();
+
   const location = useLocation();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const isLoggedIn = useSelector((state) => state.auth?.isLoggedIn);
-  const input = useSelector((state) => state.auth?.input);
   const isLoginMode = location.pathname === "/login";
-  const status = useSelector((state) => state.auth.status);
-  const error = useSelector((state) => state.auth.error);
-
-  // Redirect if already logged in
-  React.useEffect(() => {
-    if (isLoggedIn) {
-      navigate("/blogs", { replace: true });
-    }
-  }, [isLoggedIn, navigate]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(sendRequest({ type: "login", input })).then((result) => {
-      if (result.meta.requestStatus === "fulfilled") {
-        toast.success("Login successful!", {
-          position: "top-right",
-          duration: 1500,
-        });
-        setTimeout(() => {
-          navigate("/blogs");
-        }, 1500);
-      }
-    });
-  };
-  useEffect(() => {
-    if (status === "pending") {
-      toast.loading("Logging in...", { position: "top-right", duration: 1000 });
-    }
-    if (status === "failed" && error) {
-      toast.error(typeof error === "object" ? error?.message : error, {
-        position: "top-right",
-        duration: 1300,
-      });
-    }
-  }, [status, error]);
+  const { handleSubmit } = useAuthSubmit('login');
 
   return (
     <>

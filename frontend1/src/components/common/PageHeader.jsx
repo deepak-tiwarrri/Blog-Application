@@ -20,6 +20,7 @@ const PageHeader = ({
    onBackClick,
    showBackButton = true,
    actions,
+   theme = "dark",
 }) => {
    const navigate = useNavigate();
 
@@ -38,7 +39,9 @@ const PageHeader = ({
          {showBackButton && backTo && (
             <button
                onClick={handleBack}
-               className="inline-flex items-center gap-2 mb-6 text-gray-600 hover:text-gray-900 transition-colors duration-200 group"
+               className={`inline-flex items-center gap-2 mb-6 transition-colors duration-200 group
+                  ${theme === "dark" ? "text-gray-300 hover:text-white" : "text-gray-600 hover:text-gray-900"}
+               `}
             >
                <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-200" />
                <span
@@ -54,14 +57,14 @@ const PageHeader = ({
             <div>
                <h1
                   style={{ fontFamily: "Playfair Display, serif" }}
-                  className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-2"
+                  className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}
                >
                   {title}
                </h1>
                {subtitle && (
                   <p
                      style={{ fontFamily: "Poppins, sans-serif" }}
-                     className="text-gray-600 text-sm sm:text-base"
+                     className={`text-sm sm:text-base ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}
                   >
                      {subtitle}
                   </p>

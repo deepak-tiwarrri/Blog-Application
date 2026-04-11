@@ -1,55 +1,39 @@
-import { authActions } from "@/store";
-import React, { useState } from "react";
-import { useDispatch, useLocation } from "react-redux";
+import { sendRequest } from "@/store";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import AuthForm from "./features/AuthForm";
-import { USER_URL } from "./utils";
-import { userApi, setAuthToken } from "@/api";
+import { setTokenWithTimestamp } from "@/hooks/useTokenExpiration";
+import AuthForm from "./AuthForm";
+
 const Auth = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const dispatch = useDispatch();
-  const [isSignup, setIsSignUp] = useState(true);
-  const [input, setInput] = useState({ name: '', email: '', password: '' });
-
-  const sendRequest = async (type = "login") => {
-    try {
-      const res = await (type === 'signup' ? userApi.signup({ name: input.name, email: input.email, password: input.password }) : userApi.login({ email: input.email, password: input.password }));
-      const data = res.data;
-      if (data?.token) {
-        localStorage.setItem('token', data.token);
-        setAuthToken(data.token);
-      }
-      return data;
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
-  };
-
-
+  const isLoginMode = useSelector((state) => state.auth?.isLoggedIn === false);
+  const input = useSelector((state) => state.auth?.input);
+  const status = useSelector((state) => state.auth?.status);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    sendRequest(isSignup ? 'signup' : 'login')
-      .then((data) => {
-        if (data?.user) {
-          localStorage.setItem('userId', data.user._id);
-          dispatch(authActions.login());
-          navigate('/blogs');
+    dispatch(
+      sendRequest({
+        type: isLoginMode ? "login" : "signup",
+        input,
+      })
+    ).then((action) => {
+      // sendRequest thunk returns { user, token } on success
+      if (action.payload?.user) {
+        if (action.payload?.token) {
+          setTokenWithTimestamp(action.payload.token);
         }
-      });
+        navigate("/blogs");
+      }
+    });
   };
-  console.log(location.pathname);
+
   return (
-    <>
-      <AuthForm
-        isSignup={isSignup}
-        handleSubmit={handleSubmit}
-        setIsSignUp={setIsSignUp}
-        setInput={setInput}
-      />
-    </>
+    <AuthForm
+      onHandleSubmit={handleSubmit}
+      isLoginMode={isLoginMode}
+    />
   );
 };
 

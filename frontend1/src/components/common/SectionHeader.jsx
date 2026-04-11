@@ -28,7 +28,7 @@ const SectionHeader = ({ badge, title, subtitle, centered = true }) => {
       )}
 
       <h2
-        className="text-3xl md:text-4xl font-bold text-gray-900 mb-4"
+        className="text-3xl md:text-4xl font-bold text-gray-200 mb-4"
         style={{ fontFamily: "Playfair Display, serif" }}
       >
         {title}
@@ -36,7 +36,7 @@ const SectionHeader = ({ badge, title, subtitle, centered = true }) => {
 
       {subtitle && (
         <p
-          className="text-lg text-gray-600 max-w-2xl mx-auto"
+          className="text-lg text-gray-300 max-w-2xl mx-auto"
           style={{ fontFamily: "Poppins, sans-serif" }}
         >
           {subtitle}

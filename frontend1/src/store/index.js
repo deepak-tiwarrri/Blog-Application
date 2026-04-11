@@ -1,7 +1,6 @@
 import {
-  configureStore,
   createAsyncThunk,
-  createSlice,
+  createSlice
 } from "@reduxjs/toolkit";
 import { userApi, setAuthToken } from "@/api";
 
@@ -42,7 +41,6 @@ const authSlice = createSlice({
       })
       .addCase(sendRequest.fulfilled, (state, action) => {
         state.status = "succeeded";
-        // action.payload expected to be { user, token }
         state.user = action.payload?.user || null;
         state.isLoggedIn = true;
       })
@@ -71,26 +69,46 @@ export const sendRequest = createAsyncThunk(
         })
         : userApi.login({ email: input.email, password: input.password }));
 
-      const data = res.data;
+      const res_data = res.data;
+      console.log("----response data: send request:", res_data);
+
+      // Response structure: { success, message, data: { user, accessToken, refreshToken }, timestamp }
+      const data = res_data.data;
+      
       // Validate response
       if (!data || !data.user) {
+        console.error("User data missing in response:", res_data);
         return rejectWithValue("Response format is not proper");
       }
-      // persist userId and token
-      localStorage.setItem("userId", data.user._id);
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-        setAuthToken(data.token);
+      
+      // Extract user and tokens from nested data
+      const user = data.user;
+      const accessToken = data.accessToken;
+      const refreshToken = data.refreshToken;
+      
+      console.log("----extracted user:", user);
+      console.log("----extracted tokens:", { accessToken: !!accessToken, refreshToken: !!refreshToken });
+      
+      // persist userId and tokens
+      localStorage.setItem("userId", user._id);
+      if (accessToken) {
+        localStorage.setItem("token", accessToken);
+        setAuthToken(accessToken);
       }
-      return { user: data.user, token: data.token };
+      if (refreshToken) {
+        localStorage.setItem("refreshToken", refreshToken);
+      }
+      
+      return { user, token: accessToken };
     } catch (error) {
+      console.log('----error send request - response:', error?.response?.data);
+      console.log('----error send request - message:', error?.message);
+      console.log('----error send request - full error:', error);
       return rejectWithValue(error.response?.data || error?.message);
     }
   }
 );
 export const authActions = authSlice.actions;
-export const store = configureStore({
-  reducer: {
-    auth: authSlice.reducer,
-  },
-});
+export const { logout, updateInput, updateUser, login } = authSlice.actions;
+
+export default authSlice.reducer; 

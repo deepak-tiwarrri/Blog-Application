@@ -1,0 +1,183 @@
+/* Glass Morphism & Motion Enhancements */
+
+/* Smooth scroll behavior */
+html {
+   scroll-behavior: smooth;
+}
+
+/* Elegant fade-in animation for hero elements */
+@keyframes fadeInUp {
+   from {
+      opacity: 0;
+      transform: translateY(30px);
+   }
+
+   to {
+      opacity: 1;
+      transform: translateY(0);
+   }
+}
+
+/* Smooth float animation */
+@keyframes float {
+
+   0%,
+   100% {
+      transform: translateY(0px);
+   }
+
+   50% {
+      transform: translateY(-10px);
+   }
+}
+
+/* Glassmorphism glow effect */
+@keyframes glassGlow {
+
+   0%,
+   100% {
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+   }
+
+   50% {
+      box-shadow: 0 0 30px rgba(147, 51, 234, 0.15);
+   }
+}
+
+/* Slide in from left animation */
+@keyframes slideInLeft {
+   from {
+      opacity: 0;
+      transform: translateX(-50px);
+   }
+
+   to {
+      opacity: 1;
+      transform: translateX(0);
+   }
+}
+
+/* Slide in from right animation */
+@keyframes slideInRight {
+   from {
+      opacity: 0;
+      transform: translateX(50px);
+   }
+
+   to {
+      opacity: 1;
+      transform: translateX(0);
+   }
+}
+
+/* Glass background hover effect */
+.glass-hover {
+   transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.glass-hover:hover {
+   backdrop-filter: blur(12px);
+   background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Smooth backdrop blur transitions */
+.backdrop-blur-smooth {
+   transition: backdrop-filter 0.3s ease, background-color 0.3s ease;
+}
+
+/* Motion reduce for accessibility */
+@media (prefers-reduced-motion: reduce) {
+
+   *,
+   *::before,
+   *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+   }
+}
+
+/* Elegant gradient text */
+.gradient-text {
+   background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+   -webkit-background-clip: text;
+   -webkit-text-fill-color: transparent;
+   background-clip: text;
+}
+
+/* Smooth transitions for interactive elements */
+button,
+a {
+   transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Glass card effect */
+.glass-card {
+   backdrop-filter: blur(10px);
+   border: 1px solid rgba(255, 255, 255, 0.18);
+   background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+}
+
+.glass-card:hover {
+   backdrop-filter: blur(12px);
+   border: 1px solid rgba(255, 255, 255, 0.25);
+   background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
+}
+
+/* Smooth loading animation */
+@keyframes shimmer {
+   0% {
+      background-position: -1000px 0;
+   }
+
+   100% {
+      background-position: 1000px 0;
+   }
+}
+
+.animate-shimmer {
+   background: linear-gradient(90deg,
+         #f0f0f0 0%,
+         #e0e0e0 50%,
+         #f0f0f0 100%);
+   background-size: 200% 100%;
+   animation: shimmer 2s infinite;
+}
+
+/* Elegant shadow for cards */
+.shadow-glass {
+   box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+}
+
+.shadow-glass:hover {
+   box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+}
+
+/* Smooth rotate animation */
+@keyframes smoothRotate {
+   from {
+      transform: rotate(0deg);
+   }
+
+   to {
+      transform: rotate(360deg);
+   }
+}
+
+/* Pulse animation for attention */
+@keyframes elegantPulse {
+
+   0%,
+   100% {
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+   }
+
+   50% {
+      box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+   }
+}
+
+/* Smooth color transition */
+.smooth-color-transition {
+   transition: color 0.3s ease, background-color 0.3s ease;
+}

@@ -1,68 +1,82 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import DOMPurify from 'dompurify';
+
 
 const BlogCard = ({ blog }) => {
+  const cleanDescription = DOMPurify.sanitize(blog.description, { ALLOWED_TAGS: [] });
+  const readingTime = blog.readingTime || Math.ceil(
+    (cleanDescription?.split(/\s+/).length || 0) / 200
+  );
+
   return (
-    <article
-      key={blog._id}
-      className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all overflow-hidden flex flex-col"
-    >
-      <img
-        src={blog.image}
-        onError={(e) => {
-          e.target.src = "/assets/dish.jpg";
-        }}
-        alt={blog.title}
-        className="w-full h-48 object-cover"
-      />
+    <div className="group flex flex-col h-full overflow-hidden bg-white/5 backdrop-blur-xl rounded-2xl shadow-xl hover:shadow-2xl hover:shadow-blue-900/20 border border-white/10 hover:border-white/30 transition-all duration-300 hover:-translate-y-1">
+      {/* Fixed image dimensions: 16:9 aspect ratio */}
+      <div className="relative w-full pt-[56.25%] bg-white/10 overflow-hidden">
+        <img
+          src={blog.image}
+          onError={(e) => {
+            e.target.src = "/assets/dish.jpg";
+          }}
+          alt={blog.title}
+          className="absolute inset-0 w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500 ease-in-out"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-950/80 via-transparent to-transparent opacity-60"></div>
+      </div>
+
       <div
         className="p-4 flex-1 flex flex-col justify-between"
         style={{ fontFamily: "'Poppins', sans-serif" }}
       >
-        <h3
-          className="text-lg md:text-xl font-semibold text-gray-900 mb-2"
-          style={{
-            fontFamily: "'Playfair Display', serif",
-            fontWeight: "700",
-            letterSpacing: "0.5px",
-          }}
-        >
-          {blog.title}
-        </h3>
-        <p
-          className="text-gray-700 mb-3 line-clamp-3"
-          style={{
-            fontFamily: "'Poppins', sans-serif",
-            lineHeight: "1.6",
-            fontSize: "0.95rem",
-          }}
-        >
-          {blog.description}
-        </p>
-        <div
-          className="flex items-center justify-between mt-auto"
-          style={{ fontFamily: "'Poppins', sans-serif" }}
-        >
-          <span
-            className="text-sm text-gray-500"
-            style={{
-              fontFamily: "'Poppins', sans-serif",
-              fontSize: "0.875rem",
-              letterSpacing: "0.5px",
-            }}
+        <div>
+          <h3
+            className="text-lg md:text-xl font-bold text-white mb-2 line-clamp-2 group-hover:text-blue-400 transition-colors duration-300"
+            style={{ fontFamily: "'Playfair Display', serif" }}
           >
-            By {blog.user?.name}
-          </span>
+            {blog.title}
+          </h3>
+          <p
+            className="text-gray-300 mb-4 line-clamp-2"
+            style={{ fontFamily: "'Poppins', sans-serif", fontSize: "0.95rem" }}
+            dangerouslySetInnerHTML={{ __html: cleanDescription }}
+          />
+        </div>
+
+        <div className="space-y-4 mt-auto border-t border-white/10 pt-4">
+          <div
+            className="flex items-center justify-between text-xs text-gray-400"
+            style={{ fontFamily: "'Poppins', sans-serif" }}
+          >
+            <div className="flex items-center gap-2">
+              <span className="font-medium text-gray-300">{blog.user?.name || "Unknown"}</span>
+              {blog.createdAt && (
+                <>
+                  <span className="text-gray-600">•</span>
+                  <span>
+                    {new Date(blog.createdAt).toLocaleDateString("en-US", {
+                      month: "short", day: "numeric", year: "numeric",
+                    })}
+                  </span>
+                </>
+              )}
+            </div>
+            {readingTime && (
+              <span className="bg-white/10 px-2 py-1 rounded-md text-gray-300">
+                {readingTime} min
+              </span>
+            )}
+          </div>
+
           <Link
             to={`/blogs/${blog._id}`}
-            className="text-blue-500 hover:underline font-medium transition-colors"
-            style={{ fontFamily: "'Poppins', sans-serif", fontWeight: "500" }}
+            className="inline-flex w-full justify-center items-center gap-2 py-2 px-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-white font-medium transition-all duration-300 hover:text-blue-400 hover:border-blue-400/50"
+            style={{ fontFamily: "'Poppins', sans-serif" }}
           >
-            Read More
+            Read Full Article →
           </Link>
         </div>
       </div>
-    </article>
+    </div>
   );
 };
 
