@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import axios from "axios";
 import { USER_URL } from "@/lib/endpoints";
+import { setAuthToken } from "@/api";
+import { setTokenWithTimestamp } from "@/hooks/useTokenExpiration";
 import GoogleIcon from "../../public/assets/google-icon.svg?url";
 import { GoogleButton } from "./common/GoogleButton";
 
@@ -33,9 +35,11 @@ const GoogleSignInButton = () => {
 
       const { token, user } = response.data;
 
-      // Store token in localStorage
+      // Store token in localStorage and set axios auth header
       localStorage.setItem("token", token);
       localStorage.setItem("userId", user._id);
+      setAuthToken(token);
+      setTokenWithTimestamp(token);
 
       // Update Redux state
       dispatch(authActions.login());

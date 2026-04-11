@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import Blog from "../features/Blog";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import { Search, Tag } from "lucide-react";
 import { useScrollToTop } from "@/hooks/useScrollToTop.js";
 import SectionHeader from "../common/SectionHeader";
 import StateDisplay from "../common/StateDisplay";
@@ -9,14 +10,31 @@ import { useFetchBlogs } from "@/hooks/useBlogAPI";
 import { usePagination } from "@/hooks/useCommonLogic";
 
 const Blogs = () => {
-  useScrollToTop();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [tagFilter, setTagFilter] = useState("");
   const { blogs, loading, error, fetchBlogs } = useFetchBlogs();
-  const { currentPage, totalPages, paginatedItems, setCurrentPage } =
-    usePagination(blogs, 6);
 
+  // Filter invalid layouts prior to pagination
+  const validBlogs = blogs.filter((blog) => blog && blog.user && blog._id && blog.title);
+
+  const { currentPage, totalPages, paginatedItems, setCurrentPage } =
+    usePagination(validBlogs, 6);
+  useScrollToTop([currentPage]);
+
+  // Extract all unique tags
+  const uniqueTags = [...new Set(validBlogs.flatMap(blog => blog.tags || []))]
+    .filter(Boolean)
+    .sort();
+
+  // Debounce effect to avoid hammering API on every keystroke
   useEffect(() => {
-    fetchBlogs();
-  }, []);
+    const handler = setTimeout(() => {
+      fetchBlogs({ search: searchTerm, tag: tagFilter });
+      setCurrentPage(1); // reset to page 1 on new search
+    }, 500);
+
+    return () => clearTimeout(handler);
+  }, [searchTerm, tagFilter, fetchBlogs, setCurrentPage]);
 
   return (
     <div
@@ -47,6 +65,43 @@ const Blogs = () => {
 
         />
 
+        {/* Search & Filter Bar */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-10 max-w-3xl mx-auto items-center">
+          <div className="relative w-full">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search blogs by title or description..."
+              className="w-full pl-11 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-white placeholder-gray-500 transition-all duration-200"
+              style={{ fontFamily: "'Poppins', sans-serif" }}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="relative w-full sm:w-64">
+            <Tag className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+            <select
+              className="w-full pl-11 pr-10 py-3.5 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-white transition-all duration-200 appearance-none cursor-pointer"
+              style={{ fontFamily: "'Poppins', sans-serif" }}
+              value={tagFilter}
+              onChange={(e) => setTagFilter(e.target.value)}
+            >
+              <option value="" className="bg-gray-900 text-gray-300">All Tags</option>
+              {uniqueTags.map((tag, idx) => (
+                <option key={idx} value={tag} className="bg-gray-900 text-white">
+                  {tag}
+                </option>
+              ))}
+            </select>
+            {/* Custom dropdown arrow */}
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
         <StateDisplay
           loading={loading}
           error={error}
@@ -57,7 +112,6 @@ const Blogs = () => {
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-12">
             {paginatedItems
-              .filter((blog) => blog && blog.user && blog._id && blog.title)
               .map((blog, index) => (
                 <Blog
                   key={blog._id || index}

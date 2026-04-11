@@ -2,19 +2,20 @@ import React, { useEffect } from 'react'
 import LatestBlogsCarousel from './LatestBlogsCarousel';
 import { motion } from "framer-motion";
 import { blogApi } from '@/api';
-
+import { toast } from 'sonner';
 const FeaturedContent = () => {
+
    const [blogs, setBlogs] = React.useState([]);
    const [loading, setLoading] = React.useState(false);
    const [error, setError] = React.useState(null);
 
-   const token = localStorage.getItem("token");
+
    useEffect(() => {
       setLoading(true);
       blogApi
          .getAll()
          .then((res) => {
-            setBlogs(res.data.blogs || []);
+            setBlogs(res?.data?.data?.blogs || []);
             setLoading(false);
          })
          .catch((err) => {

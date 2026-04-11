@@ -9,12 +9,11 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 
 const UserBlogs = () => {
-  useScrollToTop();
   const userId = localStorage.getItem("userId");
-  const { user, loading, error, fetchUserBlogs } = useFetchUserBlogs(userId);
+  const { user, blogs, loading, error, fetchUserBlogs } = useFetchUserBlogs(userId);
   const { deleteBlog } = useBlogMutations();
-  const { currentPage, totalPages, paginatedItems, setCurrentPage } = usePagination(user?.blogs || [], 6);
-
+  const { currentPage, totalPages, paginatedItems, setCurrentPage } = usePagination(blogs, 6);
+  useScrollToTop([currentPage]);
 
   useEffect(() => {
     if (userId) {
@@ -46,7 +45,6 @@ const UserBlogs = () => {
           style={{ background: "radial-gradient(circle, #3b82f6, transparent)" }}
         />
       </div>
-
       <div className="relative z-10 container mx-auto max-w-7xl">
         <SectionHeader
           badge="Your Content"
@@ -54,11 +52,10 @@ const UserBlogs = () => {
           subtitle="Manage and showcase all your published stories"
           badgeClassName="text-blue-400 bg-blue-500/15 border border-blue-500/25"
         />
-
         <StateDisplay
           loading={loading}
           error={error}
-          isEmpty={!user || user.blogs.length === 0}
+          isEmpty={blogs.length === 0}
           errorMessage={error}
           emptyMessage="No blogs yet. Start creating your first blog!"
           onRetry={fetchUserBlogs}
@@ -71,7 +68,7 @@ const UserBlogs = () => {
                 title={blog.title}
                 description={blog.description}
                 imageUrl={blog.image}
-                userName={user.name}
+                userName={user?.name}
                 createdAt={blog.createdAt}
                 readingTime={blog.readingTime}
                 onDelete={() => handleDelete(blog._id)}
@@ -89,23 +86,21 @@ const UserBlogs = () => {
               showFirstButton
               showLastButton
               size="small"
-              sx={
-                {
-                  "& .MuiPaginationItem-root": {
-                    color: "rgba(255,255,255,0.6)",
-                    borderColor: "rgba(255,255,255,0.15)",
-                    "&:hover": {
-                      backgroundColor: "rgba(255,255,255,0.08)",
-                      borderColor: "rgba(255,255,255,0.3)",
-                    },
-                    "&.Mui-selected": {
-                      backgroundColor: "rgba(99,102,241,0.35)",
-                      borderColor: "rgba(139,92,246,0.6)",
-                      color: "#fff",
-                    },
+              sx={{
+                "& .MuiPaginationItem-root": {
+                  color: "rgba(255,255,255,0.6)",
+                  borderColor: "rgba(255,255,255,0.15)",
+                  "&:hover": {
+                    backgroundColor: "rgba(255,255,255,0.08)",
+                    borderColor: "rgba(255,255,255,0.3)",
                   },
-                }
-              }
+                  "&.Mui-selected": {
+                    backgroundColor: "rgba(99,102,241,0.35)",
+                    borderColor: "rgba(139,92,246,0.6)",
+                    color: "#fff",
+                  },
+                },
+              }}
             />
           </Stack>
         </StateDisplay>
@@ -114,4 +109,4 @@ const UserBlogs = () => {
   );
 };
 
-export default UserBlogs; 
+export default UserBlogs;

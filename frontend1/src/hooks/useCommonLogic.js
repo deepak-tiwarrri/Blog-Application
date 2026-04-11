@@ -1,6 +1,9 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { blogApi } from "@/api";
+
+// Global cache to track interaction requests and prevent rate limiting
+const interactionCache = new Map();
 
 /**
  * Custom hook for managing blog interaction states (like, bookmark, share)
@@ -14,18 +17,40 @@ export const useBlogInteractions = (blogId) => {
   const [bookmarked, setBookmarked] = useState(false);
   const [sharing, setSharing] = useState(false);
   const token = localStorage.getItem("token");
+  const hasInitialized = useRef(false);
 
-  // Fetch initial state from backend
+  // Fetch initial state from backend - with caching to prevent repeated calls
   useEffect(() => {
-    if (!token || !blogId) return;
+    if (!token || !blogId || hasInitialized.current) return;
 
     const checkInteractions = async () => {
       try {
+        // Check if we've already fetched this blog's interactions
+        const cacheKey = `interactions_${blogId}`;
+        if (interactionCache.has(cacheKey)) {
+          const cached = interactionCache.get(cacheKey);
+          setLiked(cached.liked);
+          setBookmarked(cached.bookmarked);
+          hasInitialized.current = true;
+          return;
+        }
+
         const response = await blogApi.checkInteractions(blogId);
-        setLiked(response?.data?.liked || false);
-        setBookmarked(response?.data?.bookmarked || false);
+        const result = {
+          liked: response?.data?.liked || false,
+          bookmarked: response?.data?.bookmarked || false,
+        };
+        
+        // Cache the result for 5 minutes
+        interactionCache.set(cacheKey, result);
+        setTimeout(() => interactionCache.delete(cacheKey), 5 * 60 * 1000);
+        
+        setLiked(result.liked);
+        setBookmarked(result.bookmarked);
+        hasInitialized.current = true;
       } catch (error) {
         console.error("Failed to fetch interaction state:", error);
+        hasInitialized.current = true;
       }
     };
 

@@ -12,20 +12,33 @@
 
 ## 📋 Table of Contents
 
-- [Overview](#overview)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Architecture](#architecture)
-- [Project Structure](#project-structure)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Running the Application](#running-the-application)
-- [API Endpoints](#api-endpoints)
-- [Screenshot](#screenshot)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
+- [Bite \& Roam - Blog Application](#bite--roam---blog-application)
+  - [📋 Table of Contents](#-table-of-contents)
+  - [🎯 Overview](#-overview)
+  - [✨ Features](#-features)
+  - [🛠️ Tech Stack](#️-tech-stack)
+    - [Frontend](#frontend)
+    - [Backend](#backend)
+  - [🧠 Architecture](#-architecture)
+    - [Application flow](#application-flow)
+    - [User journey](#user-journey)
+  - [📁 Project Structure](#-project-structure)
+  - [🚀 Prerequisites](#-prerequisites)
+  - [⚙️ Installation](#️-installation)
+    - [Backend](#backend-1)
+    - [Frontend](#frontend-1)
+  - [🔧 Configuration](#-configuration)
+  - [▶️ Running the Application](#️-running-the-application)
+    - [Start backend](#start-backend)
+    - [Start frontend](#start-frontend)
+    - [Local URLs](#local-urls)
+  - [🔌 API Endpoints](#-api-endpoints)
+    - [User endpoints](#user-endpoints)
+    - [Blog endpoints](#blog-endpoints)
+  - [📷 Screenshot](#-screenshot)
+  - [🛠️ Troubleshooting](#️-troubleshooting)
+  - [🤝 Contributing](#-contributing)
+  - [📜 License](#-license)
 
 ---
 
@@ -120,14 +133,14 @@ flowchart TD
 ## 📁 Project Structure
 
 - `backend/`
-  - `config/` - DB connection, auth, token helpers, Google OAuth
+  - `config/` - DB connection, auth config, Google OAuth, token helpers
   - `controllers/` - user and blog request handlers
   - `middleware/` - auth, validation, upload, error handling, rate limiting
   - `models/` - Mongoose schemas for `Blog`, `User`, `Comment`, `Like`, `Bookmark`
   - `routes/` - `/api/user` and `/api/blog` endpoints
   - `uploads/` - image storage for blog posts
 - `frontend1/`
-  - `src/api.js` - Axios client with response interceptor and auth header management
+  - `src/api.js` - Axios client with auth interceptor
   - `src/lib/endpoints.js` - API base URL constants
   - `src/components/` - pages, features, layout, and reusable UI blocks
   - `src/hooks/` - custom hooks for blog API logic and auth state
@@ -175,8 +188,6 @@ ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000,http://localhost:500
 PORT=8000
 NODE_ENV=development
 ```
-
-> `REFRESH_SECRET` is optional: if omitted, the backend uses `JWT_SECRET`.
 
 ---
 
@@ -238,28 +249,25 @@ npm run dev
 
 ![Bite & Roam screenshot](./screenshot.png)
 
-> Add the screenshot file to the repo root as `screenshot.png` if it is not already present.
+> Add the screenshot file to the project root as `screenshot.png` so it renders here.
 
 ---
 
 ## 🛠️ Troubleshooting
 
-- If the frontend cannot reach backend, verify `ALLOWED_ORIGINS` includes the frontend origin.
+- If the frontend cannot reach backend, verify `ALLOWED_ORIGINS` includes the frontend URL.
 - If auth fails, confirm `JWT_SECRET`, `MONGO_URI`, and `GOOGLE_CLIENT_ID`.
 - If uploads fail, make sure `backend/uploads/` exists and is writable.
-- Run `npm install` in both `backend/` and `frontend1/` before starting.
+- Install dependencies in both `backend/` and `frontend1/`.
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome. Keep feature additions aligned with the existing folder structure and update this README if API or package changes occur.
+Contributions are welcome. Keep changes aligned with the existing file structure and update the README when API or package changes occur.
 
 ---
 
 ## 📜 License
 
 ISC
-
----
-
