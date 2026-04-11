@@ -7,7 +7,7 @@ import Blogs from "./components/pages/Blogs";
 import BlogDetailPage from "./components/pages/BlogDetailPage";
 import AddBlog from "./components/features/AddBlog";
 import UserBlogs from "./components/pages/UserBlogs";
-import BlogDetail from "./components/features/EditBlog";
+import EditBlog from "./components/features/EditBlog";
 import Profile from "./components/Profile";
 import ChangePassword from "./components/pages/ChangePassword";
 import Header from "./components/layout/Header";
@@ -15,7 +15,8 @@ import Footer from "./components/layout/Footer";
 import ErrorBoundary from "./components/common/ErrorBoundary";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import { authActions } from "./store/index.js";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
+import { userApi } from "./api"; // Added for secure authentication validation
 import { Toaster } from "sonner";
 import { useTokenExpiration } from "./hooks/useTokenExpiration";
 import "./components/styles/glassmorphism.css";
@@ -26,8 +27,17 @@ const App = () => {
   // Check token expiration on app load and periodically
   useTokenExpiration();
   useEffect(() => {
-    if (localStorage.getItem("userId")) {
-      dispatch(authActions.login());
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      // Secure check: verify token is valid before logging in
+      userApi.getProfile(userId)
+        .then(() => {
+          dispatch(authActions.login());
+        })
+        .catch(() => {
+          // Failure handles 401 via api interceptor
+          dispatch(authActions.logout());
+        });
     }
   }, [dispatch]);
 
@@ -84,7 +94,7 @@ const App = () => {
                 path="/myblogs/:id"
                 element={
                   <ProtectedRoute>
-                    <BlogDetail />
+                    <EditBlog />
                   </ProtectedRoute>
                 }
               />

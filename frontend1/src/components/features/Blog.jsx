@@ -6,6 +6,7 @@ import BlogActionButtons from "@/components/common/BlogActionButtons";
 import { useBlogInteractions } from "@/hooks/useCommonLogic";
 import { useBlogMutations } from "@/hooks/useBlogAPI";
 import GlassCard from "../common/GlassCard";
+import DOMPurify from 'dompurify';
 
 const Blog = ({
   title,
@@ -36,9 +37,11 @@ const Blog = ({
     await handleShare(url);
   };
 
+  const cleanDescription = DOMPurify.sanitize(description, { ALLOWED_TAGS: [] });
+
   const readingTime =
     propReadingTime ||
-    Math.ceil((description?.split(/\s+/).length || 0) / 200);
+    Math.ceil((cleanDescription?.split(/\s+/).length || 0) / 200);
 
   return (
     <GlassCard
@@ -100,17 +103,16 @@ const Blog = ({
         {/* Description */}
         <p
           className="text-gray-400 text-sm line-clamp-3 leading-relaxed flex-1"
-        >
-          {description}
-        </p>
+          dangerouslySetInnerHTML={{ __html: cleanDescription }}
+        />
 
         {/* Reading time + actions */}
-        <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/10">
-          <div className="flex items-center gap-1.5 text-xs text-gray-500">
+        <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/10 w-full min-h-[44px]">
+          <div className="flex items-center gap-1.5 text-xs text-gray-500 whitespace-nowrap flex-shrink-0">
             <AccessTimeIcon sx={{ fontSize: "14px" }} />
             <span>{readingTime} min read</span>
           </div>
-          <div onClick={(e) => e.stopPropagation()}>
+          <div onClick={(e) => e.stopPropagation()} className="flex-shrink-0 ml-4">
             <BlogActionButtons
               liked={liked}
               bookmarked={bookmarked}

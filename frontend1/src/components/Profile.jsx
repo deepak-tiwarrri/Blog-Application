@@ -205,24 +205,35 @@ const Profile = () => {
             <div className="flex flex-col md:flex-row gap-8 items-start mb-8">
               {/* Profile Picture Section - Left Side */}
               <div className="flex-shrink-0">
-                <div className="relative group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-full blur-xl opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
-                  <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white text-3xl font-bold shadow-lg ring-2 ring-white/20 hover:ring-white/40 transition-all duration-300">
-                    {profileData.name
-                      ? profileData.name.charAt(0).toUpperCase()
-                      : "U"}
-                  </div>
+                <div className="relative group cursor-pointer hover:scale-105 transition-transform duration-300">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-full blur-xl opacity-40 group-hover:opacity-70 transition-opacity duration-300"></div>
+                  {profileData.profilePicture ? (
+                    <img 
+                      src={profileData.profilePicture} 
+                      alt="Profile" 
+                      className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover shadow-2xl ring-4 ring-white/20 group-hover:ring-white/40 transition-all duration-300"
+                    />
+                  ) : (
+                    <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-blue-500 via-purple-600 to-pink-500 flex items-center justify-center text-white text-4xl sm:text-5xl font-bold shadow-2xl ring-4 ring-white/20 group-hover:ring-white/40 transition-all duration-300">
+                      {profileData.name
+                        ? profileData.name.charAt(0).toUpperCase()
+                        : "U"}
+                    </div>
+                  )}
                 </div>
               </div>
 
               {/* Profile Details - Right Side */}
               <div className="flex-1 min-w-0">
                 {/* Name and Email */}
-                <div className="mb-4">
-                  <h2 className="text-3xl font-bold text-white">
+                <div className="mb-6">
+                  <h2 
+                    className="text-3xl sm:text-4xl font-bold text-white mb-1 tracking-tight"
+                    style={{ fontFamily: "Playfair Display, serif" }}
+                  >
                     {profileData.name}
                   </h2>
-                  <p className="text-sm italic text-gray-300 mt-1">
+                  <p className="text-sm sm:text-base text-gray-400 font-['Poppins']">
                     {profileData.email}
                   </p>
                 </div>

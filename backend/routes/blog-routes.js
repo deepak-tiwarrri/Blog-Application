@@ -1,25 +1,133 @@
 import blogController from "../controllers/blog-controller.js";
 import express from "express";
 import authMiddleware from "../middleware/auth.js";
+import { optionalAuthMiddleware } from "../middleware/auth.js";
+import {
+  validateBlogCreate,
+  validateBlogUpdate,
+  validatePagination,
+  validateBlogId,
+  validateIdParam,
+  handleValidationErrors,
+} from "../middleware/validators.js";
+import { upload } from "../middleware/upload.js";
 
 const blogRouter = express.Router();
 
-blogRouter.get("/", blogController.getAllBlogs);
-blogRouter.get("/:id", blogController.getAllBlogById);
-blogRouter.get("/user/:id", blogController.getUserById);
-blogRouter.post("/add", authMiddleware, blogController.addBlog);
-blogRouter.put("/update/:id", authMiddleware, blogController.updateBlog);
-blogRouter.delete("/:id", authMiddleware, blogController.deleteBlog);
+// Public routes
+blogRouter.get(
+  "/",
+  validatePagination,
+  handleValidationErrors,
+  blogController.getAllBlogs
+);
+
+blogRouter.get(
+  "/:id",
+  validateIdParam,
+  handleValidationErrors,
+  optionalAuthMiddleware,
+  blogController.getAllBlogById
+);
+
+blogRouter.get(
+  "/user/:id",
+  validateIdParam,
+  handleValidationErrors,
+  blogController.getUserById
+);
+
+// Protected routes
+blogRouter.post(
+  "/add",
+  authMiddleware,
+  upload.single("image"),
+  validateBlogCreate,
+  handleValidationErrors,
+  blogController.addBlog
+);
+
+blogRouter.put(
+  "/:id",
+  authMiddleware,
+  upload.single("image"),
+  validateIdParam,
+  validateBlogUpdate,
+  handleValidationErrors,
+  blogController.updateBlog
+);
+
+blogRouter.delete(
+  "/:id",
+  authMiddleware,
+  validateIdParam,
+  handleValidationErrors,
+  blogController.deleteBlog
+);
 
 // Like routes
-blogRouter.post("/:blogId/like", authMiddleware, blogController.likeBlog);
-blogRouter.delete("/:blogId/like", authMiddleware, blogController.unlikeBlog);
+blogRouter.post(
+  "/:blogId/like",
+  authMiddleware,
+  validateBlogId,
+  handleValidationErrors,
+  blogController.likeBlog
+);
+
+blogRouter.delete(
+  "/:blogId/like",
+  authMiddleware,
+  validateBlogId,
+  handleValidationErrors,
+  blogController.unlikeBlog
+);
 
 // Bookmark routes
-blogRouter.post("/:blogId/bookmark", authMiddleware, blogController.bookmarkBlog);
-blogRouter.delete("/:blogId/bookmark", authMiddleware, blogController.removeBookmark);
+blogRouter.post(
+  "/:blogId/bookmark",
+  authMiddleware,
+  validateBlogId,
+  handleValidationErrors,
+  blogController.bookmarkBlog
+);
 
-// Check user interactions
-blogRouter.get("/:blogId/interactions", authMiddleware, blogController.checkUserInteractions);
+blogRouter.delete(
+  "/:blogId/bookmark",
+  authMiddleware,
+  validateBlogId,
+  handleValidationErrors,
+  blogController.removeBookmark
+);
+
+// Check interactions
+blogRouter.get(
+  "/:blogId/interactions",
+  optionalAuthMiddleware,
+  validateBlogId,
+  handleValidationErrors,
+  blogController.checkUserInteractions
+);
+
+// Comment routes
+blogRouter.get(
+  "/:blogId/comments",
+  validateBlogId,
+  handleValidationErrors,
+  blogController.getComments
+);
+
+blogRouter.post(
+  "/:blogId/comments",
+  authMiddleware,
+  validateBlogId,
+  handleValidationErrors,
+  blogController.addComment
+);
+
+blogRouter.delete(
+  "/comments/:commentId",
+  authMiddleware,
+  blogController.deleteComment
+);
 
 export default blogRouter;

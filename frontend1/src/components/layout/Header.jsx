@@ -78,6 +78,18 @@ const Header = () => {
                 >
                   My Blogs
                 </NavLink>
+                <NavLink
+                  to="/blogs/add"
+                  onClick={handleNavClick}
+                  className={({ isActive }) =>
+                    isActive
+                      ? "nav-link bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium transition"
+                      : "nav-link text-gray-300 hover:bg-white/5 px-4 py-2 rounded-full text-sm font-medium transition"
+                  }
+                  style={{ fontFamily: "Poppins, sans-serif" }}
+                >
+                  Create Blog
+                </NavLink>
               </nav>
             </div>
           )}
@@ -178,6 +190,18 @@ const Header = () => {
                   style={{ fontFamily: "Poppins, sans-serif" }}
                 >
                   My Blogs
+                </NavLink>
+                <NavLink
+                  to="/blogs/add"
+                  onClick={handleNavClick}
+                  className={({ isActive }) =>
+                    isActive
+                      ? "block px-4 py-2 rounded-lg bg-blue-600 text-white font-medium transition"
+                      : "block px-4 py-2 rounded-lg text-gray-300 hover:bg-gray-800 font-medium transition"
+                  }
+                  style={{ fontFamily: "Poppins, sans-serif" }}
+                >
+                  Create Blog
                 </NavLink>
                 <NavLink
                   to="/profile"

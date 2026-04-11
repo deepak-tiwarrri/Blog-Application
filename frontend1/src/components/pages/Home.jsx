@@ -1,25 +1,19 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import { ArrowRight, BookOpen, Sparkles } from "lucide-react";
-
 import { useScrollToTop } from "@/hooks/useScrollToTop.js";
 import { ANIMATION_VARIANTS } from "@/constants/animations";
 import { H1, BodyLarge, BadgeText, GradientText } from "@/components/Typography";
 import { PrimaryButton, SecondaryButton } from "@/components/Button";
-
 import FeaturedSection from "../features/FeaturedSection";
 import HeroCarousel from "../features/HeroCarousel";
 import CTASection from "../sections/CTASection";
 import FeaturedContent from "../features/FeaturedContent";
 
+
 const Home = () => {
   useScrollToTop();
-  const [blogs, setBlogs] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState(null);
-
   const token = localStorage.getItem("token");
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
@@ -81,19 +75,13 @@ const Home = () => {
                 )}
               </motion.div>
             </motion.div>
-
             {/* Right - Carousel */}
             <HeroCarousel />
           </div>
         </div>
       </section>
-
-      {/* Features Section */}
       <FeaturedSection />
-      {/* Featured content section */}
-      <FeaturedContent/>
-
-      {/* CTA Section */}
+      <FeaturedContent />
       <CTASection showOnAuth={isLoggedIn} />
     </div>
   );

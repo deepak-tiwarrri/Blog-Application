@@ -17,16 +17,18 @@ import GlassCard from "../common/GlassCard";
 
 const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
   const input = useSelector((state) => state.auth?.input);
-  console.log("input");
+  const status = useSelector((state) => state.auth.status);
   const classes = useStyles();
   const dispatch = useDispatch();
+
+
+  console.log("---input---", input);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     dispatch(authActions.updateInput({ [name]: value }));
   };
 
-  const status = useSelector((state) => state.auth.status);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 dark:from-gray-900 dark:via-gray-800 dark:to-black transition-colors duration-500 text-foreground relative overflow-hidden">

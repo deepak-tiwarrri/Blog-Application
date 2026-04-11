@@ -24,6 +24,10 @@ const blogSchema = new Schema({
     type: Number,
     default: 0, // calculated as word count / 200
   },
+  tags: [{
+    type: String,
+    trim: true
+  }],
   likes: [
     {
       type: mongoose.Types.ObjectId,
@@ -36,6 +40,10 @@ const blogSchema = new Schema({
       ref: "Bookmark",
     },
   ],
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
