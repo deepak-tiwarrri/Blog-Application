@@ -7,7 +7,6 @@ import axios from "axios";
 import { USER_URL } from "@/lib/endpoints";
 import { setAuthToken } from "@/api";
 import { setTokenWithTimestamp } from "@/hooks/useTokenExpiration";
-import GoogleIcon from "../../public/assets/google-icon.svg?url";
 import { GoogleButton } from "./common/GoogleButton";
 
 /**
@@ -58,12 +57,6 @@ const GoogleSignInButton = () => {
       console.error("Google Sign-In Error:", error);
       toast.error(error.response?.data?.message || "Google Sign-In failed");
     }
-  };
-
-  const handleClick = () => {
-    // Trigger the actual GoogleLogin component
-    const googleLoginButton = document.querySelector('[role="button"]');
-    if (googleLoginButton) googleLoginButton.click();
   };
 
   const handleGoogleError = () => {
