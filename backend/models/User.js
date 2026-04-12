@@ -39,7 +39,8 @@ const userSchema = new Schema({
     validate: {
       validator: function(v) {
         if (!v) return true;
-        return /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i.test(v);
+        // Allow valid HTTP/HTTPS URLs (more permissive for profile pictures from various sources)
+        return /^https?:\/\/.+/.test(v);
       },
       message: 'Invalid image URL'
     }
