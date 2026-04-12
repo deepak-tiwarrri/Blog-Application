@@ -32,13 +32,14 @@ const GoogleSignInButton = () => {
       });
       console.log("res from google success: ", response.data);
 
-      const { token, user } = response.data;
+      const { data } = response.data;
+      const { user, accessToken } = data;
 
       // Store token in localStorage and set axios auth header
-      localStorage.setItem("token", token);
+      localStorage.setItem("token", accessToken);
       localStorage.setItem("userId", user._id);
-      setAuthToken(token);
-      setTokenWithTimestamp(token);
+      setAuthToken(accessToken);
+      setTokenWithTimestamp(accessToken);
 
       // Update Redux state
       dispatch(authActions.login());
@@ -51,7 +52,7 @@ const GoogleSignInButton = () => {
         }),
       );
 
-      toast.success("Google Sign-In Successful!");
+      toast.success(response?.message);
       navigate("/blogs");
     } catch (error) {
       console.error("Google Sign-In Error:", error);

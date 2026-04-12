@@ -10,25 +10,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "@/store";
 import GoogleSignInButton from "../GoogleSignIn";
 import PropTypes from "prop-types";
-import { BookOpen, ArrowRight } from "lucide-react";
+import { BookOpen, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { useStyles } from "@/lib/utils";
 import FeatureList from "./FeatureList";
 import GlassCard from "../common/GlassCard";
+import { useState } from "react";
 
 const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
   const input = useSelector((state) => state.auth?.input);
   const status = useSelector((state) => state.auth.status);
   const classes = useStyles();
   const dispatch = useDispatch();
-
-
-  console.log("---input---", input);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     dispatch(authActions.updateInput({ [name]: value }));
   };
-
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 dark:from-gray-900 dark:via-gray-800 dark:to-black transition-colors duration-500 text-foreground relative overflow-hidden">
@@ -104,7 +102,6 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
               </div>
 
               <form onSubmit={onHandleSubmit} className="flex flex-col gap-5">
-                {/* Name field for Signup */}
                 {!isLoginMode && (
                   <div className="flex flex-col gap-2">
                     <Label
@@ -124,7 +121,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                         name="name"
                         placeholder="John Doe"
                         value={input?.name}
-                        onChange={handleChange}
+                        onChange={(e) => handleChange(e)}
                         required
                         className={`${classes.font} h-12 pl-14 rounded-lg border border-white/15 bg-white/8 text-white placeholder:text-gray-500 focus:border-blue-500/70 focus:bg-white/12 focus:outline-none focus:ring-0 focus-visible:ring-0 transition-all duration-200`}
                       />
@@ -151,7 +148,7 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                       name="email"
                       placeholder="you@example.com"
                       value={input?.email}
-                      onChange={handleChange}
+                      onChange={(e) => handleChange(e)}
                       required
                       className={`${classes.font} h-12 pl-14 rounded-lg border border-white/15 bg-white/8 text-white placeholder:text-gray-500 focus:border-blue-500/70 focus:bg-white/12 focus:outline-none focus:ring-0 focus-visible:ring-0 transition-all duration-200`}
                     />
@@ -182,15 +179,22 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                       <LockOutlinedIcon fontSize="small" />
                     </span>
                     <Input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       id="password"
                       name="password"
                       value={input?.password}
                       placeholder="••••••••"
-                      onChange={handleChange}
+                      onChange={(e) => handleChange(e)}
                       required
-                      className={`${classes.font} h-12 pl-14 rounded-lg border border-white/15 bg-white/8 text-white placeholder:text-gray-500 focus:border-blue-500/70 focus:bg-white/12 focus:outline-none focus:ring-0 focus-visible:ring-0 transition-all duration-200`}
+                      className={`${classes.font} h-12 pl-14 pr-12 rounded-lg border border-white/15 bg-white/8 text-white placeholder:text-gray-500 focus:border-blue-500/70 focus:bg-white/12 focus:outline-none focus:ring-0 focus-visible:ring-0 transition-all duration-200`}
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300 focus:text-blue-400 transition-colors"
+                    >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
                   </div>
                 </div>
 
@@ -272,16 +276,21 @@ const AuthForm = ({ onHandleSubmit, isLoginMode }) => {
                 style={{ fontFamily: "Poppins, sans-serif" }}
               >
                 By continuing, you agree to our{" "}
-                <Link to="#" className="text-blue-400 hover:text-blue-300 hover:underline transition-colors">
+                <Link
+                  to="#"
+                  className="text-blue-400 hover:text-blue-300 hover:underline transition-colors"
+                >
                   Terms of Service
                 </Link>{" "}
                 and{" "}
-                <Link to="#" className="text-blue-400 hover:text-blue-300 hover:underline transition-colors">
+                <Link
+                  to="#"
+                  className="text-blue-400 hover:text-blue-300 hover:underline transition-colors"
+                >
                   Privacy Policy
                 </Link>
               </p>
             </GlassCard>
-
           </div>
         </div>
       </div>
