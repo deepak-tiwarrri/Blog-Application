@@ -140,7 +140,7 @@ flowchart TD
   - `routes/` - `/api/user` and `/api/blog` endpoints
   - `uploads/` - image storage for blog posts
 - `frontend1/`
-  - `src/api.js` - Axios client with response interceptor and auth header management
+  - `src/api.js` - Axios client with auth interceptor
   - `src/lib/endpoints.js` - API base URL constants
   - `src/components/` - pages, features, layout, and reusable UI blocks
   - `src/hooks/` - custom hooks for blog API logic and auth state
@@ -188,8 +188,6 @@ ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000,http://localhost:500
 PORT=8000
 NODE_ENV=development
 ```
-
-> `REFRESH_SECRET` is optional: if omitted, the backend uses `JWT_SECRET`.
 
 ---
 
@@ -249,9 +247,9 @@ npm run dev
 
 ## 📷 Screenshot
 
-![Bite & Roam screenshot](./screenshot.jpeg)
-![Profile](./profile.jpeg)
-![Login](./login.jpeg)
+![Bite & Roam screenshot](./screenshot.png)
+
+> Add the screenshot file to the project root as `screenshot.png` so it renders here.
 
 ---
 
