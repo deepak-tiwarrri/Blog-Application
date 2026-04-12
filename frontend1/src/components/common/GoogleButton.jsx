@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import GoogleIcon from "../../assets/google-icon.svg?url";
 
 const handleClick = () => {
@@ -18,3 +19,7 @@ export const GoogleButton = ({ children }) => (
     {children}
   </button>
 );
+
+GoogleButton.propTypes = {
+  children: PropTypes.node.isRequired,
+};

@@ -59,12 +59,6 @@ const GoogleSignInButton = () => {
     }
   };
 
-  const handleClick = () => {
-    // Trigger the actual GoogleLogin component
-    const googleLoginButton = document.querySelector('[role="button"]');
-    if (googleLoginButton) googleLoginButton.click();
-  };
-
   const handleGoogleError = () => {
     toast.error("Google Sign-In failed. Please try again.");
   };
