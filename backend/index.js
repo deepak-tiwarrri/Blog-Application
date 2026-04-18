@@ -65,6 +65,8 @@ const PORT = process.env.PORT || 8000;
 
 // HTTPS Enforcement in Production
 if (process.env.NODE_ENV === "production") {
+  console.log = {};
+  console.debug = {};
   app.use((req, res, next) => {
     if (req.secure || req.headers["x-forwarded-proto"] === "https") {
       return next();
