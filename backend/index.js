@@ -27,7 +27,6 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use(
   cors({
     origin: process.env.ALLOWED_ORIGINS?.split(",") || [
-      "http://143.110.176.25.nip.io",
       "http://localhost:5001",
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
@@ -65,8 +64,8 @@ const PORT = process.env.PORT || 8000;
 
 // HTTPS Enforcement in Production
 if (process.env.NODE_ENV === "production") {
-  console.log = {};
-  console.debug = {};
+  console.log = () => {};
+  console.debug = () => {};
   app.use((req, res, next) => {
     if (req.secure || req.headers["x-forwarded-proto"] === "https") {
       return next();
