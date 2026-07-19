@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import { useEffect, useState } from "react";
+import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "@/store";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +8,63 @@ import axios from "axios";
 import { USER_URL } from "@/lib/endpoints";
 import { setAuthToken } from "@/api";
 import { setTokenWithTimestamp } from "@/hooks/useTokenExpiration";
-import { GoogleButton } from "./common/GoogleButton";
+
+/**
+ * Custom Google Button component utilizing useGoogleLogin hook.
+ * Directly attached to an onClick user gesture to bypass browser popup blockers completely.
+ */
+const CustomGoogleButton = ({ onAuthSuccess }) => {
+  const [loading, setLoading] = useState(false);
+
+  const login = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      setLoading(true);
+      try {
+        await onAuthSuccess(tokenResponse.access_token);
+      } finally {
+        setLoading(false);
+      }
+    },
+    onError: (errorResponse) => {
+      console.error("Google Sign-In Error:", errorResponse);
+      toast.error("Google Sign-In was cancelled or failed");
+    },
+  });
+
+  return (
+    <button
+      type="button"
+      onClick={() => login()}
+      disabled={loading}
+      className="w-full py-3.5 px-6 bg-white/10 hover:bg-white/15 border border-white/20 active:scale-[0.98] transition-all duration-200 rounded-xl font-semibold text-white flex items-center justify-center gap-3 shadow-lg hover:shadow-xl hover:cursor-pointer disabled:opacity-50"
+      style={{ fontFamily: "Poppins, sans-serif" }}
+    >
+      {loading ? (
+        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+      ) : (
+        <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
+          <path
+            fill="#4285F4"
+            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+          />
+          <path
+            fill="#34A853"
+            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+          />
+          <path
+            fill="#FBBC05"
+            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+          />
+          <path
+            fill="#EA4335"
+            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+          />
+        </svg>
+      )}
+      <span>{loading ? "Signing in..." : "Continue with Google"}</span>
+    </button>
+  );
+};
 
 /**
  * GoogleSignInButton Component
@@ -25,12 +81,9 @@ const GoogleSignInButton = () => {
     return null;
   }
 
-  const handleGoogleSuccess = async (credentialResponse) => {
+  const handleGoogleSuccess = async (token) => {
     try {
-      // Send token to backend for verification using configured USER_URL
-      const response = await axios.post(`${USER_URL}/google-signin`, {
-        token: credentialResponse.credential,
-      });
+      const response = await axios.post(`${USER_URL}/google-signin`, { token });
       console.log("res from google success: ", response.data);
 
       const { data } = response.data;
@@ -50,19 +103,15 @@ const GoogleSignInButton = () => {
           email: user.email,
           profilePicture: user.profilePicture,
           _id: user._id,
-        }),
+        })
       );
 
-      toast.success(response?.message);
+      toast.success(response?.data?.message || "Signed in with Google successfully!");
       navigate("/blogs");
     } catch (error) {
       console.error("Google Sign-In Error:", error);
       toast.error(error.response?.data?.message || "Google Sign-In failed");
     }
-  };
-
-  const handleGoogleError = () => {
-    toast.error("Google Sign-In failed. Please try again.");
   };
 
   useEffect(() => {
@@ -75,7 +124,7 @@ const GoogleSignInButton = () => {
     return (
       <button
         disabled
-        className="w-full py-3 px-6 border-2 border-gray-300 bg-gray-800/10 text-gray-500 rounded-lg font-semibold flex items-center justify-center gap-3 cursor-not-allowed"
+        className="w-full py-3.5 px-6 border border-white/10 bg-white/5 text-gray-400 rounded-xl font-semibold flex items-center justify-center gap-3 cursor-not-allowed"
       >
         Google Sign-In Unavailable
       </button>
@@ -84,17 +133,7 @@ const GoogleSignInButton = () => {
 
   return (
     <GoogleOAuthProvider clientId={googleClientId}>
-      <div className="w-full flex justify-center">
-        <GoogleLogin
-          onSuccess={handleGoogleSuccess}
-          onError={handleGoogleError}
-          theme="outline"
-          size="large"
-          shape="rectangular"
-          text="signin_with"
-          width="100%"
-        />
-      </div>
+      <CustomGoogleButton onAuthSuccess={handleGoogleSuccess} />
     </GoogleOAuthProvider>
   );
 };
