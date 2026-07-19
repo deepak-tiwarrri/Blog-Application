@@ -25,7 +25,7 @@ const CTASection = ({
          <div className="container mx-auto px-6 lg:px-8 max-w-6xl">
             <motion.div
                initial={{ opacity: 0, y: 30 }}
-               whileInView={{ opacity: 1, y: 0 }}
+               whileinview={{ opacity: 1, y: 0 }}
                viewport={{ once: true }}
                transition={{ duration: 0.7 }}
                className="bg-primary/20 backdrop-blur-md border border-white/20 rounded-[2.5rem] p-8 md:p-14 lg:p-20"

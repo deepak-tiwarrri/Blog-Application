@@ -43,14 +43,14 @@ const FeaturedSection = () => {
         {/* Header with Animation */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          whileinview={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.7 }}
           className="text-center mb-16"
         >
           <motion.h2
             initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            whileinview={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary-foreground mb-4"
@@ -61,7 +61,7 @@ const FeaturedSection = () => {
 
           <motion.p
             initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            whileinview={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-lg text-primary-foreground/80" style={{ fontFamily: "Poppins, sans-serif" }}
@@ -74,7 +74,7 @@ const FeaturedSection = () => {
         <motion.div
           variants={containerVariants}
           initial="hidden"
-          whileInView="show"
+          whileinview="show"
           viewport={{ once: true, margin: "-50px" }}
           className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8"
         >
@@ -108,7 +108,7 @@ const FeaturedSection = () => {
                 {/* Accent line */}
                 <motion.div
                   initial={{ width: 0 }}
-                  whileInView={{ width: "2rem" }}
+                  whileinview={{ width: "2rem" }}
                   viewport={{ once: true, margin: "-50px" }}
                   transition={{ delay: 0.5 + idx * 0.1, duration: 0.5 }}
                   className="mt-6 h-1 bg-gradient-to-r from-primary to-primary-700 rounded-full"

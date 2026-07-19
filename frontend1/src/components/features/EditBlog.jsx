@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useScrollToTop } from "@/hooks/useScrollToTop.js";
-import PageHeader from "@/components/common/PageHeader";
 import { useFormState } from "@/hooks/useCommonLogic";
 import { useFetchBlogById, useBlogMutations } from "@/hooks/useBlogAPI";
 import { Input } from "@/components/ui/input";
@@ -25,6 +24,8 @@ const EditBlog = () => {
   const { id } = useParams();
   const { blog, fetchBlogById } = useFetchBlogById(id);
   const { formData, handleChange, updateForm } = useFormState(INITIAL_EDIT_STATE);
+  const [description, setDescription] = useState("");
+  const [imageFile, setImageFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { updateBlog, isLoading } = useBlogMutations();
 
@@ -65,11 +66,8 @@ const EditBlog = () => {
 
       console.log("response of edit blog", response);
 
-      if (response?.data?.success) {
-        toast.success(response?.data?.message);
+      if (response?.success) {
         navigate("/myblogs");
-      } else {
-        toast.error("Failed to update blog");
       }
     } catch (error) {
       console.error("Error updating blog:", error);

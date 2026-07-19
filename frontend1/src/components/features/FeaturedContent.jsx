@@ -33,14 +33,14 @@ const FeaturedContent = () => {
          <div className="container mx-auto px-6 lg:px-8 max-w-7xl relative z-10">
             <motion.div
                initial={{ opacity: 0, y: 30 }}
-               whileInView={{ opacity: 1, y: 0 }}
+               whileinview={{ opacity: 1, y: 0 }}
                viewport={{ once: true, margin: "-100px" }}
                transition={{ duration: 0.7 }}
                className="text-center max-w-3xl mx-auto mb-16 md:mb-20"
             >
                <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
+                  whileinview={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6 }}
                   className="inline-block mb-6 px-5 py-2.5 bg-primary rounded-full transition-all duration-300"
@@ -52,7 +52,7 @@ const FeaturedContent = () => {
 
                <h2
                   initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  whileinview={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.1 }}
                   className="text-4xl md:text-5xl font-bold text-primary-foreground mb-4" style={{ fontFamily: "Playfair Display, serif" }}
@@ -62,7 +62,7 @@ const FeaturedContent = () => {
 
                <motion.p
                   initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  whileinview={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.2 }}
                   className="text-lg md:text-xl text-primary-foreground/80 leading-relaxed" style={{ fontFamily: "Poppins, sans-serif" }}
@@ -74,7 +74,7 @@ const FeaturedContent = () => {
             {/* Latest Blogs Carousel */}
             <div
                initial={{ opacity: 0, y: 40 }}
-               whileInView={{ opacity: 1, y: 0 }}
+               whileinview={{ opacity: 1, y: 0 }}
                viewport={{ once: true, margin: "-50px" }}
                transition={{ duration: 0.8, delay: 0.3 }}
             >

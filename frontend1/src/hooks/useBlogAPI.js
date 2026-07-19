@@ -223,7 +223,7 @@ export const useBlogMutations = () => {
     }
   }, []);
 
-  return { createBlog, updateBlog, deleteBlog, isLoading, error };
+  return { createBlog, updateBlog, deleteBlog, isLoading, error,setIsLoading };
 };
 
 /**
