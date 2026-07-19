@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "@/store";
@@ -64,13 +65,20 @@ const GoogleSignInButton = () => {
     toast.error("Google Sign-In failed. Please try again.");
   };
 
-  // Custom styled Google Sign-In button
-  <GoogleButton>Sign in with Google</GoogleButton>;
+  useEffect(() => {
+    if (!googleClientId) {
+      console.warn("Google Client ID is not configured");
+    }
+  }, [googleClientId]);
 
   if (!googleClientId) {
-    console.warn("Google Client ID is not configured");
-    return toast.error(
-      "Google Sign-In is not available at the moment, add google client id",
+    return (
+      <button
+        disabled
+        className="w-full py-3 px-6 border-2 border-gray-300 bg-gray-800/10 text-gray-500 rounded-lg font-semibold flex items-center justify-center gap-3 cursor-not-allowed"
+      >
+        Google Sign-In Unavailable
+      </button>
     );
   }
 
@@ -89,7 +97,7 @@ const GoogleSignInButton = () => {
           />
         </div>
         {/* Custom styled button */}
-        <GoogleButton />
+        <GoogleButton>Sign in with Google</GoogleButton>
       </div>
     </GoogleOAuthProvider>
   );
