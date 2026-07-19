@@ -84,20 +84,16 @@ const GoogleSignInButton = () => {
 
   return (
     <GoogleOAuthProvider clientId={googleClientId}>
-      <div style={{ position: "relative" }}>
-        {/* Hidden GoogleLogin component - we'll use custom button above */}
-        <div
-          style={{ position: "absolute", opacity: 0, pointerEvents: "none" }}
-        >
-          <GoogleLogin
-            onSuccess={handleGoogleSuccess}
-            onError={handleGoogleError}
-            text="signin_with"
-            size="large"
-          />
-        </div>
-        {/* Custom styled button */}
-        <GoogleButton>Sign in with Google</GoogleButton>
+      <div className="w-full flex justify-center">
+        <GoogleLogin
+          onSuccess={handleGoogleSuccess}
+          onError={handleGoogleError}
+          theme="outline"
+          size="large"
+          shape="rectangular"
+          text="signin_with"
+          width="100%"
+        />
       </div>
     </GoogleOAuthProvider>
   );
