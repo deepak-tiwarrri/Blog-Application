@@ -24,16 +24,25 @@ app.use(express.json({ limit: "10mb" })); // Limit payload size
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 // CORS Configuration
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || "http://localhost:5001,https://blog-application-liard-nine.vercel.app")
+  .split(",")
+  .map((o) => o.trim().replace(/\/$/, ""));
+
 app.use(
   cors({
-    origin: process.env.ALLOWED_ORIGINS?.split(",") || [
-      "http://localhost:5001",
-      "https://blog-application-liard-nine.vercel.app/",
-    ],
+    origin: (origin, callback) => {
+      // Allow non-browser requests (no Origin header)
+      if (!origin) {
+        return callback(null, true);
+      }
+      const normalized = origin.replace(/\/$/, "");
+      const allowed = allowedOrigins.includes(normalized);
+      return callback(null, allowed);
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
     optionsSuccessStatus: 200,
-  }),
+  })
 );
 
 // Rate Limiting
@@ -59,6 +68,7 @@ app.use((req, res) => {
   });
 });
 
+
 // Global Error Handler (must be last)
 app.use(errorHandler);
 const PORT = process.env.PORT || 8000;
@@ -74,6 +84,8 @@ if (process.env.NODE_ENV === "production") {
     return res.redirect(`https://${req.headers.host}${req.url}`);
   });
 }
+
+
 
 app.listen(PORT, () => {
   console.log(`[${new Date().toISOString()}] Server listening on port ${PORT}`);
