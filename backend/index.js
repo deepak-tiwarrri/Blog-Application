@@ -17,32 +17,65 @@ const __dirname = path.dirname(__filename);
 dotenv.config();
 
 const app = express();
-
+ 
 // Security Middleware
 app.use(helmet()); // Secure HTTP headers
 app.use(express.json({ limit: "10mb" })); // Limit payload size
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 // CORS Configuration
+
+console.log('ALLOWED_ORIGINS env ->', JSON.stringify(process.env.ALLOWED_ORIGINS));
+
+// Log incoming Origin header to help debug CORS mismatches
+app.use((req, res, next) => {
+  console.log('Incoming Origin header ->', req.headers.origin);
+  next();
+});
+
+// Normalize configured origins (trim + remove trailing slash)
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || "http://localhost:5001,https://blog-application-liard-nine.vercel.app")
   .split(",")
   .map((o) => o.trim().replace(/\/$/, ""));
 
+// Use function form for origin so we can normalize the incoming origin and log decisions
 app.use(
   cors({
     origin: (origin, callback) => {
       // Allow non-browser requests (no Origin header)
       if (!origin) {
+        console.log('CORS: no origin (non-browser) - allowed');
         return callback(null, true);
       }
       const normalized = origin.replace(/\/$/, "");
       const allowed = allowedOrigins.includes(normalized);
+      console.log(`CORS: incoming origin=${origin} normalized=${normalized} allowed=${allowed}`);
       return callback(null, allowed);
     },
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
     optionsSuccessStatus: 200,
-  })
+  }),
+);
+
+// Log what Access-Control-Allow-Origin header was set (or not) for each response
+app.use((req, res, next) => {
+  res.on("finish", () => {
+    console.log("Access-Control-Allow-Origin ->", res.getHeader("Access-Control-Allow-Origin"));
+  });
+  next();
+});
+console.log('ALLOWED_ORIGINS=', JSON.stringify(process.env.ALLOWED_ORIGINS));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5001",
+      "https://blog-application-liard-nine.vercel.app",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    credentials: true,
+    optionsSuccessStatus: 200,
+  }),
 );
 
 // Rate Limiting
@@ -68,6 +101,11 @@ app.use((req, res) => {
   });
 });
 
+
+app.use((req, res, next) => {
+  console.log('Incoming Origin header ->', req.headers.origin);
+  next();
+});
 
 // Global Error Handler (must be last)
 app.use(errorHandler);

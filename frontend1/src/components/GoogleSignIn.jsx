@@ -88,7 +88,7 @@ const GoogleSignInButton = () => {
 
       const { data } = response.data;
       const { user, accessToken } = data;
-
+      console.log("user id: ",user._id);
       // Store token in localStorage and set axios auth header
       localStorage.setItem("token", accessToken);
       localStorage.setItem("userId", user._id);

@@ -60,31 +60,36 @@ const login = asyncHandler(async (req, res) => {
   );
 });
 
-const googleSignIn = asyncHandler(async (req, res) => {
-  const { token } = req.body;
+const googleSignIn = asyncHandler(async (req, res, next) => {
+  try {
+    const { token } = req.body;
 
-  if (!token) {
-    throw new InvalidCredentialsError('Google token is required');
-  }
+    if (!token) {
+      throw new InvalidCredentialsError('Google token is required');
+    }
 
-  const user = await userService.processGoogleSignIn(token);
-  const { accessToken, refreshToken } = generateTokenPair(user._id);
+    const user = await userService.processGoogleSignIn(token);
+    const { accessToken, refreshToken } = generateTokenPair(user._id);
 
-  return sendSuccess(
-    res,
-    {
-      user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        profilePicture: user.profilePicture,
+    return sendSuccess(
+      res,
+      {
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          profilePicture: user.profilePicture,
+        },
+        accessToken,
+        refreshToken,
       },
-      accessToken,
-      refreshToken,
-    },
-    'Google sign-in successful',
-    200
-  );
+      'Google sign-in successful',
+      200
+    );
+  } catch (error) {
+    console.error('Google sign-in failed:', error);
+    next(error);
+  }
 });
 
 const getUserProfile = asyncHandler(async (req, res) => {
