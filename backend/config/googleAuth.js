@@ -2,7 +2,9 @@
 // Install: npm install google-auth-library
 import { OAuth2Client } from "google-auth-library";
 
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const googleClient = process.env.GOOGLE_CLIENT_ID
+  ? new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
+  : null;
 
 /**
  * Verify Google ID Token and extract user info
@@ -10,6 +12,10 @@ const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
  * @returns {Object} Decoded token with user info
  */
 export const verifyGoogleToken = async (token) => {
+  if (!process.env.GOOGLE_CLIENT_ID || !googleClient) {
+    throw new Error("Google OAuth is not configured on the server. Set GOOGLE_CLIENT_ID in the backend environment.");
+  }
+
   try {
     const ticket = await googleClient.verifyIdToken({
       idToken: token,
