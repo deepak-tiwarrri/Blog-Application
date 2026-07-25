@@ -25,7 +25,14 @@ const userSchema = new Schema({
     required: function() {
       return this.authMethod === 'email';
     },
-    minlength: [12, 'Password must be at least 12 characters'],
+    validate: {
+      validator: function(v) {
+        // Only enforce minlength for email-based auth
+        if (this.authMethod !== 'email') return true;
+        return v && v.length >= 12;
+      },
+      message: 'Password must be at least 12 characters',
+    },
     select: false,
   },
   googleId: {

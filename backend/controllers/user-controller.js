@@ -87,7 +87,18 @@ const googleSignIn = asyncHandler(async (req, res, next) => {
       200
     );
   } catch (error) {
-    console.error('Google sign-in failed:', error);
+    console.error('Google sign-in failed:', {
+      name: error.name,
+      message: error.message,
+      code: error.code,
+      validationErrors: error.errors
+        ? Object.keys(error.errors).map(k => ({
+            field: k,
+            message: error.errors[k].message,
+            value: error.errors[k].value,
+          }))
+        : null,
+    });
     next(error);
   }
 });
