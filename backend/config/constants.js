@@ -39,7 +39,7 @@ export const RATE_LIMITS = {
   AUTH_LOGIN: { windowMs: 15 * 60 * 1000, max: 5 },  // 5 attempts per 15 min
   AUTH_SIGNUP: { windowMs: 60 * 60 * 1000, max: 5 },  // 5 attempts per hour
   AUTH_PASSWORDCHANGE: { windowMs: 60 * 60 * 1000, max: 3 },  // 3 attempts per hour
-  GENERAL: { windowMs: 15 * 60 * 1000, max: 100 },  // 100 requests per 15 min
+  GENERAL: { windowMs: 15 * 60 * 1000, max: 2000 },  // 2000 requests per 15 min
 };
 
 export const ERROR_CODES = {

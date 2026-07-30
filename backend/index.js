@@ -17,104 +17,61 @@ const __dirname = path.dirname(__filename);
 dotenv.config();
 
 const app = express();
- 
+
+// Trust proxy (required for Render / Vercel proxies so rate limiting & IP checks work correctly)
+app.set("trust proxy", 1);
+
 // Security Middleware
-app.use(helmet()); // Secure HTTP headers
-app.use(express.json({ limit: "10mb" })); // Limit payload size
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    crossOriginOpenerPolicy: { policy: "unsafe-none" },
+  })
+);
+
+app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 // CORS Configuration
+const defaultAllowedOrigins = [
+  "http://localhost:5001",
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "https://blog-application-liard-nine.vercel.app",
+];
 
-console.log('ALLOWED_ORIGINS env ->', JSON.stringify(process.env.ALLOWED_ORIGINS));
-
-// Log incoming Origin header to help debug CORS mismatches
-app.use((req, res, next) => {
-  console.log('Incoming Origin header ->', req.headers.origin);
-  next();
-});
-
-// Normalize configured origins (trim + remove trailing slash)
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || "http://localhost:5001,https://blog-application-liard-nine.vercel.app")
+const envAllowedOrigins = (process.env.ALLOWED_ORIGINS || "")
   .split(",")
-  .map((o) => o.trim().replace(/\/$/, ""));
+  .map((o) => o.trim().replace(/\/$/, ""))
+  .filter(Boolean);
 
-// Use function form for origin so we can normalize the incoming origin and log decisions
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow non-browser requests (no Origin header)
-      if (!origin) {
-        console.log('CORS: no origin (non-browser) - allowed');
-        return callback(null, true);
-      }
-      const normalized = origin.replace(/\/$/, "");
-      const allowed = allowedOrigins.includes(normalized);
-      console.log(`CORS: incoming origin=${origin} normalized=${normalized} allowed=${allowed}`);
-      return callback(null, allowed);
-    },
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    credentials: true,
-    optionsSuccessStatus: 200,
-  }),
-);
+const allowedOriginsSet = new Set([...defaultAllowedOrigins, ...envAllowedOrigins]);
 
-// Log what Access-Control-Allow-Origin header was set (or not) for each response
-app.use((req, res, next) => {
-  res.on("finish", () => {
-    console.log("Access-Control-Allow-Origin ->", res.getHeader("Access-Control-Allow-Origin"));
-  });
-  next();
-});
-console.log('ALLOWED_ORIGINS=', JSON.stringify(process.env.ALLOWED_ORIGINS));
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5001",
-      "https://blog-application-liard-nine.vercel.app",
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    credentials: true,
-    optionsSuccessStatus: 200,
-  }),
-);
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow non-browser requests (curl, server-to-server, Postman)
+    if (!origin) return callback(null, true);
 
-// Rate Limiting
-app.use("/api/", generalLimiter);
-// Health check endpoint
-app.get("/health", (req, res) => {
-  res.status(200).json({ status: "OK", timestamp: new Date().toISOString() });
-});
+    const normalized = origin.trim().replace(/\/$/, "");
 
-// Serve uploads folder as static
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+    if (allowedOriginsSet.has(normalized) || normalized.endsWith(".vercel.app")) {
+      return callback(null, true);
+    }
 
-connectDB();
-app.use("/api/user", userRouter);
-app.use("/api/blog", blogRouter);
+    console.warn(`[CORS] Blocked request from origin: ${origin}`);
+    return callback(null, false);
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
 
-//404 handler
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: "Route not found",
-    path: req.originalUrl,
-  });
-});
-
-
-app.use((req, res, next) => {
-  console.log('Incoming Origin header ->', req.headers.origin);
-  next();
-});
-
-// Global Error Handler (must be last)
-app.use(errorHandler);
-const PORT = process.env.PORT || 8000;
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 // HTTPS Enforcement in Production
 if (process.env.NODE_ENV === "production") {
-  console.log = () => {};
-  console.debug = () => {};
   app.use((req, res, next) => {
     if (req.secure || req.headers["x-forwarded-proto"] === "https") {
       return next();
@@ -123,7 +80,37 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "OK", timestamp: new Date().toISOString() });
+});
 
+// Rate Limiting
+app.use("/api/", generalLimiter);
+
+// Serve uploads folder as static
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// Connect Database
+connectDB();
+
+// API Routes
+app.use("/api/user", userRouter);
+app.use("/api/blog", blogRouter);
+
+// 404 Handler
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "Route not found",
+    path: req.originalUrl,
+  });
+});
+
+// Global Error Handler (must be last)
+app.use(errorHandler);
+
+const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => {
   console.log(`[${new Date().toISOString()}] Server listening on port ${PORT}`);
