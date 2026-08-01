@@ -37,7 +37,7 @@ const Blog = ({
     await handleShare(url);
   };
 
-  const cleanDescription = DOMPurify.sanitize(description, { ALLOWED_TAGS: [] });
+  const cleanDescription = DOMPurify.sanitize(description || "", { ALLOWED_TAGS: [] });
 
   const readingTime =
     propReadingTime ||

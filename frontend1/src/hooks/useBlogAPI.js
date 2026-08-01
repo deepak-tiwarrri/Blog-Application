@@ -210,7 +210,6 @@ export const useBlogMutations = () => {
     setError(null);
     try {
       await blogApi.delete(blogId);
-      console.log("---delete blog called---", response);
       toast.success("Blog deleted successfully!");
       return true;
     } catch (err) {
