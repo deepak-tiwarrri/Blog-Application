@@ -1,5 +1,9 @@
+// Must be the first import: other imported modules (e.g. googleAuth.js)
+// read process.env at their own module-evaluation time, which in ESM
+// happens before any of this file's own top-level code runs. Loading env
+// vars via a later `dotenv.config()` call would be too late for them.
+import "dotenv/config";
 import express from "express";
-import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import cors from "cors";
 import helmet from "helmet";
@@ -12,9 +16,6 @@ import { generalLimiter } from "./middleware/rateLimiter.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// Load environment variables
-dotenv.config();
 
 const app = express();
 
