@@ -14,6 +14,10 @@ import blogRouter from "./routes/blog-routes.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { generalLimiter } from "./middleware/rateLimiter.js";
 
+if (process.env.NODE_ENV === "production") {
+  console.log = () => {};
+}
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -114,6 +118,8 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => {
-  console.log(`[${new Date().toISOString()}] Server listening on port ${PORT}`);
-  console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
+  if (process.env.NODE_ENV !== "production") {
+    console.log(`[${new Date().toISOString()}] Server listening on port ${PORT}`);
+    console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
+  }
 });

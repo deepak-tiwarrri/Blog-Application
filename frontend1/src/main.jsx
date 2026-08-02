@@ -12,6 +12,10 @@ import App from "./App.jsx";
 import { setAuthToken } from "./api";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+if (import.meta.env.PROD) {
+  console.log = () => {};
+}
+
 const router = createBrowserRouter(
   [
     {
