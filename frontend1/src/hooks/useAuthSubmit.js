@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { sendRequest } from '@/store';
 import { handleAuthToasts, showSuccessToast } from '@/utils/toast';
+import { ConstructionOutlined } from '@mui/icons-material';
 
 export const useAuthSubmit = (type = 'login') => {
   const dispatch = useDispatch();
@@ -26,15 +27,11 @@ export const useAuthSubmit = (type = 'login') => {
     e.preventDefault();
     
     const result = await dispatch(sendRequest({ type, input }));
-    
+    console.log('result of submit: ',result);
     if (result.meta.requestStatus === 'fulfilled') {
       const message = type === 'signup' ? 'Signup successful!' : 'Login successful!';
-      showSuccessToast(message);
-      
-      // Delay navigation to allow toast to be seen
-      setTimeout(() => {
-        navigate('/blogs');
-      }, 1500);
+      showSuccessToast(message);  
+      navigate('/blogs');
     }
   };
 

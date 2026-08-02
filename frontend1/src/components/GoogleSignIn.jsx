@@ -76,10 +76,13 @@ const GoogleSignInButton = () => {
   const isLoggedIn = useSelector((state) => state.auth?.isLoggedIn);
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
-  // Don't show Google signin if already logged in
-  if (isLoggedIn) {
-    return null;
-  }
+
+  useEffect(() => {
+    if (!googleClientId) {
+      console.warn("Google Client ID is not configured");
+    }
+  }, [googleClientId]);
+
 
   const handleGoogleSuccess = async (token) => {
     try {
@@ -114,11 +117,8 @@ const GoogleSignInButton = () => {
     }
   };
 
-  useEffect(() => {
-    if (!googleClientId) {
-      console.warn("Google Client ID is not configured");
-    }
-  }, [googleClientId]);
+
+   
 
   if (!googleClientId) {
     return (
@@ -129,6 +129,9 @@ const GoogleSignInButton = () => {
         Google Sign-In Unavailable
       </button>
     );
+  }
+  if (isLoggedIn) {
+    return null;
   }
 
   return (

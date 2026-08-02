@@ -9,7 +9,7 @@ const Signup = () => {
   useAuthRedirect();
 
   const location = useLocation();
-  const isLoginMode = location.pathname === "/login";
+  const isLoginMode = false;
   const { handleSubmit } = useAuthSubmit('signup');
 
   return (
