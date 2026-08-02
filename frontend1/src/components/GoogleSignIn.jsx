@@ -34,7 +34,7 @@ const CustomGoogleButton = ({ onAuthSuccess }) => {
   return (
     <button
       type="button"
-      onClick={() => login()}
+      onClick={login}
       disabled={loading}
       className="w-full py-3.5 px-6 bg-white/10 hover:bg-white/15 border border-white/20 active:scale-[0.98] transition-all duration-200 rounded-xl font-semibold text-white flex items-center justify-center gap-3 shadow-lg hover:shadow-xl hover:cursor-pointer disabled:opacity-50"
       style={{ fontFamily: "Poppins, sans-serif" }}
