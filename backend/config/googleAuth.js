@@ -22,7 +22,6 @@ export const verifyGoogleToken = async (token) => {
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
-    console.log("google ticket response: ", ticket);
     const payload = ticket.getPayload();
 
     return {
@@ -34,11 +33,6 @@ export const verifyGoogleToken = async (token) => {
   } catch (error) {
     console.warn("Google ID token verification failed, trying UserInfo API fallback:", error.message);
     try {
-      // Plain fetch (not googleClient.request) because OAuth2Client.request()
-      // always tries to attach its own credentials before sending, and this
-      // client only holds a client ID (no credentials) - it would throw
-      // "No access, refresh token, API key or refresh handler callback is set"
-      // before ever using the manual Authorization header below.
       const userinfoRes = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -56,5 +50,44 @@ export const verifyGoogleToken = async (token) => {
       console.error("Google userinfo fallback failed:", fallbackError.message);
     }
     throw new InvalidCredentialsError("Invalid or expired Google token");
+  }
+};
+
+export const exchangeCodeForGoogleUser = async (code, redirectUri) => {
+  if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+    throw new Error("Google OAuth is not configured on the server. Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in the backend environment.");
+  }
+
+  const client = new OAuth2Client(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    redirectUri
+  );
+
+  try {
+    const { tokens } = await client.getToken(code);
+    if (!tokens?.id_token) {
+      throw new InvalidCredentialsError("Failed to obtain Google ID token from authorization code");
+    }
+
+    const ticket = await client.verifyIdToken({
+      idToken: tokens.id_token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    if (!payload) {
+      throw new InvalidCredentialsError("Invalid Google token payload");
+    }
+
+    return {
+      email: payload.email,
+      name: payload.name,
+      picture: payload.picture,
+      googleId: payload.sub,
+    };
+  } catch (error) {
+    console.error("Google code exchange failed:", error.message || error);
+    throw new InvalidCredentialsError("Google authorization code exchange failed");
   }
 };

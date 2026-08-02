@@ -32,6 +32,7 @@ userRouter.post(
 );
 
 userRouter.post("/google-signin", userController.googleSignIn);
+userRouter.post("/google-signin/:code", userController.googleSignInRedirect);
 
 // Protected routes
 userRouter.get(

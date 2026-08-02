@@ -103,6 +103,52 @@ const googleSignIn = asyncHandler(async (req, res, next) => {
   }
 });
 
+const googleSignInRedirect = asyncHandler(async (req, res, next) => {
+  try {
+    const { code } = req.params;
+    if (!code) {
+      throw new InvalidCredentialsError('Authorization code is required');
+    }
+
+    const configuredRedirectUri = process.env.GOOGLE_REDIRECT_URI;
+    const redirectUri = configuredRedirectUri
+      ? configuredRedirectUri.replace(/\/+$/, "")
+      : "http://localhost:5173/google-callback";
+    const user = await userService.processGoogleSignInRedirect(code, redirectUri);
+    const { accessToken, refreshToken } = generateTokenPair(user._id);
+
+    return sendSuccess(
+      res,
+      {
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          profilePicture: user.profilePicture,
+        },
+        accessToken,
+        refreshToken,
+      },
+      'Google sign-in successful',
+      200
+    );
+  } catch (error) {
+    console.error('Google redirect sign-in failed:', {
+      name: error.name,
+      message: error.message,
+      code: error.code,
+      validationErrors: error.errors
+        ? Object.keys(error.errors).map(k => ({
+            field: k,
+            message: error.errors[k].message,
+            value: error.errors[k].value,
+          }))
+        : null,
+    });
+    next(error);
+  }
+});
+
 const getUserProfile = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -182,6 +228,7 @@ export default {
   signUp,
   login,
   googleSignIn,
+  googleSignInRedirect,
   getUserProfile,
   updateUserProfile,
   changePassword,

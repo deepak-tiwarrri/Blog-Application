@@ -14,6 +14,7 @@ import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import ErrorBoundary from "./components/common/ErrorBoundary";
 import ProtectedRoute from "./components/common/ProtectedRoute";
+import GoogleCallback from "./components/GoogleCallback";
 import { authActions } from "./store/index.js";
 import { useDispatch } from "react-redux";
 import { userApi } from "./api"; // Added for secure authentication validation
@@ -98,6 +99,7 @@ const App = () => {
                   </ProtectedRoute>
                 }
               />
+              <Route path="/google-callback" element={<GoogleCallback />} />
             </Routes>
           </ErrorBoundary>
         </main>

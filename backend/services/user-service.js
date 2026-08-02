@@ -1,6 +1,6 @@
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
-import { verifyGoogleToken } from "../config/googleAuth.js";
+import { verifyGoogleToken, exchangeCodeForGoogleUser } from "../config/googleAuth.js";
 import { SECURITY } from '../config/constants.js';
 import { hasCommonPatterns, validatePasswordStrength } from '../utils/passwordValidator.js';
 import { sanitizeHTMLContent } from '../utils/sanitizer.js';
@@ -61,6 +61,32 @@ export const verifyLogin = async ({ email, password }) => {
 
 export const processGoogleSignIn = async (token) => {
   const googleUser = await verifyGoogleToken(token);
+  let user = await User.findOne({ email: googleUser.email });
+
+  if (!user) {
+    user = new User({
+      name: googleUser.name,
+      email: googleUser.email,
+      googleId: googleUser.googleId,
+      profilePicture: googleUser.picture,
+      authMethod: 'google',
+      blogs: [],
+    });
+  } else if (!user.googleId) {
+    user.googleId = googleUser.googleId;
+    user.authMethod = 'google';
+    if (!user.profilePicture) {
+      user.profilePicture = googleUser.picture;
+    }
+  }
+
+  user.lastLogin = new Date();
+  await user.save();
+  return user;
+};
+
+export const processGoogleSignInRedirect = async (code, redirectUri) => {
+  const googleUser = await exchangeCodeForGoogleUser(code, redirectUri);
   let user = await User.findOne({ email: googleUser.email });
 
   if (!user) {
